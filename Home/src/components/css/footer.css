@@ -1,0 +1,22 @@
+footer {
+  height: 115px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: #092843;
+}
+
+.footer-logo img {
+  width: 90px;
+}
+.social-icons {
+  margin-right: 50px;
+}
+
+.social-icons svg {
+  fill: #fff;
+  width: 24px;
+  height: 24px;
+  margin-left: 50px;
+}
