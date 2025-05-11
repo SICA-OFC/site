@@ -61,7 +61,7 @@ create table TimeAluno
   id    serial primary key,
   Time   integer not null,
   constraint FK_TimeTA foreign key (Time) references Time(id),
-  aluno  integer not null,
+  Aluno  integer not null,
   constraint FK_AlunoTA foreign key (Aluno) references Aluno(id)
   );
 
