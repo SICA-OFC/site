@@ -8,6 +8,7 @@ import EmailLoginConfirmPage from "./pages/EmailLoginConfirmPage.jsx";
 import EmailPerfilConfirmPage from "./pages/EmailPerfilConfirmPage.jsx";
 import EmailSignConfirmPage from "./pages/EmailSignConfirmPage.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <GoogleReCaptchaProvider reCaptchaKey="6Lch7TIrAAAAACwovKu2Vk4Xbqe2TmXdsrrIyn1h">
     <RouterProvider router={router} />
+    </GoogleReCaptchaProvider>
   </StrictMode>
 );
