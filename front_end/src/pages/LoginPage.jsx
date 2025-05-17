@@ -3,12 +3,15 @@ import sideImage from "../assets/sideImage.png";
 import logo from "../assets/logo.png";
 import line from "../assets/Line 3.png";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+
+  const {executeRecaptcha} = useGoogleReCaptcha();
 
   const navigate = useNavigate();
 
@@ -19,23 +22,44 @@ export default function LoginPage() {
   function handleSenhaChange(e) {
     setSenha(e.target.value);
   }
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const userInfo = {
-      email,
-      senha,
-    };
 
-    fetch("http://localhost:3000/usuario/token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(userInfo),
+  const handleSubmit = (event) => {
+  event.preventDefault();
+
+  if (!executeRecaptcha) {
+    console.log("reCAPTCHA ainda não disponivel");
+    return;
+  }
+
+  executeRecaptcha("login_form")
+    .then((tokenCaptcha) => {
+      console.log("reCAPTCHA token:", tokenCaptcha);
+
+      return fetch(`/api/verifyToken?token=${tokenCaptcha}`)
+        .then((verifyResponse) => verifyResponse.json())
+        .then((verifyResult) => {
+          if (!verifyResult.success || verifyResult.score < 0.5) {
+            alert("Verificação do reCAPTCHA falhou. Ação bloqueada.");
+            throw new Error("reCAPTCHA inválido.");
+          }
+
+          const userInfo = {
+            email,
+            senha,
+            tokenCaptcha,
+          };
+
+          return fetch("http://localhost:3000/usuario/token", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(userInfo),
+          });
+        });
     })
-      .then(async (response) => {
-        const result = await response.json();
-
+    .then((response) => {
+      return response.json().then((result) => {
         if (!response.ok) {
           throw new Error(`Erro ${response.status}: ${JSON.stringify(result)}`);
         }
@@ -43,20 +67,30 @@ export default function LoginPage() {
         const token = result.token;
         console.log("Token recebido:", token);
 
-        fetch("http://localhost:3000/usuario/login", {
+        return fetch("http://localhost:3000/usuario/login", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-        }).then(async (loginResponse) => {
-          const loginResult = await loginResponse.json();
+        }).then((loginResponse) => {
+          return loginResponse.json().then((loginResult) => {
+            if (!loginResponse.ok) {
+              throw new Error(
+                `Erro ${loginResponse.status}: ${JSON.stringify(loginResult)}`
+              );
+            }
 
-          if (!loginResponse.ok) {
-            throw new Error(
-              `Erro ${loginResponse.status}: ${JSON.stringify(loginResult)}`
+            console.log("Login efetuado com sucesso:", loginResult);
+
+            fetch("http://localhost:3000/usuario/enviarCodigo", {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }).then((response) =>
+              response.json().then((res) => console.log("Código enviado:", res))
             );
-          }
 
           console.log("Login efetuado com sucesso:", loginResult);
           fetch("http://localhost:3000/usuario/enviarCodigo", {
@@ -75,12 +109,13 @@ export default function LoginPage() {
             });
           }
         });
-      })
-
-      .catch((error) => {
-        console.error("Erro no processo de token/login:", error.message);
       });
-  };
+    })
+    .catch((error) => {
+      console.error("Erro no processo de login:", error.message);
+    });
+};
+
 
   return (
     <>

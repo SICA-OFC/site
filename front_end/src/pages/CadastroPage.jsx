@@ -3,8 +3,9 @@ import logo from "../assets/logo.png";
 import line from "../assets/Line 3.png";
 import sideImage from "../assets/sideImage.png";
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 function CadastroPage() {
   const [rm, setRm] = useState("");
@@ -14,6 +15,8 @@ function CadastroPage() {
   const [data, setData] = useState("");
   const [senha, setSenha] = useState("");
   const [telefone, setTelefone] = useState("");
+
+  const {executeRecaptcha} = useGoogleReCaptcha();
 
   const navigate = useNavigate();
 
@@ -45,8 +48,30 @@ function CadastroPage() {
     setTelefone(e.target.value);
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (!executeRecaptcha) {
+    console.log("reCAPTCHA ainda não está disponivel");
+    return;
+    }
+
+     executeRecaptcha("cadastro_form")
+    .then((tokenCaptcha) => {
+      console.log("reCAPTCHA token:", tokenCaptcha);
+
+      return fetch(`/api/verifyToken?token=${tokenCaptcha}`)
+        .then((verify) => verify.json())
+        .then(({ success, score }) => {
+          if (!success || score < 0.5) {
+            alert("Verificação do reCAPTCHA falhou. Ação bloqueada.");
+            const button = document.querySelector(styles.button);
+            if (button) {
+              button.setCustomValidity('Você foi identificado como um bot');
+            }
+            throw new Error("Bot detectado");
+          }
+
     const userInfo = {
       rm: parseInt(rm),
       nome,
@@ -55,19 +80,21 @@ function CadastroPage() {
       data,
       senha,
       telefone,
+      tokenCaptcha,
       codigoverificacao: Math.floor(99999 + Math.random() * 900000),
       datacriacaocodigo: new Date()
     };
 
     console.log("Enviando:", JSON.stringify(userInfo));
 
-    fetch("http://localhost:3000/usuario/cadastro", {
+      fetch("http://localhost:3000/usuario/cadastro", {
       method: "POST",
       headers: {
         "Content-Type": "Application/JSON",
       },
       body: JSON.stringify(userInfo),
-    })
+    });
+  })
       .then(async (response) => {
         const result = await response.json();
         console.log("Resposta do servidor:", result);
@@ -79,6 +106,7 @@ function CadastroPage() {
       .catch((error) => {
         console.log(error);
       });
+    });
   };
 
   return (
