@@ -7,6 +7,7 @@ import LoginPage from "./pages/LoginPage.jsx";
 import EmailLoginConfirmPage from "./pages/EmailLoginConfirmPage.jsx";
 import EmailPerfilConfirmPage from "./pages/EmailPerfilConfirmPage.jsx";
 import EmailSignConfirmPage from "./pages/EmailSignConfirmPage.jsx";
+import BracketPage from "./pages/BracketPage.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
   {
     path: "/confirmacao-cadastro",
     element: <EmailSignConfirmPage />,
+  },
+  {
+    path: "/bracket",
+    element: <BracketPage />,
   },
 ]);
 

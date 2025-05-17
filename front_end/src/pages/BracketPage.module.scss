@@ -1,0 +1,27 @@
+.container_grid {
+  width: 80%;
+  max-width: 1770px;
+
+  margin: 0 auto;
+  padding: 40px 0px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.section {
+  min-height: 746px;
+}
+
+.h2 {
+  margin-top: 50px;
+}
+
+.bracketDivision {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  height: 250px;
+}

@@ -64,13 +64,12 @@ export default function LoginPage() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }).then(response => console.log(response.json()));
+          }).then((response) => console.log(response.json()));
           if (loginResult.usuario.verificado == true) {
             navigate("/confirmacao-login", {
               state: { token: token },
             });
-          }
-          else {
+          } else {
             navigate("/confirmacao-cadastro", {
               state: { token: token },
             });

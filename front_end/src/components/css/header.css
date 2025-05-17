@@ -53,4 +53,5 @@ nav ul li a:hover::after {
 
 .user-icon {
   width: 25px;
+  margin-right: 50px;
 }
