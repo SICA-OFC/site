@@ -5,12 +5,14 @@ import image1 from "../assets/image1.png";
 import image2 from "../assets/image2.png";
 import image3 from "../assets/image3.png";
 import Footer from "../components/footer.jsx";
+import LogoutButton from "../components/buttonLogout.jsx";
+// import ErrorBoundary from "../components/ErrorBoundary.jsx";
 
 export default function HomePage() {
   return (
     <div className={styles.container_home}>
       <Header />
-
+      <LogoutButton />
       <section className={styles.banner}>
         <div className={styles.container_grid}>
           <img src={bannerImage} alt="Pessoas jogando tênis" />

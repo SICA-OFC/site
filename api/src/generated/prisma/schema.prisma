@@ -8,17 +8,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
-model login {
-  id                Int       @id @default(autoincrement())
-  rm                Int
-  nome              String    @db.VarChar(30)
-  curso             String    @db.VarChar(20)
-  email             String    @unique @db.VarChar(30)
+model cursos {
+  id      Int          @id @default(autoincrement())
+  sigla   String       @db.VarChar(10)
+  ano     Int
+  nome    String       @db.VarChar(100)
+  periodo periodo_enum
+  usuario usuario[]
+}
+
+model usuario {
+  id                Int           @id @default(autoincrement())
+  rm                String        @db.VarChar(5)
+  nome              String        @db.VarChar(30)
+  curso             Int?
+  email             String        @unique @db.VarChar(30)
   senha             String
-  telefone          String    @db.VarChar(20)
-  datacriacao       DateTime? @default(now()) @db.Timestamp(6)
-  verificado        Boolean?  @default(false)
+  telefone          String        @db.VarChar(20)
+  datanascimento    DateTime      @db.Date
+  datacriacao       DateTime?     @default(now()) @db.Timestamp(6)
+  verificado        Boolean?      @default(false)
   codigoverificacao Int?
-  datacriacaocodigo DateTime? @db.Timestamp(6)
+  datacriacaocodigo DateTime?     @db.Timestamp(6)
+  controle          Int?
+  tipousuario       tipo_usuario?
+  cursos            cursos?       @relation(fields: [curso], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+enum periodo_enum {
+  Manh_ @map("Manhã")
+  Tarde
+  Noite
+}
+
+enum tipo_usuario {
+  Aluno
+  Professor
 }

@@ -1,24 +1,26 @@
 import styles from "./CadastroPage.module.scss";
 import logo from "../assets/logo.png";
 import line from "../assets/Line 3.png";
-import sideImage from "../assets/sideImage.png";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import SelectCursos from "../components/selectCursos";
 
 function CadastroPage() {
+  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const [rm, setRm] = useState("");
   const [nome, setNome] = useState("");
+  const [periodo, setPeriodo] = useState("Manhã");
   const [curso, setCurso] = useState("1DS");
   const [email, setEmail] = useState("");
-  const [data, setData] = useState("");
+  const [datanascimento, setData] = useState("");
   const [senha, setSenha] = useState("");
   const [telefone, setTelefone] = useState("");
 
-  const {executeRecaptcha} = useGoogleReCaptcha();
-
   const navigate = useNavigate();
+
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   function handleRmChange(e) {
     setRm(e.target.value);
@@ -26,10 +28,6 @@ function CadastroPage() {
 
   function handleNomeChange(e) {
     setNome(e.target.value);
-  }
-
-  function handleCursoChange(e) {
-    setCurso(e.target.value);
   }
 
   function handleEmailChange(e) {
@@ -48,64 +46,53 @@ function CadastroPage() {
     setTelefone(e.target.value);
   }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     if (!executeRecaptcha) {
-    console.log("reCAPTCHA ainda não está disponivel");
-    return;
+      console.log("reCAPTCHA ainda não disponivel");
+      return;
     }
 
-     executeRecaptcha("cadastro_form")
-    .then((tokenCaptcha) => {
+    executeRecaptcha("login_form").then(async (tokenCaptcha) => {
       console.log("reCAPTCHA token:", tokenCaptcha);
 
-      return fetch(`/api/verifyToken?token=${tokenCaptcha}`)
-        .then((verify) => verify.json())
-        .then(({ success, score }) => {
-          if (!success || score < 0.5) {
-            alert("Verificação do reCAPTCHA falhou. Ação bloqueada.");
-            const button = document.querySelector(styles.button);
-            if (button) {
-              button.setCustomValidity('Você foi identificado como um bot');
-            }
-            throw new Error("Bot detectado");
-          }
+      const verifyResponse = await fetch(
+        `http://localhost:3000/captcha?token=${tokenCaptcha}`
+      );
+      const verifyResult = await verifyResponse.json();
+      if (!verifyResult.success || verifyResult.score < 0.5) {
+        alert("Verificação do reCAPTCHA falhou. Ação bloqueada.");
+        throw new Error("reCAPTCHA inválido.");
+      }
 
-    const userInfo = {
-      rm: parseInt(rm),
-      nome,
-      curso,
-      email,
-      data,
-      senha,
-      telefone,
-      tokenCaptcha,
-      codigoverificacao: Math.floor(99999 + Math.random() * 900000),
-      datacriacaocodigo: new Date()
-    };
+      const userInfo = {
+        rm,
+        nome,
+        curso: parseInt(curso),
+        email,
+        datanascimento: new Date(datanascimento),
+        senha,
+        telefone,
+        tipousuario: "Aluno",
+      };
 
-    console.log("Enviando:", JSON.stringify(userInfo));
-
-      fetch("http://localhost:3000/usuario/cadastro", {
-      method: "POST",
-      headers: {
-        "Content-Type": "Application/JSON",
-      },
-      body: JSON.stringify(userInfo),
-    });
-  })
-      .then(async (response) => {
-        const result = await response.json();
-        console.log("Resposta do servidor:", result);
-        console.log("o token é ", result.token);
-        navigate("/confirmacao-cadastro", {
-          state: { token: result.token },
-        });
-      })
-      .catch((error) => {
-        console.log(error);
+      const response = await fetch(`${BASE_URL}/usuario/cadastro`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userInfo),
       });
+
+      const result = await response.json();
+      console.log("Resposta do servidor:", result);
+
+      if (response.ok) {
+        navigate("/confirmacao-cadastro", {
+          state: { accessToken: result.accessToken },
+        });
+      } else {
+        throw new Error(result.message || "Erro no cadastro");
+      }
     });
   };
 
@@ -129,69 +116,67 @@ function CadastroPage() {
               action="#"
               method="post"
             >
-              <div className={styles.div}>
-                <label className={styles.label} htmlFor="rm">
-                  RM
-                </label>
-                <input
-                  className={styles.input_select}
-                  value={rm}
-                  onChange={handleRmChange}
-                  type="number"
-                  id="rm"
-                  name="rm"
-                  pattern="\d{6}"
-                  required
-                />
-              </div>
-
-              <div className={styles.div}>
-                <label className={styles.label} htmlFor="nome">
-                  Nome
-                </label>
-                <input
-                  className={styles.input_select}
-                  value={nome}
-                  onChange={handleNomeChange}
-                  type="text"
-                  id="nome"
-                  name="nome"
-                  pattern="^[A-Za-z]+( [A-Za-z]+)*$"
-                  required
-                />
-              </div>
-              <div className={styles.div}>
-                <label className={styles.label} htmlFor="classe">
-                  Classe
-                </label>
-                <select
-                  className={styles.input_select}
-                  value={curso}
-                  onChange={handleCursoChange}
-                  id="classe"
-                  name="classe"
-                  required
-                >
-                  <option value="1DS">1DS</option>
-                  <option value="2DS">2DS</option>
-                  <option value="3DS">3DS</option>
-                </select>
-              </div>
-
-              <div className={styles.div}>
-                <label className={styles.label} htmlFor="email">
-                  Email
-                </label>
-                <div className={styles.email}>
+              <div className={styles.form_container}>
+                <div className={styles.div}>
+                  <label className={styles.label} htmlFor="rm">
+                    RM
+                  </label>
                   <input
                     className={styles.input_select}
-                    value={email}
-                    onChange={handleEmailChange}
-                    type="email"
-                    id="email"
-                    name="email"
+                    value={rm}
+                    onChange={handleRmChange}
+                    type="number"
+                    id="rm"
+                    name="rm"
+                    min="10000"
+                    max="99999"
+                    pattern="\d{5}"
                     required
                   />
+                </div>
+
+                <div className={styles.div}>
+                  <label className={styles.label} htmlFor="nome">
+                    Nome
+                  </label>
+                  <input
+                    className={styles.input_select}
+                    value={nome}
+                    onChange={handleNomeChange}
+                    type="text"
+                    id="nome"
+                    name="nome"
+                    pattern="[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+( [a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+)*"
+                    required
+                  />
+                </div>
+                <div className={styles.div}>
+                  <label className={styles.label} htmlFor="classe">
+                    Classe
+                  </label>
+                  <SelectCursos
+                    periodo={periodo}
+                    curso={curso}
+                    onPeriodoChange={setPeriodo}
+                    onCursoChange={setCurso}
+                  />
+                </div>
+
+                <div className={styles.div}>
+                  <label className={styles.label} htmlFor="email">
+                    Email
+                  </label>
+                  <div className={styles.email}>
+                    <input
+                      className={styles.input_select}
+                      value={email}
+                      onChange={handleEmailChange}
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -219,75 +204,74 @@ function CadastroPage() {
                   F
                 </div>
               </div> */}
+              <div className={styles.form_container}>
+                <div className={styles.div}>
+                  <label className={styles.label} htmlFor="nascimento">
+                    Data de Nascimento
+                  </label>
+                  <input
+                    className={styles.input_select}
+                    value={datanascimento}
+                    onChange={handleDataChange}
+                    type="date"
+                    id="nascimento"
+                    name="nascimento"
+                    min="1920-01-01"
+                    max={new Date().toISOString().split("T")[0]}
+                    required
+                  />
+                </div>
 
-              <div className={styles.div}>
-                <label className={styles.label} htmlFor="nascimento">
-                  Data de Nascimento
+                <div className={styles.div}>
+                  <label className={styles.label} htmlFor="password">
+                    Senha
+                  </label>
+                  <input
+                    className={styles.input_select}
+                    value={senha}
+                    onChange={handleSenhaChange}
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    required
+                  />
+                </div>
+
+                <div className={styles.div}>
+                  <label className={styles.label} htmlFor="telefone">
+                    Telefone
+                  </label>
+                  <input
+                    className={styles.input_select}
+                    value={telefone}
+                    onChange={handleTelefoneChange}
+                    type="text"
+                    id="telefone"
+                    name="telefone"
+                    required
+                  />
+                </div>
+
+                <div className={styles.div}>
+                  <button
+                    className={styles.button}
+                    type="submit"
+                    name="submit"
+                    value="cadastrar"
+                  >
+                    Cadastrar
+                  </button>
+                </div>
+
+                <label className={styles.sign_out}>
+                  Já tem conta?
+                  <Link to="/login" className={styles.a}>
+                    {" "}
+                    Entre!
+                  </Link>
                 </label>
-                <input
-                  className={styles.input_select}
-                  value={data}
-                  onChange={handleDataChange}
-                  type="date"
-                  id="nascimento"
-                  name="nascimento"
-                  min="1900-01-01"
-                  required
-                />
               </div>
-
-              <div className={styles.div}>
-                <label className={styles.label} htmlFor="password">
-                  Senha
-                </label>
-                <input
-                  className={styles.input_select}
-                  value={senha}
-                  onChange={handleSenhaChange}
-                  type="password"
-                  id="senha"
-                  name="senha"
-                  required
-                />
-              </div>
-
-              <div className={styles.div}>
-                <label className={styles.label} htmlFor="telefone">
-                  Telefone
-                </label>
-                <input
-                  className={styles.input_select}
-                  value={telefone}
-                  onChange={handleTelefoneChange}
-                  type="text"
-                  id="telefone"
-                  name="telefone"
-                  required
-                />
-              </div>
-
-              <div className={styles.div}>
-                <button
-                  className={styles.button}
-                  type="submit"
-                  name="submit"
-                  value="cadastrar"
-                >
-                  Cadastrar
-                </button>
-              </div>
-
-              <label className={styles.sign_out}>
-                Já tem conta?
-                <Link to="/login" className={styles.a}>
-                  {" "}
-                  Entre!
-                </Link>
-              </label>
             </form>
-          </div>
-          <div className={styles.image_box}>
-            <img src={sideImage} alt="Usuário" className={styles.user_image} />
           </div>
         </div>
       </div>

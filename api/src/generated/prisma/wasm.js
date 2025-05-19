@@ -117,7 +117,15 @@ exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
   Serializable: 'Serializable'
 });
 
-exports.Prisma.LoginScalarFieldEnum = {
+exports.Prisma.CursosScalarFieldEnum = {
+  id: 'id',
+  sigla: 'sigla',
+  ano: 'ano',
+  nome: 'nome',
+  periodo: 'periodo'
+};
+
+exports.Prisma.UsuarioScalarFieldEnum = {
   id: 'id',
   rm: 'rm',
   nome: 'nome',
@@ -125,10 +133,13 @@ exports.Prisma.LoginScalarFieldEnum = {
   email: 'email',
   senha: 'senha',
   telefone: 'telefone',
+  datanascimento: 'datanascimento',
   datacriacao: 'datacriacao',
   verificado: 'verificado',
   codigoverificacao: 'codigoverificacao',
-  datacriacaocodigo: 'datacriacaocodigo'
+  datacriacaocodigo: 'datacriacaocodigo',
+  controle: 'controle',
+  tipousuario: 'tipousuario'
 };
 
 exports.Prisma.SortOrder = {
@@ -145,10 +156,20 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.periodo_enum = exports.$Enums.periodo_enum = {
+  Manh_: 'Manh_',
+  Tarde: 'Tarde',
+  Noite: 'Noite'
+};
 
+exports.tipo_usuario = exports.$Enums.tipo_usuario = {
+  Aluno: 'Aluno',
+  Professor: 'Professor'
+};
 
 exports.Prisma.ModelName = {
-  login: 'login'
+  cursos: 'cursos',
+  usuario: 'usuario'
 };
 
 /**
