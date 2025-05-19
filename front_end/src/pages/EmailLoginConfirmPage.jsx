@@ -3,66 +3,48 @@ import logo from "../assets/logo.png";
 import line from "../assets/Line 3.png";
 import si from "../assets/ConfirmEmailImg.png";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useState } from "react";
+import CodeInput from "../components/codeInput";
 
 export default function EmailConfirmPage() {
   const navigate = useNavigate();
 
-  const inputRefs = useRef([]);
-  const [codigoArray, setCodigoArray] = useState(["", "", "", "", "", ""]);
+  const [codigoArray, setCodigoArray] = useState(Array(6).fill(""));
 
   const location = useLocation();
-  const { token } = location.state || {};
+  const { accessToken } = location.state || {};
 
-  const handleInputChange = (e, index) => {
-    const newCodigo = [...codigoArray];
-    newCodigo[index] = e.target.value;
-    setCodigoArray(newCodigo);
-
-    if (
-      e.target.value.length === e.target.maxLength &&
-      inputRefs.current[index + 1]
-    ) {
-      inputRefs.current[index + 1].focus();
-    }
-  };
-
-  const handleKeyDown = (e, index) => {
-    if (
-      e.key === "Backspace" &&
-      e.target.value === "" &&
-      inputRefs.current[index - 1]
-    ) {
-      inputRefs.current[index - 1].focus();
-    }
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const codigoVerificacao = codigoArray.join("");
-    console.log(token);
-    const cadastroResponse = await fetch(
-      "http://localhost:3000/usuario/verificarLogin",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ codigoVerificacao }),
-      }
-    );
-
-    const CadastroResult = await cadastroResponse.json();
-
-    if (!cadastroResponse.ok) {
-      throw new Error(
-        `Erro ${CadastroResult.status}: ${JSON.stringify(CadastroResult)}`
+  const handleSubmit = async (e) => {
+    const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+    e.preventDefault();
+    
+    try {
+      const codigoverificacao = codigoArray.join("");
+      console.log(accessToken);
+      const loginResponse = await fetch(
+        `${BASE_URL}/usuario/verificar`,
+        {
+          method: "POST",
+          credentials: 'include',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ codigoverificacao }),
+        }
       );
-    }
 
-    console.log("Login feito com sucesso:", CadastroResult);
-    navigate("/");
+      if (!loginResponse.ok) {
+        const errorData = await loginResponse.json();
+        throw new Error(`Erro ${loginResponse.status}: ${errorData.erro || "Falha na verificação"}`);
+      }
+
+      const loginResult = await loginResponse.json();
+      console.log("login efetivado com sucesso", loginResult);
+      navigate("/");
+    } catch (error) {
+      console.error("Erro durante a verificação:", error.message);
+    }
   };
 
   return (
@@ -87,19 +69,11 @@ export default function EmailConfirmPage() {
             <p className={style.subtitle}>
               Uma camada a mais de proteção para sua conta!
             </p>
-            <div className={style.code_input}>
-              {Array.from({ length: 6 }, (_, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  maxLength="1"
-                  ref={(el) => (inputRefs.current[index] = el)}
-                  onChange={(e) => handleInputChange(e, index)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                  value={codigoArray[index]}
-                />
-              ))}
-            </div>
+            <CodeInput
+              value={codigoArray}
+              onChange={setCodigoArray}
+              className={style.code_input}
+            />
             <input
               type="submit"
               onClick={handleSubmit}

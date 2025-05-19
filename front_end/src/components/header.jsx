@@ -2,9 +2,31 @@ import logo from "../assets/logo.png";
 import line from "../assets/Line 3.png";
 import ListItem from "./listItem.jsx";
 import "./css/header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 
 export default function Header() {
+  const navigate = useNavigate();
+
+  const handleClick = async (e) => {
+    e.preventDefault();
+    
+    try {
+      const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+      const response = await fetch(`${BASE_URL}/usuario/verificarSessao`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      const result = await response.json();
+      console.log(result);
+      if (result.erro) {
+      navigate('/login');
+      }
+    } catch (error) {
+      console.error("Erro ao verificar autenticação:", error);
+    }
+  };
+
   return (
     <header>
       <div id="atalhos">
@@ -14,14 +36,14 @@ export default function Header() {
         <img src={line} />
         <nav>
           <ul>
-            <ListItem href={"/"} texto={"Home"} />
+            <ListItem href={"#"} texto={"Home"} />
             <ListItem href={"#"} texto={"Equipes"} />
-            <ListItem href={"/bracket"} texto={"Chaves"} />
+            <ListItem href={"#"} texto={"Chaves"} />
             <ListItem href={"#"} texto={"Modalidades"} />
           </ul>
         </nav>
       </div>
-      <Link to="/login">
+      <Link to="/login" onClick={handleClick} >
         <svg
           className="user-icon"
           xmlns="http://www.w3.org/2000/svg"

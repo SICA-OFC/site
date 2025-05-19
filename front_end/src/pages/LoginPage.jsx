@@ -2,18 +2,79 @@ import styles from "./LoginPage.module.scss";
 import sideImage from "../assets/sideImage.png";
 import logo from "../assets/logo.png";
 import line from "../assets/Line 3.png";
-import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function LoginPage() {
+  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  const {executeRecaptcha} = useGoogleReCaptcha();
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const navigate = useNavigate();
+
+  const evtSourceRef = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const isLoginPage = location.pathname === "/login";
+    if (!isLoginPage || !email) return;
+
+    const setupSSE = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/usuario/ver`, {
+          method: "GET",
+          headers: {
+            email,
+          },
+        });
+        if (!response.ok) throw new Error("Erro ao buscar usuário");
+        const data = await response.json();
+        const userId = data.id;
+
+        const evtSource = new EventSource(`${BASE_URL}/events/${userId}`);
+        evtSourceRef.current = evtSource;
+
+        evtSource.addEventListener("account_unlock", (e) => {
+          const data = JSON.parse(e.data);
+          console.log("Usuário desbloqueado:", data);
+          evtSource.close();
+        });
+
+        evtSource.addEventListener("account_lock", () => {
+          console.log("Usuário bloqueado. Contate o suporte.");
+        });
+
+        evtSource.addEventListener("account_close_connection", () => {
+          console.log("Conexão encerrada por evento.");
+          evtSource.close();
+        });
+
+        evtSource.onopen = () => {
+          console.log("SSE conectada na página de login.");
+        };
+
+        evtSource.onerror = (err) => {
+          console.error("Erro SSE:", err);
+        };
+      } catch (err) {
+        console.error("Erro ao configurar SSE:", err);
+      }
+    };
+
+    setupSSE();
+
+    return () => {
+      if (evtSourceRef.current) {
+        evtSourceRef.current.close();
+        console.log("SSE fechada ao sair da página de login.");
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location, email]);
 
   function handleEmailChange(e) {
     setEmail(e.target.value);
@@ -23,58 +84,57 @@ export default function LoginPage() {
     setSenha(e.target.value);
   }
 
-  const handleSubmit = (event) => {
-  event.preventDefault();
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-  if (!executeRecaptcha) {
-    console.log("reCAPTCHA ainda não disponivel");
-    return;
-  }
+    if (!executeRecaptcha) {
+      console.log("reCAPTCHA ainda não disponivel");
+      return;
+    }
 
-  executeRecaptcha("login_form")
-    .then((tokenCaptcha) => {
+    executeRecaptcha("login_form").then(async (tokenCaptcha) => {
       console.log("reCAPTCHA token:", tokenCaptcha);
 
-      return fetch(`/api/verifyToken?token=${tokenCaptcha}`)
-        .then((verifyResponse) => verifyResponse.json())
-        .then((verifyResult) => {
-          if (!verifyResult.success || verifyResult.score < 0.5) {
-            alert("Verificação do reCAPTCHA falhou. Ação bloqueada.");
-            throw new Error("reCAPTCHA inválido.");
+      const verifyResponse = await fetch(
+        `http://localhost:3000/captcha?token=${tokenCaptcha}`
+      );
+      const verifyResult = await verifyResponse.json();
+      if (!verifyResult.success || verifyResult.score < 0.5) {
+        alert("Verificação do reCAPTCHA falhou. Ação bloqueada.");
+        throw new Error("reCAPTCHA inválido.");
+      }
+
+      const userInfo = {
+        email,
+        senha,
+      };
+
+      return await fetch(`${BASE_URL}/usuario/token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userInfo),
+      })
+        .then(async (response) => {
+          const result = await response.json();
+
+          if (!response.ok) {
+            throw new Error(
+              `Erro ${response.status}: ${JSON.stringify(result)}`
+            );
           }
 
-          const userInfo = {
-            email,
-            senha,
-            tokenCaptcha,
-          };
+          const accessToken = result.accessToken;
+          console.log("Token recebido:", accessToken);
 
-          return fetch("http://localhost:3000/usuario/token", {
+          fetch(`${BASE_URL}/usuario/login`, {
             method: "POST",
             headers: {
+              Authorization: `Bearer ${accessToken}`,
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(userInfo),
-          });
-        });
-    })
-    .then((response) => {
-      return response.json().then((result) => {
-        if (!response.ok) {
-          throw new Error(`Erro ${response.status}: ${JSON.stringify(result)}`);
-        }
+          }).then(async (loginResponse) => {
+            const loginResult = await loginResponse.json();
 
-        const token = result.token;
-        console.log("Token recebido:", token);
-
-        return fetch("http://localhost:3000/usuario/login", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }).then((loginResponse) => {
-          return loginResponse.json().then((loginResult) => {
             if (!loginResponse.ok) {
               throw new Error(
                 `Erro ${loginResponse.status}: ${JSON.stringify(loginResult)}`
@@ -82,41 +142,29 @@ export default function LoginPage() {
             }
 
             console.log("Login efetuado com sucesso:", loginResult);
-
-            fetch("http://localhost:3000/usuario/enviarCodigo", {
+            fetch(`${BASE_URL}/usuario/enviarCodigo`, {
               method: "POST",
               headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${accessToken}`,
               },
-            }).then((response) =>
-              response.json().then((res) => console.log("Código enviado:", res))
-            );
+            }).then((response) => console.log(response.json()));
 
-          console.log("Login efetuado com sucesso:", loginResult);
-          fetch("http://localhost:3000/usuario/enviarCodigo", {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }).then((response) => console.log(response.json()));
-          if (loginResult.usuario.verificado == true) {
-            navigate("/confirmacao-login", {
-              state: { token: token },
-            });
-          } else {
-            navigate("/confirmacao-cadastro", {
-              state: { token: token },
-            });
-          }
+            if (loginResult.verificado === true) {
+              navigate("/confirmacao-login", {
+                state: { accessToken },
+              });
+            } else {
+              navigate("/confirmacao-cadastro", {
+                state: { accessToken },
+              });
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Erro no processo de token/login:", error.message);
         });
-      });
-    })
-    .catch((error) => {
-      console.error("Erro no processo de login:", error.message);
     });
-};
-
-
+  };
   return (
     <>
       <div className={styles.container_login}>
