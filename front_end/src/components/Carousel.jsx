@@ -1,32 +1,40 @@
 import React from "react";
-import CarouselItem from "./CarouselItem";
+import CarouselItem from "./CarouselItem.jsx";
+import futebolImage from "../assets/Futebas.png";
+import ComingSoon from "../assets/ComingSoon.png";
+import "./css/Carousel.css";
 
 const items = [
   {
-    image: "https://example.com/basquete.jpg",
-    alt: "Basquete",
-    title: "Basquete",
-  },
-  {
-    image: "https://example.com/futebol.jpg",
+    image: futebolImage,
     alt: "Futebol",
     title: "Futebol",
   },
   {
-    image: "https://example.com/xadrez.jpg",
-    alt: "Xadrez",
-    title: "Xadrez",
+    image: ComingSoon,
+    alt: "Em breve",
+    title: "-",
   },
   {
-    image: "https://example.com/volei.jpg",
-    alt: "Voleibol",
-    title: "Voleibol",
+    image: ComingSoon,
+    alt: "Em breve",
+    title: "-",
+  },
+  {
+    image: ComingSoon,
+    alt: "Em breve",
+    title: "-",
+  },
+  {
+    image: ComingSoon,
+    alt: "Em breve",
+    title: "-",
   },
 ];
 
 export default function Carousel() {
   return (
-    <div className="flex justify-center items-center space-x-4 overflow-x-auto p-4">
+    <div className="CarouselDiv">
       {items.map((item, index) => (
         <CarouselItem key={index} {...item} />
       ))}

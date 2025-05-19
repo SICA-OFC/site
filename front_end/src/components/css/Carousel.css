@@ -1,0 +1,10 @@
+.CarouselDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150%;
+  height: 100%;
+
+  overflow-x: scroll;
+  scrollbar-width: none;
+}

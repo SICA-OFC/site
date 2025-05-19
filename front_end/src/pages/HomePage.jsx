@@ -1,10 +1,10 @@
 import styles from "./HomePage.module.scss";
-import Header from "../components/header.jsx";
+import Header from "../components/Header.jsx";
 import bannerImage from "../assets/banner.png";
 import image1 from "../assets/image1.png";
 import image2 from "../assets/image2.png";
 import image3 from "../assets/image3.png";
-import Footer from "../components/footer.jsx";
+import Footer from "../components/Footer.jsx";
 import LogoutButton from "../components/buttonLogout.jsx";
 // import ErrorBoundary from "../components/ErrorBoundary.jsx";
 

@@ -38,7 +38,7 @@ const router = createBrowserRouter([
     element: <EmailSignConfirmPage />,
   },
   {
-    path: "/bracket",
+    path: "/chaves",
     element: <BracketPage />,
   },
   {

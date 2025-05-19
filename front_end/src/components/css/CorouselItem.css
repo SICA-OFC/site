@@ -1,0 +1,28 @@
+.CarrouselItemDiv {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 445px;
+  height: auto;
+
+  border-bottom-right-radius: 13px;
+  border-bottom-left-radius: 13px;
+
+  background-color: #de6c3c;
+  color: #f5f5f5;
+
+  overflow: hidden;
+
+  margin: 0 50px;
+}
+
+.CarrouselItemDiv img {
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+}
+
+.CarrouselItemDiv h5 {
+  color: #f5f5f5;
+}

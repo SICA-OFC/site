@@ -8,6 +8,7 @@ export default function Footer() {
       <div className="footer-logo">
         <img src={logo} />
       </div>
+      <h2>O esporte que move o mundo</h2>
       <div className="social-icons">
         <ListIcon
           href={"#"}

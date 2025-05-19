@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import styles from "./BracketPage.module.scss";
-import Header from "../components/header.jsx";
-import Footer from "../components/footer";
+import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
 import BracketUp from "../components/blockUp.jsx";
 import BracketDown from "../components/blockDown.jsx";
 import BracketEnd from "../components/blockEnd.jsx";

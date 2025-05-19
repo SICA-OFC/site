@@ -1,0 +1,35 @@
+.container_grid {
+  width: 80%;
+  max-width: 1770px;
+
+  margin: 0 auto;
+}
+
+.modalitiesBanner {
+  width: 100%;
+  height: auto;
+}
+
+.title {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.carousel_container {
+  overflow-x: auto;
+
+  margin: 50px 0;
+
+  scrollbar-width: thin;
+}
+
+.text {
+  position: absolute;
+  color: #f5f5f5;
+  top: 20%;
+  left: 55%;
+}
+
+.text h2 {
+  color: #f5f5f5;
+}
