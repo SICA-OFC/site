@@ -8,6 +8,7 @@ import EmailLoginConfirmPage from "./pages/EmailLoginConfirmPage.jsx";
 import EmailPerfilConfirmPage from "./pages/EmailPerfilConfirmPage.jsx";
 import EmailSignConfirmPage from "./pages/EmailSignConfirmPage.jsx";
 import BracketPage from "./pages/BracketPage.jsx";
+import ModalitiesPage from "./pages/ModalitiesPage.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
@@ -40,12 +41,16 @@ const router = createBrowserRouter([
     path: "/bracket",
     element: <BracketPage />,
   },
+  {
+    path: "/modalidades",
+    element: <ModalitiesPage />,
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <GoogleReCaptchaProvider reCaptchaKey="6Lch7TIrAAAAACwovKu2Vk4Xbqe2TmXdsrrIyn1h">
-    <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </GoogleReCaptchaProvider>
   </StrictMode>
 );
