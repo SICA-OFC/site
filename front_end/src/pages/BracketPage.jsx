@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import styles from "./BracketPage.module.scss";
-import Header from "../components/Header.jsx";
+import Header from "../components/header.jsx";
 import Footer from "../components/Footer.jsx";
 import BracketUp from "../components/blockUp.jsx";
 import BracketDown from "../components/blockDown.jsx";
 import BracketEnd from "../components/blockEnd.jsx";
 import logo from "../assets/logo.png";
-import randoms from "../assets/user-solid.svg";
+import randoms from "../assets/Profile.svg";
 
 export default function BracketPage() {
   //Na teoria, esse comando serve para pegar o tamanho do container e fazer com que ele se ajuste a quantidade de times

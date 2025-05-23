@@ -1,6 +1,6 @@
 import style from "./EmailConfirmPage.module.scss";
 import logo from "../assets/logo.png";
-import line from "../assets/Line 3.png";
+import line from "../assets/Line.png";
 import si from "../assets/ConfirmEmailImg.png";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
@@ -17,26 +17,27 @@ export default function EmailConfirmPage() {
   const handleSubmit = async (e) => {
     const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
     e.preventDefault();
-    
+
     try {
       const codigoverificacao = codigoArray.join("");
       console.log(accessToken);
-      const loginResponse = await fetch(
-        `${BASE_URL}/usuario/verificar`,
-        {
-          method: "POST",
-          credentials: 'include',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ codigoverificacao }),
-        }
-      );
+      const loginResponse = await fetch(`${BASE_URL}/usuario/verificar`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ codigoverificacao }),
+      });
 
       if (!loginResponse.ok) {
         const errorData = await loginResponse.json();
-        throw new Error(`Erro ${loginResponse.status}: ${errorData.erro || "Falha na verificação"}`);
+        throw new Error(
+          `Erro ${loginResponse.status}: ${
+            errorData.erro || "Falha na verificação"
+          }`
+        );
       }
 
       const loginResult = await loginResponse.json();

@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import CadastroPage from "./pages/CadastroPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import EditProfilePage from "./pages/EditProfilePage.jsx";
 import EmailLoginConfirmPage from "./pages/EmailLoginConfirmPage.jsx";
 import EmailPerfilConfirmPage from "./pages/EmailPerfilConfirmPage.jsx";
 import EmailSignConfirmPage from "./pages/EmailSignConfirmPage.jsx";
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: "/modalidades",
     element: <ModalitiesPage />,
+  },
+  {
+    path: "/editar-perfil",
+    element: <EditProfilePage />,
   },
 ]);
 

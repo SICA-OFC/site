@@ -1,9 +1,9 @@
 import styles from "./HomePage.module.scss";
-import Header from "../components/Header.jsx";
-import bannerImage from "../assets/banner.png";
-import image1 from "../assets/image1.png";
-import image2 from "../assets/image2.png";
-import image3 from "../assets/image3.png";
+import Header from "../components/header.jsx";
+import bannerImage from "../assets/bannerHome.png";
+import image1 from "../assets/Homeimage1.png";
+import image2 from "../assets/Homeimage2.png";
+import image3 from "../assets/Homeimage3.png";
 import Footer from "../components/Footer.jsx";
 import LogoutButton from "../components/buttonLogout.jsx";
 // import ErrorBoundary from "../components/ErrorBoundary.jsx";
@@ -12,10 +12,11 @@ export default function HomePage() {
   return (
     <div className={styles.container_home}>
       <Header />
-      <LogoutButton />
       <section className={styles.banner}>
-        <div className={styles.container_grid}>
-          <img src={bannerImage} alt="Pessoas jogando tênis" />
+        <img src={bannerImage} alt="Pessoas jogando tênis" />
+        <div className={styles.banner_text}>
+          <h1 className={styles.sicaTiltle}>SICA:</h1>
+          <h2>O mundo é dos </h2> <h1 className={styles.h1}>OUSADOS!</h1>
         </div>
       </section>
 

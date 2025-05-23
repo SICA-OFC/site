@@ -1,6 +1,6 @@
 import styles from "./CadastroPage.module.scss";
 import logo from "../assets/logo.png";
-import line from "../assets/Line 3.png";
+import line from "../assets/Line.png";
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";

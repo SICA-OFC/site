@@ -1,7 +1,7 @@
 import styles from "./LoginPage.module.scss";
-import sideImage from "../assets/sideImage.png";
+import sideImage from "../assets/sideImage1.png";
 import logo from "../assets/logo.png";
-import line from "../assets/Line 3.png";
+import line from "../assets/Line.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";

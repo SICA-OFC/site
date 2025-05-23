@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import style from "./EmailConfirmPage.module.scss";
 import logo from "../assets/logo.png";
-import line from "../assets/Line 3.png";
+import line from "../assets/Line.png";
 import si from "../assets/ConfirmEmailImg.png";
 import CodeInput from "../components/codeInput";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function EmailConfirmPage() {
-
   const navigate = useNavigate();
 
   const [codigoArray, setCodigoArray] = useState(Array(6).fill(""));
@@ -24,7 +23,7 @@ export default function EmailConfirmPage() {
       console.log(accessToken);
       const cadastroResponse = await fetch(`${BASE_URL}/usuario/verificar`, {
         method: "POST",
-        credentials: 'include',
+        credentials: "include",
         headers: {
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",

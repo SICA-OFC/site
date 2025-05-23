@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 
 import style from "./EmailConfirmPage.module.scss";
 import logo from "../assets/logo.png";
-import line from "../assets/Line 3.png";
+import line from "../assets/Line.png";
 import si from "../assets/ConfirmEmailImg.png";
 
 export default function EmailConfirmPage() {
