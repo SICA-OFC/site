@@ -35,7 +35,7 @@ export default function LoginPage() {
         const data = await response.json();
         const userId = data.id;
 
-        const evtSource = new EventSource(`${BASE_URL}/events/${userId}`);
+        const evtSource = new EventSource(`${BASE_URL}/usuario/events/${userId}`);
         evtSourceRef.current = evtSource;
 
         evtSource.addEventListener("account_unlock", (e) => {
@@ -93,10 +93,8 @@ export default function LoginPage() {
     }
 
     executeRecaptcha("login_form").then(async (tokenCaptcha) => {
-      console.log("reCAPTCHA token:", tokenCaptcha);
-
       const verifyResponse = await fetch(
-        `http://localhost:3000/captcha?token=${tokenCaptcha}`
+        `${BASE_URL}/usuario/captcha?token=${tokenCaptcha}`
       );
       const verifyResult = await verifyResponse.json();
       if (!verifyResult.success || verifyResult.score < 0.5) {
