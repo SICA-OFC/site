@@ -49,7 +49,7 @@ CREATE TABLE usuario (
     id SERIAL PRIMARY KEY,
     rm VARCHAR(5) NOT NULL,
     nome VARCHAR(30) NOT NULL,
-    curso INTEGER REFERENCES cursos(id) NULL,
+    curso BIGINT UNSIGNED REFERENCES cursos(id) NULL,
     email VARCHAR(30) NOT NULL UNIQUE,
     senha TEXT NOT NULL,
     telefone VARCHAR(20) NOT NULL,
@@ -146,3 +146,29 @@ create table Jogo
   constraint FK_JogoAlu1 foreign key (Aluno1) references Aluno(id),
   constraint FK_JogoAlu2 foreign key (Aluno2) references Aluno(id)
   );
+
+create table Campeonato
+(
+    id serial primary key,
+    nome varchar(30) not null,
+    Esporte BIGINT UNSIGNED NOT NULL,
+    CONSTRAINT FK_CampEspor foreign key (Esporte) references Esporte(id)
+);
+
+create table CampJogo
+    (
+    id serial primary key,
+    Campeonato bigint unsigned not null,
+    Jogo bigint unsigned not null,
+    constraint FK_CampJogo foreign key (Campeonato) references Campeonato(id),
+    constraint FK_CampeJogo foreign key (Jogo) references Jogo(id)
+    );
+
+create table CampTime
+(
+    id serial primary key,
+    Campeonato bigint unsigned not null,
+    Time bigint unsigned not null,
+    constraint FK_CampTime foreign key (Campeonato) references Campeonato(id),
+    constraint FK_CampeTime foreign key (Time) references Time(id)
+    );
