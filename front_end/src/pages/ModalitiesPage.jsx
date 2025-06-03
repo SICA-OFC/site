@@ -1,7 +1,7 @@
 import React from "react";
 import Carousel from "../components/Carousel.jsx";
-import Header from "../components/header";
-import Footer from "../components/Footer";
+import Header from "../components/header.jsx";
+import Footer from "../components/Footer.jsx";
 import Banner from "../assets/bannerModalities.png";
 import styles from "./ModalitiesPage.module.scss";
 

@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
+
 import CadastroPage from "./pages/CadastroPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import EditProfilePage from "./pages/EditProfilePage.jsx";
@@ -10,10 +11,15 @@ import EmailPerfilConfirmPage from "./pages/EmailPerfilConfirmPage.jsx";
 import EmailSignConfirmPage from "./pages/EmailSignConfirmPage.jsx";
 import BracketPage from "./pages/BracketPage.jsx";
 import ModalitiesPage from "./pages/ModalitiesPage.jsx";
+
+import AdmHomePage from "./pages/admPages/HomePage.jsx";
+import ManagmentUsersPage from "./pages/admPages/ManagmentUsersPage.jsx";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 const router = createBrowserRouter([
+  // Páginas principais
   {
     path: "/",
     element: <App />,
@@ -49,6 +55,16 @@ const router = createBrowserRouter([
   {
     path: "/editar-perfil",
     element: <EditProfilePage />,
+  },
+
+  // Páginas do administrador
+  {
+    path: "/adm",
+    element: <AdmHomePage />,
+  },
+  {
+    path: "/adm/gerenciar-usuarios",
+    element: <ManagmentUsersPage />,
   },
 ]);
 

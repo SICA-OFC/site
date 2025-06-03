@@ -1,0 +1,133 @@
+.pageWrapper {
+  position: relative;
+  min-height: 100vh;
+  font-family: "Montserrat", sans-serif;
+
+  background-image: url("../../assets/AdmBG.png");
+}
+
+.mainContent {
+  padding: 3rem;
+  background-color: white;
+  margin: 200px 0 0 340px;
+  width: 90%;
+  max-width: 1200px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.logoArea {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 50px;
+  height: 50px;
+}
+
+.verticalLine {
+  border-left: 1px solid #0c2442;
+  width: 10px;
+  height: 50px;
+}
+
+.text {
+  margin-top: 20px;
+}
+
+.subText {
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+.contentArea {
+  display: flex;
+  gap: 2rem;
+}
+
+.studentList {
+  flex: 1;
+}
+
+.viewTitle {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.fontHint {
+  font-size: 0.8rem;
+  font-weight: 300;
+}
+
+.divider {
+  height: 1px;
+  background-color: #000;
+  margin-bottom: 1rem;
+}
+
+.usersEntry {
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+}
+
+.usersEntry:hover {
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.highlight {
+  color: #f26522;
+}
+
+.studentInfo {
+  flex: 1;
+}
+
+.studentName {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.infoField {
+  margin-bottom: 1rem;
+}
+
+.infoField label {
+  display: block;
+  font-size: 0.8rem;
+  color: #555;
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+}
+
+.infoField input {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.profilePhoto {
+  align-self: center;
+  width: 200px;
+  height: 200px;
+  background-color: #f7931e;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  text-align: center;
+  font-weight: 500;
+  color: #000;
+}

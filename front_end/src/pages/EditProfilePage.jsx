@@ -1,5 +1,7 @@
 import Logo from "../assets/logo.png";
 import styles from "./EditProfilePage.module.scss";
+import PhotoUploader from "../components/profilePhotoUploader.jsx";
+import ProfilePhotoUploader from "../components/profilePhotoUploader.jsx";
 
 export default function EditProfilePage() {
   return (
@@ -124,13 +126,7 @@ export default function EditProfilePage() {
                     <label htmlFor="imagemPerfil" className={styles.label}>
                       Imagem de Perfil
                     </label>
-                    <input
-                      className={styles.input_image}
-                      type="file"
-                      id="imagemPerfil"
-                      name="imagemPerfil"
-                      accept="image/*"
-                    />
+                    <ProfilePhotoUploader />
                   </div>
                 </div>
               </div>

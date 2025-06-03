@@ -138,6 +138,11 @@ nav ul li a:hover::after {
   backdrop-filter: blur(10px);
 
   color: #092843;
+
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .menu.menu_fechado {

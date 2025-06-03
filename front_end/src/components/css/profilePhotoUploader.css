@@ -1,0 +1,68 @@
+#profilePhoto {
+  z-index: 2;
+  position: absolute;
+  width: fit-content;
+  height: fit-content;
+}
+.profile-photo-uploader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 300px;
+
+  position: relative;
+
+  border: 1px solid #0c2442;
+  border-radius: 100%;
+  background-color: #092843;
+
+  cursor: pointer;
+
+  overflow: hidden;
+}
+
+.profile-icon {
+  width: 90%;
+  height: 90%;
+
+  position: absolute;
+  top: 60px;
+
+  z-index: 1;
+
+  background-image: url("/assets/profile-icon.svg");
+  background-size: cover;
+}
+
+.background-svg {
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  z-index: 3;
+
+  top: 100px;
+}
+
+.camera-icon {
+  width: 50px;
+  height: 50px;
+
+  position: absolute;
+  bottom: 25px;
+
+  z-index: 4;
+
+  color: #fff;
+}
+
+#fileInput {
+  display: none;
+}
+
+/* .profile-photo-uploader input[type="file"] {
+  display: none;
+} */

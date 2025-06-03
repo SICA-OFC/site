@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { useState } from "react";
 import logo from "../assets/logo.png";
 import line from "../assets/Line.png";
 import ListItem from "./listItem.jsx";
