@@ -84,8 +84,8 @@ module.exports = {
             datacriacaocodigo: new Date(),
           },
         })
-        const urlUnlock = `${BASE_URL}/account/approve/${usuario.id}/${action}?token=${novoCodigo}`;
-        const urlLock = `${BASE_URL}/account/approve/${usuario.id}/lock?token=0`;
+        const urlUnlock = `${BASE_URL}/usuario/approve/${usuario.id}/${action}?token=${novoCodigo}`;
+        const urlLock = `${BASE_URL}/usuario/approve/${usuario.id}/lock?token=0`;
         const titulo = "alerta de segurança";
         const texto = ``;
 

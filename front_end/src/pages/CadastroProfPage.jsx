@@ -5,14 +5,11 @@ import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
-import SelectCursos from "../components/selectCursos";
 
-function CadastroPage() {
+function CadastroProfPage() {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const [rm, setRm] = useState("");
   const [nome, setNome] = useState("");
-  const [periodo, setPeriodo] = useState("Manhã");
-  const [curso, setCurso] = useState("1DS");
   const [email, setEmail] = useState("");
   const [datanascimento, setData] = useState("");
   const [senha, setSenha] = useState("");
@@ -67,12 +64,11 @@ function CadastroPage() {
       const userInfo = {
         rm,
         nome,
-        curso: parseInt(curso),
         email,
         datanascimento: new Date(datanascimento),
         senha,
         telefone,
-        tipousuario: "Aluno",
+        tipousuario: "Professor",
       };
 
       const response = await fetch(`${BASE_URL}/usuario/cadastro`, {
@@ -106,7 +102,7 @@ function CadastroPage() {
               <div className={styles.line}>
                 <img src={line} alt="Linha decorativa" />
               </div>
-              <h2>Cadastro</h2>
+              <h2>Cadastro - 2 </h2>
             </div>
             <form
               className={styles.form}
@@ -149,17 +145,6 @@ function CadastroPage() {
                       required
                     />
                   </div>
-                  <div className={styles.div}>
-                    <label className={styles.label} htmlFor="classe">
-                      Classe
-                      <SelectCursos
-                        periodo={periodo}
-                        curso={curso}
-                        onPeriodoChange={setPeriodo}
-                        onCursoChange={setCurso}
-                      />
-                    </label>
-                  </div>
 
                   <div className={styles.div}>
                     <label className={styles.label} htmlFor="email">
@@ -181,28 +166,28 @@ function CadastroPage() {
 
                 {/* <div className={styles.div}>
                 <label className={styles.label} htmlFor="sexo">
-                  Sexo
+                Sexo
                 </label>
                 <div>
-                  <input
-                    className={styles.radio}
-                    type="radio"
-                    name="sexo"
-                    value="M"
-                    required
-                  />{" "}
-                  M
-                  <input
-                    className={styles.radio}
-                    type="radio"
-                    name="sexo"
-                    value="F"
-                    required
-                    style={{ marginLeft: "25px" }}
-                  />{" "}
-                  F
+                <input
+                className={styles.radio}
+                type="radio"
+                name="sexo"
+                value="M"
+                required
+                />{" "}
+                M
+                <input
+                className={styles.radio}
+                type="radio"
+                name="sexo"
+                value="F"
+                required
+                style={{ marginLeft: "25px" }}
+                />{" "}
+                F
                 </div>
-              </div> */}
+                </div> */}
                 <div className={styles.form_container}>
                   <div className={styles.div}>
                     <label className={styles.label} htmlFor="nascimento">
@@ -278,4 +263,4 @@ function CadastroPage() {
   );
 }
 
-export default CadastroPage;
+export default CadastroProfPage;

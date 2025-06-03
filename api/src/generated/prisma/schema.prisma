@@ -30,7 +30,7 @@ model usuario {
   verificado        Boolean?      @default(false)
   codigoverificacao Int?
   datacriacaocodigo DateTime?     @db.Timestamp(6)
-  controle          Int?
+  controle          Int?          @default(0)
   tipousuario       tipo_usuario?
   cursos            cursos?       @relation(fields: [curso], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

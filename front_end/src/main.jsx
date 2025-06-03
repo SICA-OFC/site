@@ -4,6 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 
 import CadastroPage from "./pages/CadastroPage.jsx";
+import CadastroProfPage from "./pages/CadastroProfPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import EditProfilePage from "./pages/EditProfilePage.jsx";
 import EmailLoginConfirmPage from "./pages/EmailLoginConfirmPage.jsx";
@@ -18,6 +19,7 @@ import ManagmentUsersPage from "./pages/admPages/ManagmentUsersPage.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
+const RECAPTCHA_KEY = import.meta.env.VITE_APP_RECAPTCHA_KEY;
 const router = createBrowserRouter([
   // Páginas principais
   {
@@ -26,11 +28,25 @@ const router = createBrowserRouter([
   },
   {
     path: "/cadastro",
-    element: <CadastroPage />,
-  },
+    element: (
+      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+        <CadastroPage />
+      </GoogleReCaptchaProvider>
+    ),  },
+  {
+    path: "/cadastro-professor",
+    element: (
+      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+        <CadastroProfPage />
+      </GoogleReCaptchaProvider>
+    ),  },
   {
     path: "/login",
-    element: <LoginPage />,
+    element: (
+      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+        <LoginPage />
+      </GoogleReCaptchaProvider>
+    ),
   },
   {
     path: "/confirmacao-login",
@@ -70,8 +86,6 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <GoogleReCaptchaProvider reCaptchaKey="6Lch7TIrAAAAACwovKu2Vk4Xbqe2TmXdsrrIyn1h">
       <RouterProvider router={router} />
-    </GoogleReCaptchaProvider>
   </StrictMode>
 );

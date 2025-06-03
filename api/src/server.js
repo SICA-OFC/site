@@ -3,7 +3,8 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const limiter = require('./middlewares/rateLimit.js')
 const errorHandler = require("./middlewares/errorHandler.js");
-const routes = require("./routes.js");
+const userRoutes = require("./routes/userRoutes.js");
+const bracketsRoutes = require("./routes/bracketsRoutes.js");
 
 const app = express();
 
@@ -15,7 +16,8 @@ app.use(cors({
 }));
 app.use(limiter);
 
-app.use("/", routes);
+app.use("/usuario", userRoutes);
+app.use("/chaveamento", bracketsRoutes);
 
 app.use(errorHandler);
 
