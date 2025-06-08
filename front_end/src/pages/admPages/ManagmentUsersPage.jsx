@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styles from "./ManagmentUsersPage.module.scss";
 
 import Logo from "../../assets/logo.png";
@@ -118,6 +119,12 @@ export default function ManagmentUsersPage() {
               />
             </div>
           </div>
+        </div>
+        <div className={styles.buttonsArea}>
+          <button className={styles.btnAlterar}>Alterar</button>
+          <Link to={"/adm"}>
+            <button className={styles.btnVoltar}>Voltar</button>
+          </Link>
         </div>
       </div>
     </div>

@@ -15,6 +15,7 @@ import ModalitiesPage from "./pages/ModalitiesPage.jsx";
 
 import AdmHomePage from "./pages/admPages/HomePage.jsx";
 import ManagmentUsersPage from "./pages/admPages/ManagmentUsersPage.jsx";
+import ManagmentModalityPage from "./pages/admPages/ManagmentModalitiesPage.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
@@ -32,14 +33,16 @@ const router = createBrowserRouter([
       <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
         <CadastroPage />
       </GoogleReCaptchaProvider>
-    ),  },
+    ),
+  },
   {
     path: "/cadastro-professor",
     element: (
       <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
         <CadastroProfPage />
       </GoogleReCaptchaProvider>
-    ),  },
+    ),
+  },
   {
     path: "/login",
     element: (
@@ -82,10 +85,14 @@ const router = createBrowserRouter([
     path: "/adm/gerenciar-usuarios",
     element: <ManagmentUsersPage />,
   },
+  {
+    path: "/adm/gerenciar-modalidades",
+    element: <ManagmentModalityPage />, // Placeholder, replace with actual component
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-      <RouterProvider router={router} />
+    <RouterProvider router={router} />
   </StrictMode>
 );

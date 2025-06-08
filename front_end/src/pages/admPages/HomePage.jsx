@@ -4,7 +4,7 @@ import styles from "./HomePage.module.scss";
 
 import Logo from "../../assets/logo.png";
 
-export default function PaginaProfessor() {
+export default function ADMHomePage() {
   return (
     <div className={styles.background}>
       <div className={styles.container}>
