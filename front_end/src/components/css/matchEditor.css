@@ -1,0 +1,22 @@
+.container {
+  padding: 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.input {
+  padding: 8px;
+  border-radius: 4px;
+  border: #f18e2c solid 1px;
+
+  margin: 0 10px;
+
+  width: 40%;
+}
+
+.span {
+  margin: "0 10px";
+}
