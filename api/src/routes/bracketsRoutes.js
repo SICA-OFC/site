@@ -1,15 +1,36 @@
 const express = require("express");
 const router = express.Router();
-const UserController = require(`../controllers/UserController`);
 const authToken = require("../middlewares/authToken");
-const catchAsync = require('../middlewares/catchAsync');
-const captcha = require("../services/captcha");
+const catchAsync = require("../middlewares/catchAsync");
 
-// Rotas públicas
-router.get("/captcha", catchAsync(captcha));
-
-// Rotas protegidas (requerem autenticação)
 router.use(authToken);
-router.post("/verificar", catchAsync(UserController.Verificar));
+router.post(
+  "/",
+  catchAsync(async (req, res) => {
+    const auth_header =
+      "Basic " + Buffer.from(`knuckles240:${process.env.CHALLONGE_API_KEY}`).toString("base64");
+
+    const default_headers = {
+      "Content-Type": "application/json",
+      Authorization: auth_header,
+    };
+
+    const { route, method, extra_headers, body } = req.body;
+
+    const url = `https://api.challonge.com/v1/${route}`;
+
+    const response = await fetch(url, {
+      method,
+      headers: {
+        ...default_headers,
+        ...(extra_headers || {})
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+
+    const result = await response.json();
+    res.status(response.status).send(result);
+  })
+);
 
 module.exports = router;

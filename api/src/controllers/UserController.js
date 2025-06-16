@@ -3,18 +3,34 @@ const bcrypt = require("bcryptjs");
 const { PrismaClient, tipo_usuario } = require("../generated/prisma/client");
 const prisma = new PrismaClient();
 
-const { loadTemplate, enviarEmail } = require('../services/enviarEmail.js');
-const { verificarAcessToken, verificarRefreshToken } = require("../services/verificarToken.js");
-const { sendEvent } = require('../services/sseService.js');
-const gerarCodigo = require('../services/gerarCodigo.js');
-const { gerarAccessToken, gerarRefreshToken } = require('../services/gerarToken.js');
+const { loadTemplate, enviarEmail } = require("../services/enviarEmail.js");
+const {
+  verificarAcessToken,
+  verificarRefreshToken,
+} = require("../services/verificarToken.js");
+const { sendEvent } = require("../services/sseService.js");
+const gerarCodigo = require("../services/gerarCodigo.js");
+const {
+  gerarAccessToken,
+  gerarRefreshToken,
+} = require("../services/gerarToken.js");
 const BASE_URL = process.env.BASE_URL;
 
 module.exports = {
   CriarUsuario: async (req, res) => {
-    const { rm, nome, curso, email, datanascimento, senha, telefone, tipousuario } = req.body;
+    const {
+      rm,
+      nome,
+      curso,
+      email,
+      datanascimento,
+      senha,
+      telefone,
+      tipousuario,
+    } = req.body;
 
-    const senhaHash = await bcrypt.hash(senha, 10);
+    const salt = await bcrypt.genSalt(10);
+    const senhaHash = await bcrypt.hash(senha, salt);
     const codigoverificacao = await gerarCodigo();
 
     const novoUsuario = await prisma.usuario.create({
@@ -28,7 +44,7 @@ module.exports = {
         telefone,
         codigoverificacao,
         datacriacaocodigo: new Date(),
-        tipousuario
+        tipousuario,
       },
     });
 
@@ -37,12 +53,10 @@ module.exports = {
     await enviarEmail(email, titulo, texto, null);
     const accessToken = await gerarAccessToken(novoUsuario);
 
-    res
-      .status(200)
-      .json({
-        mensagem: 'Cadastro bem-sucedido',
-        accessToken
-      });
+    res.status(200).json({
+      mensagem: "Cadastro bem-sucedido",
+      accessToken,
+    });
   },
 
   GerarToken: async (req, res) => {
@@ -61,62 +75,60 @@ module.exports = {
       if (!senhaCorreta) {
         await prisma.usuario.update({
           where: { email: email },
-          data: { controle: (usuario.controle + 1) },
+          data: { controle: usuario.controle + 1 },
         });
         return res.status(400).json({ erro: "Senha ou email incorreto" });
       }
-    }
-    else {
+    } else {
       const { controle } = await prisma.usuario.update({
         where: { email: email },
-        data: { controle: (usuario.controle + 1) },
+        data: { controle: usuario.controle + 1 },
         select: {
           controle: true,
-        }
+        },
       });
       if (controle % 5 == 0) {
         const novoCodigo = await gerarCodigo();
-        const action = 'unlock';
+        const action = "unlock";
         await prisma.usuario.update({
           where: { email: email },
           data: {
             codigoverificacao: novoCodigo,
             datacriacaocodigo: new Date(),
           },
-        })
+        });
         const urlUnlock = `${BASE_URL}/usuario/approve/${usuario.id}/${action}?token=${novoCodigo}`;
         const urlLock = `${BASE_URL}/usuario/approve/${usuario.id}/lock?token=0`;
         const titulo = "alerta de segurança";
         const texto = ``;
 
-        const html = loadTemplate('blockedAccount.html', {
+        const html = loadTemplate("blockedAccount.html", {
           nome: usuario.nome,
           urlUnlock,
-          urlLock
+          urlLock,
         });
 
         enviarEmail(email, titulo, texto, html);
-        return res.status(423).json({ erro: "Sua conta foi bloqueada. Um e-mail com instruções foi enviado." });
+        return res.status(423).json({
+          erro: "Sua conta foi bloqueada. Um e-mail com instruções foi enviado.",
+        });
       }
       return res.status(423).json({ erro: "Sua conta foi bloqueada" });
     }
 
     const accessToken = await gerarAccessToken(usuario);
 
-    res
-      .status(200)
-      .json({
-        mensagem: 'Token de acesso gerado com sucesso',
-        accessToken
-      });
+    res.status(200).json({
+      mensagem: "Token de acesso gerado com sucesso",
+      accessToken,
+    });
   },
 
   EnviarCodigo: async (req, res) => {
     let data;
     if (req.body.email) {
-      data = { "email": req.body.email, }
-    }
-    else {
+      data = { email: req.body.email };
+    } else {
       const token = req.headers.authorization?.split(" ")[1];
       if (!token) {
         return res.status(401).json({ erro: "Token não fornecido" });
@@ -147,7 +159,9 @@ module.exports = {
       const texto = `Seu código de verificação é: ${novoCodigo}`;
       await enviarEmail(data.email, titulo, texto);
 
-      res.status(200).json({ mensagem: "Código de verificação enviado com sucesso!" });
+      res
+        .status(200)
+        .json({ mensagem: "Código de verificação enviado com sucesso!" });
     } else {
       res.status(400).json(data);
     }
@@ -167,7 +181,10 @@ module.exports = {
         return res.status(404).json({ erro: "Usuário não encontrado." });
       }
 
-      if (!isNaN(parseInt(codigoverificacao)) && usuario.codigoverificacao == codigoverificacao) {
+      if (
+        !isNaN(parseInt(codigoverificacao)) &&
+        usuario.codigoverificacao == codigoverificacao
+      ) {
         const datacriacaocodigo = new Date(usuario.datacriacaocodigo);
         const umaHora = 60 * 60 * 1000;
         const expirado =
@@ -194,22 +211,22 @@ module.exports = {
         res
           .cookie(process.env.REFRESH_TOKEN, refreshToken, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Lax',
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Lax",
             maxAge: 7 * 24 * 60 * 60 * 1000, // 7 dias
           })
           .status(200)
           .json({
-            mensagem: 'Usuário verificado com sucesso!',
+            mensagem: "Usuário verificado com sucesso!",
             accessToken,
-            refreshToken
+            refreshToken,
           });
       } else {
         return res
           .status(400)
           .json({ erro: "Código de verificação inválido." });
       }
-    };
+    }
   },
 
   VerificarSessao: async (req, res) => {
@@ -229,7 +246,11 @@ module.exports = {
     }
 
     const accessToken = await gerarAccessToken(usuario);
-    res.json({ mensagem: "O usuário está logado.", usuario: decoded, accessToken });
+    res.json({
+      mensagem: "O usuário está logado.",
+      usuario: decoded,
+      accessToken,
+    });
   },
 
   LogarUsuario: async (req, res) => {
@@ -246,14 +267,14 @@ module.exports = {
 
       res.status(200).json({
         mensagem: "Login bem-sucedido",
-        verificado: usuario.verificado
+        verificado: usuario.verificado,
       });
 
       await prisma.usuario.update({
         where: { email: usuario.email },
-        data: { controle: 0 }
-      })
-    };
+        data: { controle: 0 },
+      });
+    }
   },
 
   DeletarUsuario: async (req, res) => {
@@ -272,7 +293,7 @@ module.exports = {
         mensagem: "Usuário Deletado!",
         usuario: data.userId,
       });
-    };
+    }
   },
 
   EditarUsuario: async (req, res) => {
@@ -282,8 +303,9 @@ module.exports = {
       const { nome, curso, email, senha, telefone } = req.body;
 
       let senhaHash;
-      if (senha && senha.trim() !== '') {
-        senhaHash = await bcrypt.hash(senha, 10);
+      if (senha && senha.trim() !== "") {
+        const salt = await bcrypt.genSalt(10);
+        senhaHash = await bcrypt.hash(senha, salt);
       }
       const usuario = await prisma.usuario.update({
         where: { id: data.userId },
@@ -315,8 +337,9 @@ module.exports = {
       const { senha } = req.body;
 
       let senhaHash;
-      if (senha && senha.trim() !== '') {
-        senhaHash = await bcrypt.hash(senha, 10);
+      if (senha && senha.trim() !== "") {
+        const salt = await bcrypt.genSalt(10);
+        senhaHash = await bcrypt.hash(senha, salt);
       }
       const usuario = await prisma.usuario.update({
         where: { id: data.userId },
@@ -342,35 +365,33 @@ module.exports = {
     const { token } = req.query;
 
     const usuario = await prisma.usuario.findUnique({
-      where: { id: Number(userId) }
+      where: { id: Number(userId) },
     });
 
     if (!usuario) {
-      return res.status(404).send('Usuário não encontrado.');
+      return res.status(404).send("Usuário não encontrado.");
     }
 
-    if (usuario.codigoverificacao !== Number(token) && action == 'unlock') {
-      return res.status(400).send('Token inválido.');
+    if (usuario.codigoverificacao !== Number(token) && action == "unlock") {
+      return res.status(400).send("Token inválido.");
     }
 
     if (action == "unlock") {
       await prisma.usuario.update({
         where: { id: Number(userId), codigoverificacao: Number(token) },
-        data: { controle: 0 }
+        data: { controle: 0 },
       });
     }
 
     sendEvent(userId, `account_${action}`, { userId, status: action });
 
     return res.status(200).send(`
-        <h2>Conta ${action === 'unlock'
-        ? '✅ Liberada'
-        : '⛔ Mantida bloqueada'
-      }!</h2>
+        <h2>Conta ${
+          action === "unlock" ? "✅ Liberada" : "⛔ Mantida bloqueada"
+        }!</h2>
         <p>Você pode fechar esta aba.</p>
       `);
   },
-
 
   VerUsuario: async (req, res) => {
     const email = req.headers.email;
@@ -380,7 +401,7 @@ module.exports = {
     }
 
     const usuario = await prisma.usuario.findUnique({
-      where: { email }
+      where: { email },
     });
 
     if (!usuario) {
@@ -391,7 +412,9 @@ module.exports = {
   },
 
   Logout: async (req, res) => {
-    return res.clearCookie(process.env.REFRESH_TOKEN).status(200).json({ mensagem: 'Logout realizado com sucesso' });
-  }
-
-}
+    return res
+      .clearCookie(process.env.REFRESH_TOKEN)
+      .status(200)
+      .json({ mensagem: "Logout realizado com sucesso" });
+  },
+};

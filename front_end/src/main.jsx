@@ -76,7 +76,7 @@ const router = createBrowserRouter([
     path: "/editar-perfil",
     element: <EditProfilePage />,
   },
-
+  
   // Páginas do administrador
   {
     path: "/adm",
@@ -93,6 +93,10 @@ const router = createBrowserRouter([
   {
     path: "/adm/gerenciar-chaves",
     element: <BracketEditor />,
+  },
+  {
+    path: "*",
+    element: <App />, // Placeholder, aqui é a pagina de erro 404 (Pagina não encontrada)
   },
 ]);
 
