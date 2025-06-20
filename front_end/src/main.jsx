@@ -17,6 +17,8 @@ import AdmHomePage from "./pages/admPages/HomePage.jsx";
 import ManagmentUsersPage from "./pages/admPages/ManagmentUsersPage.jsx";
 import ManagmentModalityPage from "./pages/admPages/ManagmentModalitiesPage.jsx";
 import BracketEditor from "./pages/admPages/BracketEditor.jsx";
+import TeamManagement from "./pages/admPages/TeamManagment.jsx";
+import TournmentCreator from "./pages/admPages/TournmentCreator.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
@@ -93,6 +95,14 @@ const router = createBrowserRouter([
   {
     path: "/adm/gerenciar-chaves",
     element: <BracketEditor />,
+  },
+  {
+    path: "/adm/gerenciar-times",
+    element: <TeamManagement />,
+  },
+  {
+    path: "/adm/criar-torneio",
+    element: <TournmentCreator />,
   },
 ]);
 

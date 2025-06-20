@@ -21,10 +21,10 @@ export default function ADMHomePage() {
         <h1 className={styles.title}>Olá, Nome do ADM!</h1>
 
         <div className={styles.gridButtons}>
-          <Link>
+          <Link to={"/adm/gerenciar-chaves"}>
             <button className={styles.button}>GERENCIAR CHAVES</button>
           </Link>
-          <Link>
+          <Link to={"/adm/gerenciar-modalidades"}>
             <button className={styles.button}>GERENCIAR MODALIDADES</button>
           </Link>
           <Link>
