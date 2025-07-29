@@ -23,7 +23,7 @@ export default function ManagmentModalitiesPage() {
         </div>
 
         <div className={styles.gridButtons}>
-          <Link style={{ textDecoration: "none" }}>
+          <Link to={"modalidade"} style={{ textDecoration: "none" }}>
             <Block alt={"futebol"} image={Futebol} modality={"Futebol"} />
           </Link>
 

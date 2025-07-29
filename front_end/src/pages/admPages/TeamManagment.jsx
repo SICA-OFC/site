@@ -19,6 +19,8 @@ export default function TeamManagement() {
           <h1>Gerenciamento de Equipes</h1>
           <div className={styles.teamList}>
             <TeamBlock
+              image={logo}
+              alt={"Equipe A"}
               team={{
                 nome: "Equipe A",
                 capitão: "Capitão A",
@@ -26,13 +28,17 @@ export default function TeamManagement() {
               }}
             />
             <TeamBlock
-              team={{
+              image={logo}
+              alt={"Equipe B"}
+              team={{ 
                 nome: "Equipe B",
                 capitão: "Capitão B",
                 integrantes: ["Membro 3", "Membro 4"],
               }}
             />
             <TeamBlock
+              image={logo}
+              alt={"Equipe C"}
               team={{
                 nome: "Equipe C",
                 capitão: "Capitão C",

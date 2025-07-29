@@ -81,27 +81,27 @@ const router = createBrowserRouter([
 
   // Páginas do administrador
   {
-    path: "/adm",
+    path: "/adm/modalidade",
     element: <AdmHomePage />,
   },
   {
-    path: "/adm/gerenciar-usuarios",
+    path: "/adm/modalidade/gerenciar-usuarios",
     element: <ManagmentUsersPage />,
   },
   {
-    path: "/adm/gerenciar-modalidades",
+    path: "/adm",
     element: <ManagmentModalityPage />, // Placeholder, replace with actual component
   },
   {
-    path: "/adm/gerenciar-chaves",
+    path: "/adm/modalidade/gerenciar-chaves",
     element: <BracketEditor />,
   },
   {
-    path: "/adm/gerenciar-times",
+    path: "/adm/modalidade/gerenciar-times",
     element: <TeamManagement />,
   },
   {
-    path: "/adm/criar-torneio",
+    path: "/adm/modalidade/criar-torneio",
     element: <TournmentCreator />,
   },
 ]);

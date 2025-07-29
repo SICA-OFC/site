@@ -1,5 +1,5 @@
 .team_block {
-  background-color: #dadcde;
+  /* background-color: #dadcde; */
   padding: 20px;
   border-radius: 10px;
   width: 400px;
@@ -9,25 +9,52 @@
 .header {
   background-color: #001429;
   border: #dadcde 1px solid;
-  color: #f18e2c;
+  color: #f5f5f5;
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
   display: flex;
-  justify-content: space-between;
+
   align-items: center;
 
   transition: all 0.3s ease;
 }
 
 .header:hover {
-  background-color: #dadcde;
   color: #001429;
-  border-color: #001429;
+  border-color: #f18e2c;
+}
+
+.header_open {
+  border-bottom-right-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+.image-section {
+  padding: 20px 10px 5px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 50px;
+}
+
+.label_section {
+  display: flex;
+  justify-content: flex-end;
+
+  align-items: center;
+  background-color: #f18e2c;
+  padding: 0.5rem 1rem;
+  clip-path: polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%);
+  gap: 0.5rem;
+  width: 100%;
 }
 
 .h2 {
-  color: #f18e2c;
+  color: #f5f5f5;
 }
 
 .arrow {
@@ -39,13 +66,36 @@
 }
 
 .team_info {
-  background-color: #f5f5f5;
+  background-color: #dadcde;
   padding: 10px;
-  margin-top: 10px;
   border-radius: 5px;
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
+}
+
+.info_open {
+  max-height: 500px;
+  opacity: 1;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.info_closed {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.info {
+  background-color: #f5f5f5;
+  border-radius: 5px;
+
+  padding: 10px;
 }
 
 .team_actions {
+  display: flex;
+  justify-content: space-between;
   margin-top: 10px;
 }
 
