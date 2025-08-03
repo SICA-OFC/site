@@ -1,11 +1,12 @@
-CREATE TYPE periodo_enum AS ENUM ('Manhã','Tarde','Noite');
+-- 1. cursos
+CREATE TYPE periodo_escolar AS ENUM ('Manhã','Tarde','Noite');
 
 CREATE TABLE cursos (
-    id SERIAL PRIMARY KEY,
-    sigla VARCHAR(10) NOT NULL,
-    ano INTEGER NOT NULL,
-    nome VARCHAR(100) NOT NULL,
-    periodo periodo_enum NOT NULL
+    id      INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    sigla   VARCHAR(10)     NOT NULL,
+    ano     INTEGER NOT     NULL,
+    nome    VARCHAR(100)    NOT NULL,
+    periodo periodo_escolar NOT NULL
 );
 
 INSERT INTO cursos (sigla, ano, nome, periodo) VALUES
@@ -43,132 +44,46 @@ INSERT INTO cursos (sigla, ano, nome, periodo) VALUES
 ('2DN', 2, 'Eletrônica M-tec-N', 'Noite'),
 ('1FN', 1, 'Automação M-tec-N', 'Noite');
 
-CREATE TYPE tipo_usuario AS ENUM ('Aluno','Professor','Coordenador','Diretor','Visitante');
-
-CREATE TABLE usuario (
-    id SERIAL PRIMARY KEY,
-    rm VARCHAR(5) NOT NULL,
-    nome VARCHAR(30) NOT NULL,
-    curso BIGINT UNSIGNED REFERENCES cursos(id) NULL,
-    email VARCHAR(30) NOT NULL UNIQUE,
-    senha TEXT NOT NULL,
-    telefone VARCHAR(20) NOT NULL,
-    dataNascimento DATE NOT NULL,
-    dataCriacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    verificado BOOLEAN DEFAULT FALSE,
-    codigoVerificacao INTEGER,
-    dataCriacaoCodigo TIMESTAMP,
-    controle INTEGER,
-    tipoUsuario tipo_usuario
+-- 2. usuarios
+CREATE TYPE tipo_usuario AS ENUM (
+  'aluno',
+  'professor',
+  'coordenador',
+  'diretor',
+  'visitante'
 );
 
-SELECT u.*, c.nome FROM public.usuario u INNER JOIN public.cursos c ON u.curso = c.id ORDER BY c.id ASC;
-DROP TABLE public.usuario;
-
-SELECT * FROM public.cursos ORDER BY periodo, SUBSTRING(sigla FROM 2), ano ASC;
-DROP TABLE public.cursos;
-
-ALTER TABLE usuario
-ADD CONSTRAINT min_senha CHECK (LENGTH(senha) >= 8),
-ADD CONSTRAINT min_nome CHECK (LENGTH(nome) >= 10);
-
-
-create table Agendamento (
-  id serial Primary key,
-  data_hora Timestamp not null default current_timestamp,
-  descri varchar(200) not null, -- descrição é o que vai ser feito, ex: partida de volei entre o 3DS e o 3MH
-  estado varchar(100) default 'Pendente' -- estado = pendente, concluido, cancelado etc
+CREATE TABLE usuarios (
+  id                       INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  rm         		           VARCHAR(5)    NOT NULL UNIQUE,
+  nome			               VARCHAR(100)   NOT NULL,
+  data_nascimento          DATE,
+  curso_id                 INTEGER        NOT NULL
+    REFERENCES cursos(id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+  email                    VARCHAR(255)   NOT NULL UNIQUE,
+  senha                    TEXT           NOT NULL,
+  telefone                 VARCHAR(15),
+  criado_em                TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+  atualizado_em            TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  verificado               BOOLEAN        NOT NULL DEFAULT FALSE,
+  codigo_verificacao       INTEGER CHECK (codigo_verificacao BETWEEN 100000 AND 999999),
+  codigo_gerado_em        TIMESTAMP WITH TIME ZONE,
+  tentativas_login         INTEGER        NOT NULL DEFAULT 0,
+  tipo_usuario             tipo_usuario   NOT NULL
 );
 
-create table Peneira 
-(
-id serial primary key,
-Esporte bigint unsigned not null,
-constraint FK_PenEspor foreign key (Esporte) references Esporte(id),
-Aluno bigint unsigned not null,
-constraint FK_PenAlu foreign key (Aluno) references Aluno(id),
-Classific varchar(10) not null default 'Indefinido', -- aprovado, reprovado, indefinido?
-dataInicio timestamp default current_timestamp,
-dataFim timestamp default current_timestamp
-);
+-- Função e trigger para atualizar atualizado_em em projetos
+CREATE OR REPLACE FUNCTION atualizar_data_modificacao()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.atualizado_em := NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-create table Time
-(
-  id     serial not null primary key,
-  nome   varchar(30) not null,
-  dataCriacao timestamp default current_timestamp,
-  divisao varchar(30) default 'sub-15' -- sub-15, sub-16, sub-17
-);
-
-create table TimeAlu
-  (
-  id    serial primary key,
-  Time   BIGINT UNSIGNED not null,
-  Aluno  BIGINT UNSIGNED not null,
-CONSTRAINT FK_TimeTA FOREIGN KEY (Time) REFERENCES Time(id),
-  CONSTRAINT FK_AlunoTA FOREIGN KEY (Aluno) REFERENCES Aluno(id)
-  );
-
-  
-create table Esporte
-(
- id serial Primary key,
- Nome varchar(20) not null,
- dataCriacao timestamp default current_timestamp
-);
-
-create table EsporTimeAlu
-(
-id serial Primary key,
-Esporte BIGINT UNSIGNED not null,
-constraint FK_EsporTimeAlu foreign key (Esporte) references Esporte(id),
-Time BIGINT UNSIGNED,
-constraint FK_EsporTime foreign key (Time) references Time(id),
-Aluno BIGINT UNSIGNED,
-constraint FK_EsporAlu foreign key (Aluno) references Aluno(id)
-);
-
-create table Jogo
-  (
-  id  serial primary key,
-  Prof BIGINT UNSIGNED,
-  constraint FK_JogoProf foreign key(Prof) references Prof(id),
-  Esporte BIGINT UNSIGNED not null,
-  constraint FK_JogoEspor foreign key (Esporte) references Esporte(id),
-  Agendamento BIGINT UNSIGNED not null,
-  constraint FK_JogoAgen foreign key (Agendamento) references Agendamento(id),
-  Time1 BIGINT UNSIGNED,
-  Time2 BIGINT UNSIGNED,
-  constraint FK_JogoTime1 foreign key (Time1) references Time(id),
-  constraint FK_JogoTime2 foreign key (Time2) references Time(id),
-  Aluno1 BIGINT UNSIGNED,
-  Aluno2 BIGINT UNSIGNED,
-  constraint FK_JogoAlu1 foreign key (Aluno1) references Aluno(id),
-  constraint FK_JogoAlu2 foreign key (Aluno2) references Aluno(id)
-  );
-
-create table Campeonato
-(
-    id serial primary key,
-    nome varchar(30) not null,
-    Esporte BIGINT UNSIGNED NOT NULL,
-    CONSTRAINT FK_CampEspor foreign key (Esporte) references Esporte(id)
-);
-
-create table CampJogo
-    (
-    id serial primary key,
-    Campeonato bigint unsigned not null,
-    Jogo bigint unsigned not null,
-    constraint FK_CampJogo foreign key (Campeonato) references Campeonato(id),
-    constraint FK_CampeJogo foreign key (Jogo) references Jogo(id)
-    );
-
-create table CampTime
-(
-    id serial primary key,
-    Campeonato bigint unsigned not null,
-    Time bigint unsigned not null,
-    constraint FK_CampTime foreign key (Campeonato) references Campeonato(id),
-    constraint FK_CampeTime foreign key (Time) references Time(id)
-    );
+CREATE TRIGGER atualiza_data_usuario
+BEFORE UPDATE ON usuarios
+FOR EACH ROW
+EXECUTE FUNCTION atualizar_data_modificacao();

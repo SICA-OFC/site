@@ -16,7 +16,7 @@ export default function HomePage() {
         </section>
 
         <section className="bg-secundaria text-white flex flex-col md:flex-row justify-center items-center w-[90%] md:w-[80%]">
-          <img src={image1} alt="Garota jogando basquete" className="w-[100%] md:w-[70%]" />
+          <img src={image1} alt="Garota jogando basquete" className="w-full md:w-[70%]" />
           <p className="p-5 font-sans">
             O esporte é uma oportunidade de superação, onde cada treino e
             desafio impulsiona o crescimento. Ao se dedicar, você vence suas
@@ -25,17 +25,17 @@ export default function HomePage() {
           </p>
         </section>
 
-        <section className="bg-principal text-white flex flex-col md:flex-row justify-center items-center w-[90%] md:w-[80%]">
+        <section className="bg-primaria text-white flex flex-col md:flex-row justify-center items-center w-[90%] md:w-[80%]">
           <p className="p-5 font-sans">
             O SICA (Sistema de Intercurso Acessível) é uma plataforma inovadora
             criada para simplificar o cadastro e a organização de eventos
             esportivos escolares.
           </p>
-          <img src={image2} alt="Competição de natação" className="w-[100%] md:w-[70%]" />
+          <img src={image2} alt="Competição de natação" className="w-full md:w-[70%]" />
         </section>
 
         <section className="bg-secundaria text-white flex flex-col md:flex-row justify-center items-center w-[90%] md:w-[80%]">
-          <img src={image3} alt="Competição de natação" className="w-[100%] md:w-[70%]" />
+          <img src={image3} alt="Competição de natação" className="w-full md:w-[70%]" />
           <p className="p-5 font-sans">
             Permitindo cadastrar novos eventos de forma simples e rápida. Os usuários podem visualizar
             todas as modalidades disponíveis no site. A plataforma foi

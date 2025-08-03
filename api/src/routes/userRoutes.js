@@ -4,11 +4,13 @@ const userController = require("../controllers/UserController.js");
 const authToken = require("../middlewares/authToken.js");
 const catchAsync = require('../middlewares/catchAsync.js');
 const { registerClient } = require('../services/sseService'); 
+const captcha = require("../services/captcha.js");
 
 // Rotas públicas
 router.post("/cadastro", catchAsync(userController.CriarUsuario));
 router.post("/login", catchAsync(userController.LogarUsuario));
 router.post("/token", catchAsync(userController.RegerarToken));
+router.get("/captcha", catchAsync(captcha));
 
 router.get("/approve/:user_id/:action", catchAsync(userController.LiberarUsuario));
 router.get("/events/:user_id", (req, res) => {
