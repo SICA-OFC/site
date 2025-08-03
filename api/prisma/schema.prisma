@@ -9,30 +9,32 @@ datasource db {
 }
 
 model cursos {
-  id      Int          @id @default(autoincrement())
-  sigla   String       @db.VarChar(10)
-  ano     Int
-  nome    String       @db.VarChar(100)
-  periodo periodo_enum
-  usuario usuario[]
+  id       Int          @id @default(autoincrement())
+  sigla    String       @db.VarChar(10)
+  ano      Int
+  nome     String       @db.VarChar(100)
+  periodo  periodo_enum
+  projetos projetos[]
+  usuarios usuarios[]
 }
 
 model usuario {
-  id                Int           @id @default(autoincrement())
-  rm                String        @db.VarChar(5)
-  nome              String        @db.VarChar(30)
-  curso             Int?
-  email             String        @unique @db.VarChar(30)
-  senha             String
-  telefone          String        @db.VarChar(20)
-  datanascimento    DateTime      @db.Date
-  datacriacao       DateTime?     @default(now()) @db.Timestamp(6)
-  verificado        Boolean?      @default(false)
-  codigoverificacao Int?
-  datacriacaocodigo DateTime?     @db.Timestamp(6)
-  controle          Int?          @default(0)
-  tipousuario       tipo_usuario?
-  cursos            cursos?       @relation(fields: [curso], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id                                                  Int            @id @default(autoincrement())
+  rm                                                  String         @unique @db.VarChar(20)
+  nome                                                String         @db.VarChar(100)
+  curso_id                                            Int
+  email                                               String         @unique @db.VarChar(255)
+  senha                                               String         @db.VarChar(255)
+  telefone                                            String?        @db.VarChar(20)
+  data_nascimento                                     DateTime?      @db.Date
+  data_criacao                                        DateTime       @default(now()) @db.Timestamptz(6)
+  atualizado_em                                       DateTime?      @default(now()) @db.Timestamptz(6)
+  verificado                                          Boolean        @default(false)
+  codigo_verificacao                                  Int?
+  codigo_criacao_em                                   DateTime?      @db.Timestamptz(6)
+  tentativas_login                                    Int            @default(0)
+  tipo_usuario                                        tipo_usuario
+  cursos                                              cursos         @relation(fields: [curso_id], references: [id])
 }
 
 enum periodo_enum {
@@ -43,5 +45,5 @@ enum periodo_enum {
 
 enum tipo_usuario {
   Aluno
-  Professor
+  Admin
 }

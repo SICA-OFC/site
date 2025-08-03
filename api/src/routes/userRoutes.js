@@ -1,34 +1,31 @@
 const express = require("express");
 const router = express.Router();
-const UserController = require(`../controllers/UserController`);
-const { registerClient } = require('../services/sseService');
-const authToken = require("../middlewares/authToken");
-const catchAsync = require('../middlewares/catchAsync');
-const captcha = require("../services/captcha");
+const userController = require("../controllers/UserController.js");
+const authToken = require("../middlewares/authToken.js");
+const catchAsync = require('../middlewares/catchAsync.js');
+const { registerClient } = require('../services/sseService'); 
 
 // Rotas públicas
-router.get("/captcha", catchAsync(captcha));
-router.post("/cadastro", catchAsync(UserController.CriarUsuario));
-router.post("/cadastro", catchAsync(UserController.CriarUsuario));
-router.post("/token", catchAsync(UserController.GerarToken));
-router.post('/verificarSessao', UserController.VerificarSessao);
+router.post("/cadastro", catchAsync(userController.CriarUsuario));
+router.post("/login", catchAsync(userController.LogarUsuario));
+router.post("/token", catchAsync(userController.RegerarToken));
 
-router.post("/enviarCodigo", catchAsync(UserController.EnviarCodigo));
-router.post("/logout", catchAsync(UserController.Logout)); // Nova rota
-
-router.get("/approve/:userId/:action", catchAsync(UserController.LiberarUsuario));
-router.get("/events/:userId", (req, res) => {
+router.get("/approve/:user_id/:action", catchAsync(userController.LiberarUsuario));
+router.get("/events/:user_id", (req, res) => {
     res.header('Access-Control-Allow-Origin', '*');
-    registerClient(req.params.userId, res);
+    registerClient(req.params.user_id, res);
 });
 
-router.get("/ver", catchAsync(UserController.VerUsuario));
+router.get("/ver", catchAsync(userController.VerUsuario));
 
 // Rotas protegidas (requerem autenticação)
 router.use(authToken);
-router.post("/verificar", catchAsync(UserController.Verificar));
-router.post("/login", catchAsync(UserController.LogarUsuario));
-router.delete("/deletar", catchAsync(UserController.DeletarUsuario));
-router.patch("/editar", catchAsync(UserController.EditarUsuario));
+router.post("/verificar", catchAsync(userController.Verificar));
+router.post("/enviarCodigo", catchAsync(userController.EnviarCodigo));
+router.patch("/editar", catchAsync(userController.EditarUsuario));
+router.patch("/redefinirSenha", catchAsync(userController.RedefinirSenha));
+router.delete("/deletar", catchAsync(userController.DeletarUsuario));
+router.post("/verificarSessao", catchAsync(userController.VerificarSessao));
+router.post("/logout", catchAsync(userController.Logout));
 
 module.exports = router;
