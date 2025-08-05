@@ -31,7 +31,56 @@ const router = createBrowserRouter([
       </GoogleReCaptchaProvider>
     ),
   },
+  {
+    path: "/confirmacao-login",
+    element: <EmailLoginConfirmPage />,
+  },
+  {
+    path: "/confirmacao-perfil",
+    element: <EmailPerfilConfirmPage />,
+  },
+  {
+    path: "/confirmacao-cadastro",
+    element: <EmailSignConfirmPage />,
+  },
+  {
+    path: "/chaves",
+    element: <BracketPage />,
+  },
+  {
+    path: "/modalidades",
+    element: <ModalitiesPage />,
+  },
+  {
+    path: "/editar-perfil",
+    element: <EditProfilePage />,
+  },
 
+  // Páginas do administrador
+  {
+    path: "/adm/modalidade",
+    element: <AdmHomePage />,
+  },
+  {
+    path: "/adm/modalidade/gerenciar-usuarios",
+    element: <ManagmentUsersPage />,
+  },
+  {
+    path: "/adm",
+    element: <ManagmentModalityPage />, // Placeholder, replace with actual component
+  },
+  {
+    path: "/adm/modalidade/gerenciar-chaves",
+    element: <BracketEditor />,
+  },
+  {
+    path: "/adm/modalidade/gerenciar-times",
+    element: <TeamManagement />,
+  },
+  {
+    path: "/adm/modalidade/criar-torneio",
+    element: <TournmentCreator />,
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
