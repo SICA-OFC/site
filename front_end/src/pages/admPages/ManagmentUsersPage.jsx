@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styles from "./ManagmentUsersPage.module.scss";
 
 import Logo from "../../assets/logo.png";
 import ProfilePhotoUploader from "../../components/profilePhotoUploader.jsx";
@@ -8,8 +7,8 @@ import genericProfilePhoto from "../../assets/genericProfilePhoto.png";
 
 function ClickableUserEntry({ name, rm, course, modality }) {
   return (
-    <p className={styles.usersEntry}>
-      <span className={styles.highlight}>
+    <p className="text-sm mb-1">
+      <span className="text-[#f26522]">
         {name} | {rm} | {course} | {modality}
       </span>
     </p>
@@ -22,7 +21,7 @@ export default function ManagmentUsersPage() {
     .map((_, i) => ({
       name: `Fulano ${i + 1}`,
       rm: 33197 + i,
-      course: "Mecanica",
+      course: "Mecânica",
       modality: "Futebol",
       categoria: "SUB 17",
     }));
@@ -30,32 +29,33 @@ export default function ManagmentUsersPage() {
   const [selectedUser, setSelectedUser] = React.useState(users[0]);
 
   return (
-    <div className={styles.pageWrapper}>
-      <div className={styles.mainContent}>
-        <div className={styles.header}>
-          <div className={styles.logoArea}>
-            <img src={Logo} alt="Imagem do logo" className={styles.logo} />
-            <div className={styles.verticalLine}></div>
-            <h1 className={styles.text}>Area do Administrador</h1>
-          </div>
+    <div
+      className="min-h-screen bg-cover font-montserrat"
+      style={{ backgroundImage: "url('/assets/AdmBG.png')" }}
+    >
+      <div className="bg-white p-12 mt-[200px] ml-[340px] w-[90%] max-w-[1200px] shadow-md rounded">
+        {/* Header */}
+        <div className="flex items-center justify-center mb-12 -ml-[550px]">
+          <img src={Logo} alt="Logo" className="w-[80px]" />
+          <div className="border-l border-[#001429] w-[10px] h-[60px] mx-4"></div>
+          <h2 className="text-lg font-semibold">Área do Administrador</h2>
         </div>
 
-        <div className={styles.contentArea}>
-          <div className={styles.studentList}>
-            <h2 className={styles.viewTitle}>VIZUALIZAR ALUNOS</h2>
-            <div className={styles.divider}></div>
+        {/* Content */}
+        <div className="flex gap-8">
+          {/* Lista de usuários */}
+          <div className="flex-1">
+            <h2 className="text-lg mb-2">VISUALIZAR ALUNOS</h2>
+            <div className="h-px bg-black mb-4"></div>
             {users.map((user, i) => (
               <div
                 key={i}
-                className={styles.usersEntry}
+                className={`text-sm mb-1 p-1 rounded cursor-pointer ${
+                  selectedUser && selectedUser.rm === user.rm
+                    ? "bg-gray-300"
+                    : "hover:bg-gray-100"
+                }`}
                 onClick={() => setSelectedUser(user)}
-                style={{
-                  background:
-                    selectedUser && selectedUser.rm === user.rm
-                      ? "#e0e0e0"
-                      : "transparent",
-                  cursor: "pointer",
-                }}
               >
                 <ClickableUserEntry
                   name={user.name}
@@ -67,63 +67,51 @@ export default function ManagmentUsersPage() {
             ))}
           </div>
 
-          <div className={styles.studentInfo}>
-            <h2 className={styles.studentName}>
+          {/* Info do aluno selecionado */}
+          <div className="flex-1">
+            <h2 className="text-xl font-bold mb-4">
               {selectedUser ? selectedUser.name : ""}
             </h2>
 
-            <div className={styles.infoField}>
-              <label>RM</label>
-              <input
-                type="text"
-                value={selectedUser ? selectedUser.rm : ""}
-                readOnly
-              />
-            </div>
+            {/* Campos */}
+            {["rm", "course", "modality", "categoria"].map((field, idx) => (
+              <div className="mb-4" key={idx}>
+                <label className="block text-xs text-gray-600 uppercase mb-1">
+                  {field.toUpperCase()}
+                </label>
+                <input
+                  type="text"
+                  value={selectedUser ? selectedUser[field] : ""}
+                  readOnly
+                  className="w-full p-2 text-base border border-gray-300 rounded"
+                />
+              </div>
+            ))}
 
-            <div className={styles.infoField}>
-              <label>CURSO</label>
-              <input
-                type="text"
-                value={selectedUser ? selectedUser.course : ""}
-                readOnly
-              />
-            </div>
-
-            <div className={styles.infoField}>
-              <label>MODALIDADE</label>
-              <input
-                type="text"
-                value={selectedUser ? selectedUser.modality : ""}
-                readOnly
-              />
-            </div>
-
-            <div className={styles.infoField}>
-              <label>CATEGORIA</label>
-              <input
-                type="text"
-                value={selectedUser ? selectedUser.categoria : ""}
-                readOnly
-              />
-            </div>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div className={styles.infoField}>
-              <label>FOTO DE PERFIL</label>
+            {/* Foto de perfil */}
+            <div className="mb-4">
+              <label className="block text-xs text-gray-600 uppercase mb-1">
+                Foto de Perfil
+              </label>
               <ProfilePhotoUploader
                 photoUrl={genericProfilePhoto}
-                onPhotoChange={(newPhoto) => {
-                  console.log("New photo URL:", newPhoto);
-                }}
+                onPhotoChange={(newPhoto) =>
+                  console.log("New photo URL:", newPhoto)
+                }
               />
             </div>
           </div>
         </div>
-        <div className={styles.buttonsArea}>
-          <button className={styles.btnAlterar}>Alterar</button>
-          <Link to={"/adm"}>
-            <button className={styles.btnVoltar}>Voltar</button>
+
+        {/* Botões */}
+        <div className="flex justify-evenly px-[20%] mt-8">
+          <button className="bg-[#0c2442] text-[#f5f5f5] py-3 px-6 rounded border border-[#f5f5f5] hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border-[#0c2442] transition">
+            Alterar
+          </button>
+          <Link to="/adm">
+            <button className="bg-[#f18e2c] text-[#001429] py-3 px-6 rounded border border-[#f18e2c] hover:bg-[#f5f5f5] hover:text-[#f18e2c] hover:border-[#f18e2c] transition">
+              Voltar
+            </button>
           </Link>
         </div>
       </div>

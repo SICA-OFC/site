@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import "./css/header.css";
 
 export default function LogoutButton() {
   const navigate = useNavigate();
@@ -29,7 +28,10 @@ export default function LogoutButton() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <button className="ExitButton" type="submit">
+      <button
+        type="submit"
+        className="bg-transparent text-red-600 transition-transform duration-500 hover:scale-115 focus:outline-none font-[montserrat]"
+      >
         Sair
       </button>
     </form>

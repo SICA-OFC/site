@@ -1,93 +1,100 @@
 import Logo from "../assets/logo.png";
-import styles from "./EditProfilePage.module.scss";
-import PhotoUploader from "../components/profilePhotoUploader.jsx";
 import ProfilePhotoUploader from "../components/profilePhotoUploader.jsx";
 
 export default function EditProfilePage() {
   return (
-    <div className={styles.container_cadastro}>
-      <div className={styles.container}>
-        <div className={styles.login_box}>
-          <div className={styles.logo_div}>
-            <div className={styles.logo}>
-              <img src={Logo} alt="Logo SICA" />
+    <div
+      className="font-montserrat flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: 'url("../assets/PerfilPageBG.png")' }}
+    >
+      <div className="flex max-w-[70vw] w-full bg-gray-100 shadow-lg rounded-lg overflow-hidden">
+        <div className="flex flex-col gap-2 p-10 flex-1">
+          <div className="flex justify-evenly w-[250px] mb-12">
+            <div className="flex items-center mb-0.5">
+              <img src={Logo} alt="Logo SICA" className="w-10 h-10 mr-0.5" />
             </div>
-            <div className={styles.verticalLine}></div>
-            <h2>Editar Perfil</h2>
+            <div className="border-l border-[#092843] mx-5" />
+            <h2 className="text-[#092843] self-center">Editar Perfil</h2>
           </div>
-          <h3>Olá, Nome do Brother</h3>
-          <div className={styles.horizontalLine}></div>
-          <form className={styles.form} action="#" method="post">
-            <div className={styles.form_container}>
-              <div className={styles.left}>
+
+          <h3 className="text-[#092843] mb-2">Olá, Nome do Brother</h3>
+          <div className="border-t border-[#092843] w-full mb-5" />
+
+          <form action="#" method="post" className="flex gap-[10%] w-full">
+            <div className="flex justify-around w-full">
+              <div className="flex flex-col gap-2 w-2/5">
                 {/* Dados Pessoais */}
-                <div className={styles.section}>
-                  <h4>Dados Pessoais</h4>
-                  <div className={styles.div}>
-                    <label htmlFor="name" className={styles.label}>
+                <section className="relative">
+                  <h4 className="text-[#001429] mb-2">Dados Pessoais</h4>
+                  <div className="flex flex-col mb-2">
+                    <label htmlFor="name" className="mb-1 text-[#001429]">
                       Nome
                     </label>
                     <input
-                      className={styles.input_select}
                       type="text"
                       id="name"
                       name="name"
                       value="Nome do Brother"
                       required
+                      className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
                   </div>
-                  <div className={styles.div}>
-                    <label htmlFor="email" className={styles.label}>
+                  <div className="flex flex-col mb-2">
+                    <label htmlFor="email" className="mb-1 text-[#001429]">
                       Email
                     </label>
                     <input
-                      className={styles.input_select}
                       type="email"
                       id="email"
                       name="email"
                       value="emaildobrother@exemplo.com"
                       required
+                      className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
                   </div>
-                  <div className={styles.div}>
-                    <label htmlFor="telefone" className={styles.label}>
+                  <div className="flex flex-col mb-2">
+                    <label htmlFor="telefone" className="mb-1 text-[#001429]">
                       Telefone
                     </label>
                     <input
-                      className={styles.input_select}
                       type="text"
                       maxLength="11"
                       id="telefone"
                       name="telefone"
                       value="1199999-9999"
                       required
+                      className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
                   </div>
-                  <div className={styles.div}>
-                    <label htmlFor="dataNascimento" className={styles.label}>
+                  <div className="flex flex-col mb-2">
+                    <label
+                      htmlFor="dataNascimento"
+                      className="mb-1 text-[#001429]"
+                    >
                       Data de Nascimento
                     </label>
                     <input
-                      className={styles.input_select}
                       type="date"
                       id="dataNascimento"
                       name="dataNascimento"
                       required
+                      className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
                   </div>
-                </div>
+                </section>
+
                 {/* Informações Acadêmicas */}
-                <div className={styles.section}>
-                  <h4>Informações Acadêmicas</h4>
-                  <div className={styles.div}>
-                    <label htmlFor="curso" className={styles.label}>
+                <section className="relative mt-6">
+                  <h4 className="text-[#001429] mb-2">Informações Acadêmicas</h4>
+                  <div className="flex flex-col mb-2">
+                    <label htmlFor="curso" className="mb-1 text-[#001429]">
                       Curso
                     </label>
                     <select
-                      className={styles.input_select}
                       id="curso"
                       name="curso"
                       required
+                      className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     >
                       <option value="">Selecione o curso</option>
                       <option value="engenharia">Engenharia</option>
@@ -96,19 +103,20 @@ export default function EditProfilePage() {
                       <option value="adm">Administração</option>
                     </select>
                   </div>
-                </div>
+                </section>
+
                 {/* Modalidades */}
-                <div className={styles.section}>
-                  <h4>Modalidades</h4>
-                  <div className={styles.div}>
-                    <label htmlFor="modalidades" className={styles.label}>
+                <section className="relative mt-6">
+                  <h4 className="text-[#001429] mb-2">Modalidades</h4>
+                  <div className="flex flex-col mb-2">
+                    <label htmlFor="modalidades" className="mb-1 text-[#001429]">
                       Modalidades
                     </label>
                     <select
-                      className={styles.input_select}
                       id="modalidades"
                       name="modalidades"
                       required
+                      className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     >
                       <option value="futebol">Futebol</option>
                       <option value="volei">Vôlei</option>
@@ -116,19 +124,20 @@ export default function EditProfilePage() {
                       <option value="natacao">Natação</option>
                     </select>
                   </div>
-                </div>
+                </section>
               </div>
-              <div className={styles.right}>
+
+              <div className="flex flex-col gap-2 w-2/5">
                 {/* Imagem de Perfil */}
-                <div className={styles.section}>
-                  <h4>Imagem de Perfil</h4>
-                  <div className={styles.div}>
-                    <label htmlFor="imagemPerfil" className={styles.label}>
+                <section className="relative">
+                  <h4 className="text-[#001429] mb-2">Imagem de Perfil</h4>
+                  <div className="flex flex-col mb-2">
+                    <label htmlFor="imagemPerfil" className="mb-1 text-[#001429]">
                       Imagem de Perfil
                     </label>
                     <ProfilePhotoUploader />
                   </div>
-                </div>
+                </section>
               </div>
             </div>
           </form>

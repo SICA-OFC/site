@@ -1,10 +1,7 @@
-import styles from "./LoginPage.module.scss";
-import sideImage from "../assets/sideImage1.png";
 import logo from "../assets/logo.png";
-import line from "../assets/Line.png";
-import { useLocation, useNavigate } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import sideImage1 from "../assets/sideImage1.png";
+import { useEffect, useRef, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 export default function LoginPage() {
@@ -93,9 +90,7 @@ export default function LoginPage() {
     }
 
     executeRecaptcha("login_form").then(async (tokenCaptcha) => {
-      const verifyResponse = await fetch(
-        `${BASE_URL}/usuario/captcha?token=${tokenCaptcha}`
-      );
+      const verifyResponse = await fetch(`${BASE_URL}/usuario/captcha?token=${tokenCaptcha}`);
       const verifyResult = await verifyResponse.json();
       if (!verifyResult.success || verifyResult.score < 0.5) {
         alert("Verificação do reCAPTCHA falhou. Ação bloqueada.");
@@ -107,95 +102,60 @@ export default function LoginPage() {
         senha,
       };
 
-      return await fetch(`${BASE_URL}/usuario/token`, {
+      return await fetch(`${BASE_URL}/usuario/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userInfo),
-      })
-        .then(async (response) => {
-          const result = await response.json();
+      }).then(async (response) => {
+        const result = await response.json();
 
-          if (!response.ok) {
-            throw new Error(
-              `Erro ${response.status}: ${JSON.stringify(result)}`
-            );
-          }
+        if (!response.ok) {
+          throw new Error(`Erro ${response.status}: ${JSON.stringify(result)}`);
+        }
 
-          const accessToken = result.accessToken;
-          console.log("Token recebido:", accessToken);
+        const accessToken = result.accessToken;
+        console.log("Token recebido:", accessToken);
 
-          fetch(`${BASE_URL}/usuario/login`, {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }).then(async (loginResponse) => {
-            const loginResult = await loginResponse.json();
-
-            if (!loginResponse.ok) {
-              throw new Error(
-                `Erro ${loginResponse.status}: ${JSON.stringify(loginResult)}`
-              );
-            }
-
-            console.log("Login efetuado com sucesso:", loginResult);
-            fetch(`${BASE_URL}/usuario/enviarCodigo`, {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }).then((response) => console.log(response.json()));
-
-            if (loginResult.verificado === true) {
-              navigate("/confirmacao-login", {
-                state: { accessToken },
-              });
-            } else {
-              navigate("/confirmacao-cadastro", {
-                state: { accessToken },
-              });
-            }
+        if (accessToken) {
+          navigate("/confirmacao", {
+            state: { accessToken },
           });
-        })
-        .catch((error) => {
-          console.error("Erro no processo de token/login:", error.message);
-        });
+        }
+
+      });
     });
   };
+
   return (
-    <>
-      <div className={styles.container_login}>
-        <div className={styles.container_grid}>
-          <div className={styles.login_box}>
-            <div className={styles.logo_div}>
-              <div className={styles.logo}>
-                <img src={logo} alt="Logo SICA" />
-              </div>
-              <div className={styles.line}>
-                <img src={line} alt="Linha decorativa" />
-              </div>
-              <h2>Login</h2>
-            </div>
-            <form className={styles.form} onSubmit={handleSubmit}>
-              <label className={styles.labe} htmlFor="email">
+    <div className="bg-[url(/src/assets/background.png)] bg-no-repeat bg-cover bg-center h-screen flex flex-col justify-center items-center gap-2">
+      <div className="bg-[#f5f5f5] rounded-md w-[80%] h-fit flex flex-row justify-between items-start">
+        <div className="flex flex-col items-center gap-2 w-full md:w-[50%] p-6">
+          <div className="flex flex-rol items-center gap-2 w-full">
+            <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
+            <div className="h-9 border-l border-black" />
+            <h1 className="font-[energy]">Login</h1>
+          </div>
+          <form onSubmit={handleSubmit} className="flex flex-col justify-center items-baseline gap-2 w-[80%]">
+            <div>
+              <label className="text-[#001429] text-sm" htmlFor="email">
                 Email
               </label>
               <input
-                className={styles.input}
+                className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
                 value={email}
                 onChange={handleEmailChange}
                 type="email"
                 id="email"
                 name="email"
+                autoComplete="email"
                 required
               />
 
-              <label className={styles.labe} htmlFor="password">
+              <label className="text-[#001429] text-sm" htmlFor="senha">
                 Senha
               </label>
               <input
-                className={styles.input}
+                className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
                 value={senha}
                 onChange={handleSenhaChange}
                 type="password"
@@ -203,29 +163,26 @@ export default function LoginPage() {
                 name="senha"
                 required
               />
+            </div>
+            <button
+              className="bg-secundaria text-white rounded-md font-semibold h-[50px] w-full hover:bg-neutra-branca hover:text-[#001429] hover:border-secundaria hover:border-1 hover:cursor-pointer transition"
+              type="submit"
+              name="submit"
+              value="login"
+            >
+              Entrar
+            </button>
 
-              <button
-                className={styles.button}
-                type="submit"
-                name="submit"
-                value="login"
-              >
-                Entrar
-              </button>
-              <label className={styles.sign_out}>
-                Ainda não tem conta?
-                <Link to="/cadastro" className={styles.a}>
-                  {" "}
-                  Cadastre-se!
-                </Link>
-              </label>
-            </form>
-          </div>
-          <div className={styles.image_box}>
-            <img src={sideImage} alt="Usuário" className={styles.user_image} />
-          </div>
+            <div className="flex flex-col items-center justify-center w-full">
+              <span className="text-sm text-center w-full">Ainda não tem conta?</span>
+              <span className="text-primaria text-sm text-center w-full">
+                <Link to="/cadastro"> Cadastre-se!</Link>
+              </span>
+            </div>
+          </form>
         </div>
+        <img src={sideImage1} className="hidden md:block w-[50%] h-full" />
       </div>
-    </>
+    </div>
   );
 }

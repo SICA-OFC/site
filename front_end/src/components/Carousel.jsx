@@ -2,7 +2,6 @@ import React from "react";
 import CarouselItem from "./CarouselItem.jsx";
 import futebolImage from "../assets/ModalitySoccerImage.png";
 import ComingSoon from "../assets/ComingSoon.png";
-import "./css/Carousel.css";
 
 const items = [
   {
@@ -39,14 +38,7 @@ const items = [
 
 export default function Carousel() {
   return (
-    <div
-      className="CarouselDiv"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: "16px",
-      }}
-    >
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full h-full">
       {items.map((item, index) => (
         <CarouselItem key={index} {...item} />
       ))}

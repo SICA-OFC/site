@@ -1,23 +1,21 @@
 const jwt = require("jsonwebtoken");
 
-const verificarAcessToken = async (token) => {
-  const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, decoded) => {
-    if (err) {
-      return ({ erro: "Token inválido" });
-    }
+const verificarAccessToken = (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     return decoded;
-  });
-  return data;
+  } catch (err) {
+    return { erro: "Token inválido", err };
+  }
 };
 
-const verificarRefreshToken = async (token) => {
-  const data = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
-    if (err) {
-      return ({ erro: "Token inválido" });
-    }
+const verificarRefreshToken = (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
     return decoded;
-  });
-  return data;
+  } catch (err) {
+    return { erro: "Token inválido", err };
+  }
 };
 
-module.exports = { verificarAcessToken, verificarRefreshToken };
+module.exports = { verificarAccessToken, verificarRefreshToken };
