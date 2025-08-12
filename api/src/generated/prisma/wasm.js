@@ -139,6 +139,7 @@ exports.Prisma.UsuariosScalarFieldEnum = {
   telefone: 'telefone',
   criado_em: 'criado_em',
   atualizado_em: 'atualizado_em',
+  verificado: 'verificado',
   codigo_verificacao: 'codigo_verificacao',
   codigo_gerado_em: 'codigo_gerado_em',
   tentativas_login: 'tentativas_login',
@@ -166,8 +167,11 @@ exports.periodo_escolar = exports.$Enums.periodo_escolar = {
 };
 
 exports.tipo_usuario = exports.$Enums.tipo_usuario = {
-  Aluno: 'Aluno',
-  Professor: 'Professor'
+  aluno: 'aluno',
+  professor: 'professor',
+  coordenador: 'coordenador',
+  diretor: 'diretor',
+  visitante: 'visitante'
 };
 
 exports.Prisma.ModelName = {

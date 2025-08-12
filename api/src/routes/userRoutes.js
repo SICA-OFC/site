@@ -18,10 +18,11 @@ router.get("/events/:user_id", (req, res) => {
     registerClient(req.params.user_id, res);
 });
 
-router.get("/ver", catchAsync(userController.VerUsuario));
+router.get("/ver", catchAsync(userController.VerID));
 
 // Rotas protegidas (requerem autenticação)
 router.use(authToken);
+router.get("/", catchAsync(userController.VerUsuario));
 router.post("/verificar", catchAsync(userController.Verificar));
 router.post("/enviarCodigo", catchAsync(userController.EnviarCodigo));
 router.patch("/editar", catchAsync(userController.EditarUsuario));

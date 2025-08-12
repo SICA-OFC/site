@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import logo from "../../assets/logo.png";
 
-export default function CadastroTorneio() {
+export default function TournmentCreatorPage() {
   const [selectedDate, setSelectedDate] = useState(null);
 
   return (

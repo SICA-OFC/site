@@ -5,7 +5,7 @@ import Futebol from "../../assets/ModalitySoccerImage.png";
 import Block from "../../components/modalityBlock.jsx";
 import Logo from "../../assets/logo.png";
 
-export default function ManagmentModalitiesPage() {
+export default function ManagementModalitiesPage() {
   return (
     <div
       className="min-h-screen bg-cover bg-center flex items-center justify-center"

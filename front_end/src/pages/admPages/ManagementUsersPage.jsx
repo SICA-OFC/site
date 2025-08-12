@@ -15,7 +15,7 @@ function ClickableUserEntry({ name, rm, course, modality }) {
   );
 }
 
-export default function ManagmentUsersPage() {
+export default function ManagementUsersPage() {
   const users = Array(12)
     .fill(0)
     .map((_, i) => ({

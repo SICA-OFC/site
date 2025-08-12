@@ -5,6 +5,15 @@ import "./index.css";
 import HomePage from "./pages/HomePage.jsx";
 import CadastroPage from "./pages/CadastroPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
+import EmailConfirmPage from "./pages/EmailConfirmPage.jsx";
+import BracketPage from "./pages/BracketPage.jsx";
+import ModalitiesPage from "./pages/ModalitiesPage.jsx";
+import EditProfilePage from "./pages/EditProfilePage.jsx";
+import AdmHomePage from "./pages/admPages/HomePage.jsx";
+import ManagementUsersPage from "./pages/admPages/ManagementUsersPage.jsx"; 
+import ManagementModalityPage from "./pages/admPages/ManagementModalitiesPage.jsx";
+import BracketEditorPage from "./pages/admPages/BracketEditorPage.jsx";
+// import TeamManagementPage from "./pages/admPages/TeamManagement.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
@@ -32,16 +41,8 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/confirmacao-login",
-    element: <EmailLoginConfirmPage />,
-  },
-  {
-    path: "/confirmacao-perfil",
-    element: <EmailPerfilConfirmPage />,
-  },
-  {
-    path: "/confirmacao-cadastro",
-    element: <EmailSignConfirmPage />,
+    path: "/confirmacao",
+    element: <EmailConfirmPage />,
   },
   {
     path: "/chaves",
@@ -63,24 +64,24 @@ const router = createBrowserRouter([
   },
   {
     path: "/adm/modalidade/gerenciar-usuarios",
-    element: <ManagmentUsersPage />,
+    element: <ManagementUsersPage />,
   },
   {
     path: "/adm",
-    element: <ManagmentModalityPage />, // Placeholder, replace with actual component
+    element: <ManagementModalityPage />, // Placeholder, replace with actual component
   },
   {
     path: "/adm/modalidade/gerenciar-chaves",
-    element: <BracketEditor />,
+    element: <BracketEditorPage />,
   },
-  {
-    path: "/adm/modalidade/gerenciar-times",
-    element: <TeamManagement />,
-  },
-  {
-    path: "/adm/modalidade/criar-torneio",
-    element: <TournmentCreator />,
-  },
+  // {
+  //   path: "/adm/modalidade/gerenciar-times",
+  //   element: <TeamManagementPage />,
+  // },
+  // {
+  //   path: "/adm/modalidade/criar-torneio",
+  //   element: <TournmentCreatorPage />,
+  // },
 ]);
 
 createRoot(document.getElementById("root")).render(

@@ -79,7 +79,7 @@ module.exports = {
           where: { email: email },
           data: {
             codigo_verificacao: novoCodigo,
-            codigo_criacao_em: new Date(),
+            codigo_gerado_em: new Date(),
           },
         });
         const urlUnlock = `${BASE_URL}/usuario/approve/${usuario.id}/${action}?token=${novoCodigo}`;
@@ -168,7 +168,7 @@ module.exports = {
       `);
   },
 
-  VerUsuario: async (req, res) => {
+  VerID: async (req, res) => {
     const email = req.headers.email;
 
     if (!email) {
@@ -195,16 +195,16 @@ module.exports = {
     const { codigo_verificacao } = req.body;
 
     if (!isNaN(parseInt(codigo_verificacao)) && data.codigo_verificacao == codigo_verificacao) {
-      const codigo_criacao_em = new Date(data.codigo_criacao_em);
+      const codigo_gerado_em = new Date(data.codigo_gerado_em);
       const tempo = 15 * 60 * 1000; // 15 minutos
-      const expirado = new Date().getTime() - codigo_criacao_em.getTime() > tempo;
+      const expirado = new Date().getTime() - codigo_gerado_em.getTime() > tempo;
 
       if (expirado) {
         await prisma.usuarios.update({
           where: { email: data.email },
           data: {
             codigo_verificacao: null,
-            codigo_criacao_em: null,
+            codigo_gerado_em: null,
           },
         });
         return res.status(400).json({ erro: "O código de verificação expirou." });
@@ -215,7 +215,7 @@ module.exports = {
         data: {
           verificado: true,
           codigo_verificacao: null,
-          codigo_criacao_em: null,
+          codigo_gerado_em: null,
         },
       });
 
@@ -257,7 +257,7 @@ module.exports = {
       where: { email: data.email },
       data: {
         codigo_verificacao: novoCodigo,
-        codigo_criacao_em: new Date(),
+        codigo_gerado_em: new Date(),
       },
     });
 
@@ -348,6 +348,23 @@ module.exports = {
     const data = req.user;
     if (!data) {
       return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+
+    res.json({ mensagem: "O usuário está logado.", usuario: data });
+  },
+  
+  VerUsuario: async (req, res) => {
+    const data = req.user;
+    if (!data) {
+      return res.status(404).json({ erro: "Usuário não encontrado" });
+    }
+
+    const usuario = await prisma.usuarios.findUnique({
+      where: { email: data.email },
+    });
+
+    if (!usuario) {
+      return res.status(404).json({ error: "Usuário não encontrado." });
     }
 
     res.json({ mensagem: "O usuário está logado.", usuario: data });

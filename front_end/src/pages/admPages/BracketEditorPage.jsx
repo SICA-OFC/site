@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import MatchEditor from "../../components/MatchEditor.jsx";
 import Logo from "../../assets/logo.png";
 
-const BracketEditor = () => {
+const BracketEditorPage = () => {
   const [matches, setMatches] = useState([
     { team1: "SICA", team2: "Randoms" },
     { team1: "SICA", team2: "Randoms" },
@@ -75,4 +75,4 @@ const BracketEditor = () => {
   );
 };
 
-export default BracketEditor;
+export default BracketEditorPage;

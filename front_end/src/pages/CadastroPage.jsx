@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import SelectCursos from "../components/selectCursos.jsx";
 
-export default function LoginPage() {
+export default function CadastroPage() {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const [rm, setRm] = useState("");
   const [nome, setNome] = useState("");
@@ -67,7 +67,7 @@ export default function LoginPage() {
         data_nascimento: new Date(data_nascimento),
         senha,
         telefone,
-        tipo_usuario: "Aluno",
+        tipo_usuario: "aluno",
       };
 
       const response = await fetch(`${BASE_URL}/usuario/cadastro`, {
@@ -80,7 +80,7 @@ export default function LoginPage() {
       console.log("Resposta do servidor:", result);
 
       if (response.ok) {
-        navigate("/confirmacao-cadastro", {
+        navigate("/confirmacao", {
           state: { accessToken: result.accessToken },
         });
       } else {

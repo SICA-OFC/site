@@ -69,9 +69,9 @@ CREATE TABLE usuarios (
   atualizado_em            TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   verificado               BOOLEAN        NOT NULL DEFAULT FALSE,
   codigo_verificacao       INTEGER CHECK (codigo_verificacao BETWEEN 100000 AND 999999),
-  codigo_gerado_em        TIMESTAMP WITH TIME ZONE,
+  codigo_gerado_em         TIMESTAMP WITH TIME ZONE,
   tentativas_login         INTEGER        NOT NULL DEFAULT 0,
-  tipo_usuario             tipo_usuario   NOT NULL
+  tipo_usuario             tipo_usuario   DEFAULT 'aluno'
 );
 
 -- Função e trigger para atualizar atualizado_em em projetos

@@ -1,5 +1,5 @@
 import logo from "../assets/logo.png";
-import sideImage1 from "../assets/sideImage1.png";
+import sideImage from "../assets/sideImage1.png";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
@@ -181,7 +181,7 @@ export default function LoginPage() {
             </div>
           </form>
         </div>
-        <img src={sideImage1} className="hidden md:block w-[50%] h-full" />
+        <img src={sideImage} className="hidden md:block w-[50%] h-full" />
       </div>
     </div>
   );

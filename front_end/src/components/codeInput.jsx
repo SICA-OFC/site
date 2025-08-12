@@ -68,7 +68,7 @@ const CodeInput = ({ value, onChange, className }) => {
           onChange={(e) => handleInputChange(e, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
           onPaste={(e) => handlePaste(e, index)}
-          className="code-input"    
+          className="text-center border-b-1 border-b-neutra-preta bg-neutra-branca w-10 h-12.5 text-2xl"    
         />
       ))}
     </div>

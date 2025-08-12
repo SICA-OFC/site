@@ -1,7 +1,94 @@
+import { useEffect, useState } from "react";
 import Logo from "../assets/logo.png";
 import ProfilePhotoUploader from "../components/profilePhotoUploader.jsx";
+import SelectCursos from "../components/selectCursos.jsx";
+import { useNavigate } from "react-router-dom";
 
 export default function EditProfilePage() {
+  const [data, setData] = useState(false);
+
+  useEffect(() => {
+    const verUsuario = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/usuario/`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const result = await response.json();
+        console.log(result);
+        setData(result);
+      } catch (error) {
+        console.error("Erro ao verificar autenticação:", error);
+      }
+    };
+
+    verUsuario();
+  }, []);
+
+  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+  const [rm, setRm] = useState("");
+  const [nome, setNome] = useState("");
+  const [periodo, setPeriodo] = useState("Manhã");
+  const [curso, setCurso] = useState("1DS");
+  const [email, setEmail] = useState("");
+  const [data_nascimento, setDataNascimento] = useState("");
+  const [senha, setSenha] = useState("");
+  const [telefone, setTelefone] = useState("");
+
+  const navigate = useNavigate();
+
+  function handleRmChange(e) {
+    setRm(e.target.value);
+  }
+
+  function handleNomeChange(e) {
+    setNome(e.target.value);
+  }
+
+  function handleEmailChange(e) {
+    setEmail(e.target.value);
+  }
+
+  function handleDataChange(e) {
+    setData(e.target.value);
+  }
+
+  function handleSenhaChange(e) {
+    setSenha(e.target.value);
+  }
+
+  function handleTelefoneChange(e) {
+    setTelefone(e.target.value);
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const userInfo = {
+      email,
+      data_nascimento: new Date(data_nascimento),
+      senha,
+      telefone,
+    };
+
+    const response = await fetch(`${BASE_URL}/usuario/editar`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userInfo),
+    });
+
+    const result = await response.json();
+    setData(result.usuario);
+    console.log("Resposta do servidor:", data);
+    if (response.ok) {
+      navigate("/editar-perfil", {
+        state: { accessToken: result.accessToken },
+      });
+    } else {
+      throw new Error(result.message || "Erro no cadastro");
+    }
+  };
+
   return (
     <div
       className="font-montserrat flex items-center justify-center min-h-screen bg-cover bg-center"
@@ -34,7 +121,7 @@ export default function EditProfilePage() {
                       type="text"
                       id="name"
                       name="name"
-                      value="Nome do Brother"
+                      value={data.nome}
                       required
                       className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
@@ -47,7 +134,7 @@ export default function EditProfilePage() {
                       type="email"
                       id="email"
                       name="email"
-                      value="emaildobrother@exemplo.com"
+                      value={data.email}
                       required
                       className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
@@ -61,7 +148,7 @@ export default function EditProfilePage() {
                       maxLength="11"
                       id="telefone"
                       name="telefone"
-                      value="1199999-9999"
+                      value={data.telefone}
                       required
                       className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
@@ -76,7 +163,7 @@ export default function EditProfilePage() {
                     <input
                       type="date"
                       id="dataNascimento"
-                      name="dataNascimento"
+                      value={data.data_nascimento}
                       required
                       className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
@@ -85,23 +172,19 @@ export default function EditProfilePage() {
 
                 {/* Informações Acadêmicas */}
                 <section className="relative mt-6">
-                  <h4 className="text-[#001429] mb-2">Informações Acadêmicas</h4>
+                  <h4 className="text-[#001429] mb-2">
+                    Informações Acadêmicas
+                  </h4>
                   <div className="flex flex-col mb-2">
                     <label htmlFor="curso" className="mb-1 text-[#001429]">
                       Curso
+                      <SelectCursos
+                        periodo={periodo}
+                        curso={curso}
+                        onPeriodoChange={setPeriodo}
+                        onCursoChange={setCurso}
+                      />
                     </label>
-                    <select
-                      id="curso"
-                      name="curso"
-                      required
-                      className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
-                    >
-                      <option value="">Selecione o curso</option>
-                      <option value="engenharia">Engenharia</option>
-                      <option value="direito">Direito</option>
-                      <option value="medicina">Medicina</option>
-                      <option value="adm">Administração</option>
-                    </select>
                   </div>
                 </section>
 
@@ -109,7 +192,10 @@ export default function EditProfilePage() {
                 <section className="relative mt-6">
                   <h4 className="text-[#001429] mb-2">Modalidades</h4>
                   <div className="flex flex-col mb-2">
-                    <label htmlFor="modalidades" className="mb-1 text-[#001429]">
+                    <label
+                      htmlFor="modalidades"
+                      className="mb-1 text-[#001429]"
+                    >
                       Modalidades
                     </label>
                     <select
@@ -132,7 +218,10 @@ export default function EditProfilePage() {
                 <section className="relative">
                   <h4 className="text-[#001429] mb-2">Imagem de Perfil</h4>
                   <div className="flex flex-col mb-2">
-                    <label htmlFor="imagemPerfil" className="mb-1 text-[#001429]">
+                    <label
+                      htmlFor="imagemPerfil"
+                      className="mb-1 text-[#001429]"
+                    >
                       Imagem de Perfil
                     </label>
                     <ProfilePhotoUploader />
