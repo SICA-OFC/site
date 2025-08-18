@@ -33,6 +33,7 @@ model usuarios {
   codigo_gerado_em   DateTime?     @db.Timestamptz(6)
   tentativas_login   Int           @default(0)
   tipo_usuario       tipo_usuario? @default(aluno)
+  foto_perfil        String?
   cursos             cursos        @relation(fields: [curso_id], references: [id])
 }
 

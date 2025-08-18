@@ -3,6 +3,10 @@ const bcrypt = require("bcryptjs");
 const { PrismaClient } = require("../generated/prisma/client.js");
 const prisma = new PrismaClient();
 
+const fs = require("fs");
+const path = require("path");
+const sharp = require("sharp");
+
 const { loadTemplate, enviarEmail } = require("../services/enviarEmail.js");
 const { verificarAccessToken, regerarAccessToken } = require("../services/verificarToken.js");
 const { sendEvent } = require("../services/sseService.js");
@@ -255,25 +259,53 @@ module.exports = {
 
     const { nome, curso_id, email, data_nascimento, telefone } = req.body;
 
+    let imageUrl = null;
+    if (req.file) {
+      const usuarioAtual = await prisma.usuarios.findUnique({
+        where: { id: data.id },
+      });
+
+      if (usuarioAtual.foto_perfil) {
+        const oldFilePath = path.join(process.cwd(), "uploads", path.basename(usuarioAtual.foto_perfil));
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+        }
+      }
+
+      const randomName = `${Date.now()}-${Math.floor(Math.random() * 10000)}.webp`;
+      const uploadDir = path.join(process.cwd(), "uploads");
+      const uploadPath = path.join(uploadDir, randomName);
+
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      await sharp(req.file.buffer).webp({ quality: 50 }).toFile(uploadPath);
+
+      imageUrl = `http://localhost:3000/uploads/${randomName}`;
+    }
+
     const usuario = await prisma.usuarios.update({
       where: { id: data.id },
       data: {
         nome: nome ?? undefined,
-        curso_id: curso_id ?? undefined,
         email: email ?? undefined,
         data_nascimento: data_nascimento ?? undefined,
         telefone: telefone ?? undefined,
+        foto_perfil: imageUrl ?? undefined,
+        cursos: { connect: { id: parseInt(curso_id) ?? undefined } },
       },
     });
 
     res.status(200).json({
-      mensagem: "Usuário Editado!",
+      mensagem: "Usuário editado com sucesso!",
       usuario: {
         nome: usuario.nome,
         curso_id: usuario.curso_id,
         email: usuario.email,
         data_nascimento: usuario.data_nascimento,
         telefone: usuario.telefone,
+        foto_perfil: imageUrl,
       },
     });
   },

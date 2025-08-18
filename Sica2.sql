@@ -63,6 +63,7 @@ CREATE TABLE usuarios (
   email                    VARCHAR(255)   NOT NULL UNIQUE,
   senha                    TEXT           NOT NULL,
   telefone                 VARCHAR(15),
+  foto_perfil              TEXT           NOT NULL,
   criado_em                TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   atualizado_em            TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   codigo_verificacao       INTEGER CHECK (codigo_verificacao BETWEEN 100000 AND 999999),

@@ -140,7 +140,7 @@ export default function CadastroPage() {
                   type="date"
                   id="nascimento"
                   name="nascimento"
-                  min="1920-01-01"
+                  min="2000-01-01"
                   max={new Date().toISOString().split("T")[0]}
                   required
                 />
@@ -181,6 +181,7 @@ export default function CadastroPage() {
                 </label>
                 <input
                   className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+                  maxLength="19"
                   value={telefone}
                   onChange={handleTelefoneChange}
                   type="text"

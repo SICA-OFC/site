@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import Logo from "../../assets/logo.png";
-import ProfilePhotoUploader from "../../components/profilePhotoUploader.jsx";
-import genericProfilePhoto from "../../assets/genericProfilePhoto.png";
+import ProfileUploader from "../../components/ProfileUploader.jsx";
+import genericProfilePhoto from "../../assets/profilePhoto.png";
 
 function ClickableUserEntry({ name, rm, course, modality }) {
   return (
@@ -95,7 +95,7 @@ export default function ManagementUsersPage() {
               <label className="block text-xs text-gray-600 uppercase mb-1">
                 Foto de Perfil
               </label>
-              <ProfilePhotoUploader
+              <ProfileUploader
                 photoUrl={genericProfilePhoto}
                 onPhotoChange={(newPhoto) =>
                   console.log("New photo URL:", newPhoto)
