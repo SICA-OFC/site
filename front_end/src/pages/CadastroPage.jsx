@@ -9,7 +9,7 @@ export default function CadastroPage() {
   const [rm, setRm] = useState("");
   const [nome, setNome] = useState("");
   const [periodo, setPeriodo] = useState("1");
-  const [curso, setCurso] = useState("");
+  const [curso, setCurso] = useState("1");
   const [email, setEmail] = useState("");
   const [data_nascimento, setData] = useState("");
   const [senha, setSenha] = useState("");

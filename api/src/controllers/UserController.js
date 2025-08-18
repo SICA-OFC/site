@@ -372,7 +372,7 @@ module.exports = {
         cursos: true,
       },
     });
-    
+
     if (!usuario) {
       return res.status(404).json({ error: "Usuário não encontrado." });
     }
@@ -381,6 +381,10 @@ module.exports = {
   },
 
   Logout: async (req, res) => {
-    return res.clearCookie(process.env.REFRESH_TOKEN).status(200).json({ mensagem: "Logout realizado com sucesso" });
+    return res
+      .clearCookie(process.env.REFRESH_TOKEN)
+      .clearCookie(process.env.ACCESS_TOKEN)
+      .status(200)
+      .json({ mensagem: "Logout realizado com sucesso" });
   },
 };

@@ -9,9 +9,8 @@ const Header = () => {
   const burgerRef = useRef(null);
   const fetchedRef = useRef(false);
 
+  const classToggle = (el, ...args) => args.map((e) => el.classList.toggle(e));
   const handleClick = () => {
-    const classToggle = (el, ...args) => args.map((e) => el.classList.toggle(e));
-
     if (menuRef.current) {
       menuRef.current.classList.toggle("translate-x-0");
       menuRef.current.classList.toggle("translate-x-full");
@@ -26,14 +25,14 @@ const Header = () => {
 
   useEffect(() => {
     if (fetchedRef.current) return;
-    
+
     const verificarSessao = async () => {
       try {
         const response = await fetch(`${BASE_URL}/usuario/verificarSessao`, {
           method: "POST",
           credentials: "include",
         });
-        
+
         if (response.ok) {
           setIsLoggedIn(true);
         } else {
@@ -44,10 +43,42 @@ const Header = () => {
         setIsLoggedIn(false);
       }
     };
-    
+
     verificarSessao();
     fetchedRef.current = true;
   }, [BASE_URL]);
+
+  const handleLogout = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(`${BASE_URL}/usuario/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+      const json = await res.json();
+
+      if (res.ok) {
+        setIsLoggedIn(false);
+      } else {
+        alert(json.erro || "Erro ao sair");
+      }
+    } catch (err) {
+      console.error("Erro no logout:", err);
+      alert("Erro inesperado ao sair");
+    }
+  };
+
+  const MenuPerfilRef = useRef(null);
+
+  function AbrirFecharMenu() {
+    const menu = MenuPerfilRef.current;
+    if (!menu) return;
+
+    if (menu.nextSibling.classList.contains("menu")) {
+      classToggle(menu.nextSibling, "md:flex", "md:hidden");
+    }
+  }
 
   return (
     <>
@@ -73,8 +104,12 @@ const Header = () => {
           </div>
 
           {isLoggedIn ? (
-            <Link to="/editar-perfil">
-              <button className="hidden md:flex items-center justify-center border-none hover:cursor-pointer p-0 size-12.5">
+            <>
+              <button
+                ref={MenuPerfilRef}
+                onClick={AbrirFecharMenu}
+                className="hidden md:flex items-center justify-center border-none hover:cursor-pointer p-0 size-12.5"
+              >
                 <svg className="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                   <path
                     fill="#f18e2c"
@@ -82,7 +117,18 @@ const Header = () => {
                   />
                 </svg>
               </button>
-            </Link>
+              <div className="menu hidden md:hidden bg-white h-15 w-15 rounded-xl absolute right-8.5 top-14 flex-col justify-center items-center">
+                <Link to="/editar-perfil" className="h-[50%] flex justify-center items-center text-destaque font-semibold">
+                  Perfil
+                </Link>
+                <button
+                  className="block bg-black text-white w-15 h-[50%] font-semibold text-sl rounded-lg shadow hover:cursor-pointer hover:outline-blue-700 hover:outline-1 hover:bg-neutra-preta transition"
+                  onClick={handleLogout}
+                >
+                  Sair
+                </button>
+              </div>
+            </>
           ) : (
             <Link to="/login">
               <button className="hidden md:block bg-white text-black w-24 h-12 hover:cursor-pointer hover:outline-blue-700 hover:outline-1 hover:bg-neutra-branca font-semibold text-xl rounded-lg shadow transition">
@@ -129,17 +175,25 @@ const Header = () => {
           </Link>
 
           {isLoggedIn ? (
-            <Link to="/editar-perfil" onClick={handleClick}>
-              <button className="flex items-center gap-3 border-none hover:cursor-pointer">
-                <svg className="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                  <path
-                    fill="#f18e2c"
-                    d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"
-                  />
-                </svg>
-                Perfil
+            <>
+              <Link to="/editar-perfil" onClick={handleClick}>
+                <button className="flex items-center gap-3 border-none hover:cursor-pointer">
+                  <svg className="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                    <path
+                      fill="#f18e2c"
+                      d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"
+                    />
+                  </svg>
+                  Perfil
+                </button>
+              </Link>
+              <button
+                className="block bg-black text-white w-24 h-12 font-semibold text-xl rounded-lg shadow hover:cursor-pointer hover:outline-blue-700 hover:outline-1 hover:bg-neutra-preta transition"
+                onClick={handleLogout}
+              >
+                Sair
               </button>
-            </Link>
+            </>
           ) : (
             <Link to="/login" onClick={handleClick}>
               <button className="block bg-black text-white w-24 h-12 font-semibold text-xl rounded-lg shadow hover:cursor-pointer hover:outline-blue-700 hover:outline-1 hover:bg-neutra-preta transition">
