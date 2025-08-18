@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import SelectCursos from "../components/selectCursos.jsx";
+import { toast, Bounce } from "react-toastify";
 
 export default function CadastroPage() {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
@@ -16,6 +17,17 @@ export default function CadastroPage() {
   const [telefone, setTelefone] = useState("");
 
   const navigate = useNavigate();
+  const toastSettings = {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    transition: Bounce,
+  };
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -47,7 +59,7 @@ export default function CadastroPage() {
     e.preventDefault();
 
     if (!executeRecaptcha) {
-      console.log("reCAPTCHA ainda não disponivel");
+      toast.error("Algo deu errado ao cadastrar! Tente novamente!", toastSettings);
       return;
     }
 
@@ -55,7 +67,7 @@ export default function CadastroPage() {
       const verifyResponse = await fetch(`${BASE_URL}/usuario/captcha?token=${tokenCaptcha}`);
       const verifyResult = await verifyResponse.json();
       if (!verifyResult.success || verifyResult.score < 0.5) {
-        alert("Verificação do reCAPTCHA falhou. Ação bloqueada.");
+        toast.error("Verificação do reCAPTCHA falhou. Ação bloqueada.", toastSettings);
         throw new Error("reCAPTCHA inválido.");
       }
 
@@ -77,13 +89,14 @@ export default function CadastroPage() {
       });
 
       const result = await response.json();
-      console.log("Resposta do servidor:", result);
 
       if (response.ok) {
+        toast.success("Cadastro feito com sucesso, prossiga pra autentificação de 2 fatores!", toastSettings);
         navigate("/confirmacao", {
           state: { accessToken: result.accessToken },
         });
       } else {
+        toast.error("Algo deu errado ao cadastrar! Tente novamente!", toastSettings);
         throw new Error(result.message || "Erro no cadastro");
       }
     });

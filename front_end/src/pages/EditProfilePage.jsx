@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import Logo from "../assets/logo.png";
 import ProfileUploader from "../components/ProfileUploader.jsx";
 import SelectCursos from "../components/selectCursos.jsx";
-import { toast, ToastContainer, Bounce} from "react-toastify";
+import { toast, Bounce } from "react-toastify";
 
 export default function EditProfilePage() {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
@@ -14,10 +14,17 @@ export default function EditProfilePage() {
   const [data_nascimento, setDataNascimento] = useState("");
   const [telefone, setTelefone] = useState("");
   const [file, setFile] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  {
-    isLoading ? "" : "";
-  }
+  const toastSettings = {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    transition: Bounce,
+  };
 
   const fetchedRef = useRef(false);
   const nomeRef = useRef(false);
@@ -30,19 +37,23 @@ export default function EditProfilePage() {
           method: "GET",
           credentials: "include",
         });
-        const result = await response.json();
-        console.log(result);
-        const usuario = result.usuario;
-        nomeRef.current = usuario.nome;
-        setRm(usuario.rm);
-        setNome(usuario.nome);
-        setEmail(usuario.email);
-        setDataNascimento(new Date(usuario.data_nascimento).toISOString().split("T")[0]);
-        setTelefone(usuario.telefone);
-        setPeriodo(`${usuario.cursos.periodo}`);
-        setCurso(usuario.curso_id);
-        setFile(usuario.foto_perfil || null);
+        if (response.ok) {
+          const result = await response.json();
+          const usuario = result.usuario;
+          nomeRef.current = usuario.nome;
+          setRm(usuario.rm);
+          setNome(usuario.nome);
+          setEmail(usuario.email);
+          setDataNascimento(new Date(usuario.data_nascimento).toISOString().split("T")[0]);
+          setTelefone(usuario.telefone);
+          setPeriodo(`${usuario.cursos.periodo}`);
+          setCurso(usuario.curso_id);
+          setFile(usuario.foto_perfil || null);
+        } else {
+          toast.error("Algo deu errado ao editar o perfil! Tente novamente!", toastSettings);
+        }
       } catch (error) {
+        toast.error("Algo deu errado ao editar o perfil! Tente novamente!", toastSettings);
         console.error("Erro ao verificar autenticação:", error);
       }
     };
@@ -73,7 +84,6 @@ export default function EditProfilePage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     const formData = new FormData();
     formData.append("rm", rm);
     formData.append("nome", nome);
@@ -93,21 +103,9 @@ export default function EditProfilePage() {
     });
 
     const result = await response.json();
-    console.log("Resposta do servidor:", result);
     if (response.ok) {
-      toast.success(result.mensagem, {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        transition: Bounce
-      });
+      toast.success(result.mensagem, toastSettings);
       nomeRef.current = nome;
-      setIsLoading(false);
     } else {
       throw new Error(result.message || "Erro no cadastro");
     }
@@ -283,7 +281,6 @@ export default function EditProfilePage() {
           </form>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 }

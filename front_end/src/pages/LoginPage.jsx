@@ -3,6 +3,7 @@ import sideImage from "../assets/sideImage1.png";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import { toast, Bounce } from "react-toastify";
 
 export default function LoginPage() {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
@@ -15,6 +16,18 @@ export default function LoginPage() {
 
   const evtSourceRef = useRef(null);
   const location = useLocation();
+
+  const toastSettings = {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    transition: Bounce,
+  };
 
   useEffect(() => {
     const isLoginPage = location.pathname === "/login";
@@ -35,28 +48,14 @@ export default function LoginPage() {
         const evtSource = new EventSource(`${BASE_URL}/usuario/events/${userId}`);
         evtSourceRef.current = evtSource;
 
-        evtSource.addEventListener("account_unlock", (e) => {
-          const data = JSON.parse(e.data);
-          console.log("Usuário desbloqueado:", data);
+        evtSource.addEventListener("account_unlock", () => {
+          toast.info("Usuário desbloqueado!", toastSettings);
           evtSource.close();
-        });
-
-        evtSource.addEventListener("account_lock", () => {
-          console.log("Usuário bloqueado. Contate o suporte.");
         });
 
         evtSource.addEventListener("account_close_connection", () => {
-          console.log("Conexão encerrada por evento.");
           evtSource.close();
         });
-
-        evtSource.onopen = () => {
-          console.log("SSE conectada na página de login.");
-        };
-
-        evtSource.onerror = (err) => {
-          console.error("Erro SSE:", err);
-        };
       } catch (err) {
         console.error("Erro ao configurar SSE:", err);
       }
@@ -67,7 +66,6 @@ export default function LoginPage() {
     return () => {
       if (evtSourceRef.current) {
         evtSourceRef.current.close();
-        console.log("SSE fechada ao sair da página de login.");
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -85,7 +83,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!executeRecaptcha) {
-      console.log("reCAPTCHA ainda não disponivel");
+      toast.error("Algo deu errado ao logar! Tente novamente!", toastSettings);
       return;
     }
 
@@ -93,7 +91,7 @@ export default function LoginPage() {
       const verifyResponse = await fetch(`${BASE_URL}/usuario/captcha?token=${tokenCaptcha}`);
       const verifyResult = await verifyResponse.json();
       if (!verifyResult.success || verifyResult.score < 0.5) {
-        alert("Verificação do reCAPTCHA falhou. Ação bloqueada.");
+        toast.error("Verificação do reCAPTCHA falhou. Ação bloqueada.", toastSettings);
         throw new Error("reCAPTCHA inválido.");
       }
 
@@ -110,18 +108,16 @@ export default function LoginPage() {
         const result = await response.json();
 
         if (!response.ok) {
-          throw new Error(`Erro ${response.status}: ${JSON.stringify(result)}`);
+          toast.error(result.erro, toastSettings);
         }
 
         const accessToken = result.accessToken;
-        console.log("Token recebido:", accessToken);
-
         if (accessToken) {
+          toast.success("Logado feito com sucesso, prossiga pra autentificação de 2 fatores!", toastSettings);
           navigate("/confirmacao", {
             state: { accessToken },
           });
         }
-
       });
     });
   };

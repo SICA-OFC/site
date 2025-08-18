@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useEffect, useRef, useState } from "react";
+import { toast, Bounce } from "react-toastify";
 
 const Header = () => {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
@@ -8,6 +9,17 @@ const Header = () => {
   const menuRef = useRef(null);
   const burgerRef = useRef(null);
   const fetchedRef = useRef(false);
+  const toastSettings = {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    transition: Bounce,
+  };
 
   const classToggle = (el, ...args) => args.map((e) => el.classList.toggle(e));
   const handleClick = () => {
@@ -39,7 +51,7 @@ const Header = () => {
           setIsLoggedIn(false);
         }
       } catch (error) {
-        console.error("Erro ao verificar autenticação:", error);
+        console.error("Erro ao verificar a sessão:", error);
         setIsLoggedIn(false);
       }
     };
@@ -56,16 +68,16 @@ const Header = () => {
         method: "POST",
         credentials: "include",
       });
-      const json = await res.json();
 
       if (res.ok) {
+        toast.success("Você deslogou com sucesso!", toastSettings);
         setIsLoggedIn(false);
       } else {
-        alert(json.erro || "Erro ao sair");
+        toast.error("Algo deu errado ao sair! Tente novamente!", toastSettings);
       }
     } catch (err) {
+      toast.error("Algo deu errado ao sair! Tente novamente!", toastSettings);
       console.error("Erro no logout:", err);
-      alert("Erro inesperado ao sair");
     }
   };
 
@@ -118,7 +130,10 @@ const Header = () => {
                 </svg>
               </button>
               <div className="menu hidden md:hidden bg-white h-15 w-15 rounded-xl absolute right-8.5 top-14 flex-col justify-center items-center">
-                <Link to="/editar-perfil" className="h-[50%] flex justify-center items-center text-destaque font-semibold">
+                <Link
+                  to="/editar-perfil"
+                  className="h-[50%] flex justify-center items-center text-destaque font-semibold"
+                >
                   Perfil
                 </Link>
                 <button

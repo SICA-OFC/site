@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import { ToastContainer } from "react-toastify";
 
 import HomePage from "./pages/HomePage.jsx";
 import CadastroPage from "./pages/CadastroPage.jsx";
@@ -10,7 +11,7 @@ import BracketPage from "./pages/BracketPage.jsx";
 import ModalitiesPage from "./pages/ModalitiesPage.jsx";
 import EditProfilePage from "./pages/EditProfilePage.jsx";
 import AdmHomePage from "./pages/admPages/HomePage.jsx";
-import ManagementUsersPage from "./pages/admPages/ManagementUsersPage.jsx"; 
+import ManagementUsersPage from "./pages/admPages/ManagementUsersPage.jsx";
 import ManagementModalityPage from "./pages/admPages/ManagementModalitiesPage.jsx";
 import BracketEditorPage from "./pages/admPages/BracketEditorPage.jsx";
 // import TeamManagementPage from "./pages/admPages/TeamManagement.jsx";
@@ -22,7 +23,7 @@ const RECAPTCHA_KEY = import.meta.env.VITE_APP_RECAPTCHA_KEY;
 const router = createBrowserRouter([
   {
     path: "/",
-    element: < HomePage />,
+    element: <HomePage />,
   },
   {
     path: "/cadastro",
@@ -87,5 +88,6 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <RouterProvider router={router} />
+    <ToastContainer />
   </StrictMode>
 );
