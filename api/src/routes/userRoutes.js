@@ -9,7 +9,6 @@ const captcha = require("../services/captcha.js");
 // Rotas públicas
 router.post("/cadastro", catchAsync(userController.CriarUsuario));
 router.post("/login", catchAsync(userController.LogarUsuario));
-router.post("/token", catchAsync(userController.RegerarToken));
 router.get("/captcha", catchAsync(captcha));
 
 router.get("/approve/:user_id/:action", catchAsync(userController.LiberarUsuario));
@@ -19,6 +18,7 @@ router.get("/events/:user_id", (req, res) => {
 });
 
 router.get("/ver", catchAsync(userController.VerID));
+router.post("/verificarSessao", catchAsync(userController.VerificarSessao));
 
 // Rotas protegidas (requerem autenticação)
 router.use(authToken);
@@ -28,7 +28,6 @@ router.post("/enviarCodigo", catchAsync(userController.EnviarCodigo));
 router.patch("/editar", catchAsync(userController.EditarUsuario));
 router.patch("/redefinirSenha", catchAsync(userController.RedefinirSenha));
 router.delete("/deletar", catchAsync(userController.DeletarUsuario));
-router.post("/verificarSessao", catchAsync(userController.VerificarSessao));
 router.post("/logout", catchAsync(userController.Logout));
 
 module.exports = router;

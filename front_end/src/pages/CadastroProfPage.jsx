@@ -1,7 +1,6 @@
 import logo from "../assets/logo.png";
-import line from "../assets/Line.png";
 import { useNavigate, Link } from "react-router-dom";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 function CadastroProfPage() {

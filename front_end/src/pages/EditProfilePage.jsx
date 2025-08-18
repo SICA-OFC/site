@@ -1,13 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Logo from "../assets/logo.png";
 import ProfilePhotoUploader from "../components/profilePhotoUploader.jsx";
 import SelectCursos from "../components/selectCursos.jsx";
 import { useNavigate } from "react-router-dom";
 
 export default function EditProfilePage() {
-  const [data, setData] = useState(false);
+  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+  const [rm, setRm] = useState("");
+  const [nome, setNome] = useState("");
+  const [periodo, setPeriodo] = useState("");
+  const [curso, setCurso] = useState("");
+  const [email, setEmail] = useState("");
+  const [data_nascimento, setDataNascimento] = useState("");
+  const [telefone, setTelefone] = useState("");
 
+  const fetchedRef = useRef(false);
+  const nomeRef = useRef(false);
   useEffect(() => {
+    if (fetchedRef.current) return;
+
     const verUsuario = async () => {
       try {
         const response = await fetch(`${BASE_URL}/usuario/`, {
@@ -16,24 +27,23 @@ export default function EditProfilePage() {
         });
         const result = await response.json();
         console.log(result);
-        setData(result);
+        const usuario = result.usuario;
+        nomeRef.current = usuario.nome;
+        setRm(usuario.rm);
+        setNome(usuario.nome);
+        setPeriodo(`${usuario.cursos.periodo}`);
+        setEmail(usuario.email);
+        setDataNascimento(new Date(usuario.data_nascimento).toISOString().split("T")[0]);
+        setTelefone(usuario.telefone);
+        setCurso(usuario.curso_id);
       } catch (error) {
         console.error("Erro ao verificar autenticação:", error);
       }
     };
 
     verUsuario();
-  }, []);
-
-  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
-  const [rm, setRm] = useState("");
-  const [nome, setNome] = useState("");
-  const [periodo, setPeriodo] = useState("Manhã");
-  const [curso, setCurso] = useState("1DS");
-  const [email, setEmail] = useState("");
-  const [data_nascimento, setDataNascimento] = useState("");
-  const [senha, setSenha] = useState("");
-  const [telefone, setTelefone] = useState("");
+    fetchedRef.current = true;
+  }, [BASE_URL]);
 
   const navigate = useNavigate();
 
@@ -50,11 +60,7 @@ export default function EditProfilePage() {
   }
 
   function handleDataChange(e) {
-    setData(e.target.value);
-  }
-
-  function handleSenhaChange(e) {
-    setSenha(e.target.value);
+    setDataNascimento(e.target.value);
   }
 
   function handleTelefoneChange(e) {
@@ -65,10 +71,12 @@ export default function EditProfilePage() {
     e.preventDefault();
 
     const userInfo = {
+      rm,
+      nome,
       email,
       data_nascimento: new Date(data_nascimento),
-      senha,
       telefone,
+      curso_id: parseInt(curso),
     };
 
     const response = await fetch(`${BASE_URL}/usuario/editar`, {
@@ -78,8 +86,7 @@ export default function EditProfilePage() {
     });
 
     const result = await response.json();
-    setData(result.usuario);
-    console.log("Resposta do servidor:", data);
+    console.log("Resposta do servidor:", result.usuario);
     if (response.ok) {
       navigate("/editar-perfil", {
         state: { accessToken: result.accessToken },
@@ -104,15 +111,29 @@ export default function EditProfilePage() {
             <h2 className="text-[#092843] self-center">Editar Perfil</h2>
           </div>
 
-          <h3 className="text-[#092843] mb-2">Olá, Nome do Brother</h3>
+          <h3 className="text-[#092843] mb-2">Olá, {nomeRef.current || "Usuário"}</h3>
           <div className="border-t border-[#092843] w-full mb-5" />
 
-          <form action="#" method="post" className="flex gap-[10%] w-full">
+          <form action="#" onSubmit={handleSubmit} method="post" className="flex gap-[10%] w-full">
             <div className="flex justify-around w-full">
               <div className="flex flex-col gap-2 w-2/5">
                 {/* Dados Pessoais */}
                 <section className="relative">
                   <h4 className="text-[#001429] mb-2">Dados Pessoais</h4>
+                  <div className="flex flex-col mb-2">
+                    <label htmlFor="rm" className="mb-1 text-[#001429]">
+                      RM
+                    </label>
+                    <input
+                      type="text"
+                      id="rm"
+                      name="rm"
+                      value={rm}
+                      onChange={handleRmChange}
+                      required
+                      className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                    />
+                  </div>
                   <div className="flex flex-col mb-2">
                     <label htmlFor="name" className="mb-1 text-[#001429]">
                       Nome
@@ -121,8 +142,10 @@ export default function EditProfilePage() {
                       type="text"
                       id="name"
                       name="name"
-                      value={data.nome}
+                      value={nome}
+                      onChange={handleNomeChange}
                       required
+                      autoComplete="name"
                       className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
                   </div>
@@ -134,8 +157,10 @@ export default function EditProfilePage() {
                       type="email"
                       id="email"
                       name="email"
-                      value={data.email}
+                      value={email}
+                      onChange={handleEmailChange}
                       required
+                      autoComplete="email"
                       className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
                   </div>
@@ -148,22 +173,21 @@ export default function EditProfilePage() {
                       maxLength="11"
                       id="telefone"
                       name="telefone"
-                      value={data.telefone}
+                      value={telefone}
+                      onChange={handleTelefoneChange}
                       required
                       className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
                   </div>
                   <div className="flex flex-col mb-2">
-                    <label
-                      htmlFor="dataNascimento"
-                      className="mb-1 text-[#001429]"
-                    >
+                    <label htmlFor="dataNascimento" className="mb-1 text-[#001429]">
                       Data de Nascimento
                     </label>
                     <input
                       type="date"
                       id="dataNascimento"
-                      value={data.data_nascimento}
+                      value={data_nascimento}
+                      onChange={handleDataChange}
                       required
                       className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                     />
@@ -172,9 +196,7 @@ export default function EditProfilePage() {
 
                 {/* Informações Acadêmicas */}
                 <section className="relative mt-6">
-                  <h4 className="text-[#001429] mb-2">
-                    Informações Acadêmicas
-                  </h4>
+                  <h4 className="text-[#001429] mb-2">Informações Acadêmicas</h4>
                   <div className="flex flex-col mb-2">
                     <label htmlFor="curso" className="mb-1 text-[#001429]">
                       Curso
@@ -192,10 +214,7 @@ export default function EditProfilePage() {
                 <section className="relative mt-6">
                   <h4 className="text-[#001429] mb-2">Modalidades</h4>
                   <div className="flex flex-col mb-2">
-                    <label
-                      htmlFor="modalidades"
-                      className="mb-1 text-[#001429]"
-                    >
+                    <label htmlFor="modalidades" className="mb-1 text-[#001429]">
                       Modalidades
                     </label>
                     <select
@@ -218,10 +237,7 @@ export default function EditProfilePage() {
                 <section className="relative">
                   <h4 className="text-[#001429] mb-2">Imagem de Perfil</h4>
                   <div className="flex flex-col mb-2">
-                    <label
-                      htmlFor="imagemPerfil"
-                      className="mb-1 text-[#001429]"
-                    >
+                    <label htmlFor="imagemPerfil" className="mb-1 text-[#001429]">
                       Imagem de Perfil
                     </label>
                     <ProfilePhotoUploader />

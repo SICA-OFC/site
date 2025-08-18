@@ -4,7 +4,7 @@ const { PrismaClient } = require("../generated/prisma/client.js");
 const prisma = new PrismaClient();
 
 const { loadTemplate, enviarEmail } = require("../services/enviarEmail.js");
-const { verificarRefreshToken } = require("../services/verificarToken.js");
+const { verificarAccessToken, regerarAccessToken } = require("../services/verificarToken.js");
 const { sendEvent } = require("../services/sseService.js");
 const gerarCodigo = require("../services/gerarCodigo.js");
 const { gerarAccessToken, gerarRefreshToken } = require("../services/gerarToken.js");
@@ -117,26 +117,6 @@ module.exports = {
     });
   },
 
-  RegerarToken: async (req, res) => {
-    const refreshToken = req.cookies[process.env.REFRESH_TOKEN];
-    if (!refreshToken) {
-      return res.status(401).json({ erro: "Refresh token não encontrado" });
-    }
-
-    const payload = verificarRefreshToken(refreshToken);
-    if (payload.erro) {
-      return res.status(401).json({ erro: payload.erro });
-    }
-
-    const accessToken = gerarAccessToken({ id: payload.id, email: payload.email });
-
-    // Opcional: rotacionar refresh token
-    // const newRefreshToken = gerarRefreshToken(payload);
-    // res.cookie('refreshToken', newRefreshToken, { httpOnly: true, sameSite: 'Strict', secure: true });
-
-    return res.status(200).json({ accessToken });
-  },
-
   LiberarUsuario: async (req, res) => {
     const { user_id, action } = req.params;
     const { token } = req.query;
@@ -213,7 +193,6 @@ module.exports = {
       const usuario = await prisma.usuarios.update({
         where: { email: data.email },
         data: {
-          verificado: true,
           codigo_verificacao: null,
           codigo_gerado_em: null,
         },
@@ -345,14 +324,42 @@ module.exports = {
   },
 
   VerificarSessao: async (req, res) => {
-    const data = req.user;
-    if (!data) {
+    let access_token = req.cookies[process.env.ACCESS_TOKEN];
+
+    if (!access_token) {
+      if (req.cookies[process.env.REFRESH_TOKEN]) {
+        try {
+          access_token = await regerarAccessToken(req.cookies[process.env.REFRESH_TOKEN]);
+          res.cookie(process.env.ACCESS_TOKEN, access_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "Lax",
+            maxAge: 15 * 60 * 1000,
+          });
+        } catch (err) {
+          return res.status(401).json({ erro: "Refresh token inválido ou expirado." });
+        }
+      } else {
+        return res.status(404).json({ erro: "Usuário não logado." });
+      }
+    }
+
+    const data = verificarAccessToken(access_token);
+    if (data.erro) {
+      return res.status(401).json({ erro: data.erro });
+    }
+
+    const usuario = await prisma.usuarios.findUnique({
+      where: { email: data.email },
+    });
+
+    if (!usuario) {
       return res.status(404).json({ erro: "Usuário não encontrado" });
     }
 
-    res.json({ mensagem: "O usuário está logado.", usuario: data });
+    res.json({ mensagem: "O usuário está logado.", usuario });
   },
-  
+
   VerUsuario: async (req, res) => {
     const data = req.user;
     if (!data) {
@@ -361,13 +368,16 @@ module.exports = {
 
     const usuario = await prisma.usuarios.findUnique({
       where: { email: data.email },
+      include: {
+        cursos: true,
+      },
     });
-
+    
     if (!usuario) {
       return res.status(404).json({ error: "Usuário não encontrado." });
     }
 
-    res.json({ mensagem: "O usuário está logado.", usuario: data });
+    res.json({ mensagem: "O usuário está logado.", usuario });
   },
 
   Logout: async (req, res) => {

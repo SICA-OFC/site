@@ -139,7 +139,6 @@ exports.Prisma.UsuariosScalarFieldEnum = {
   telefone: 'telefone',
   criado_em: 'criado_em',
   atualizado_em: 'atualizado_em',
-  verificado: 'verificado',
   codigo_verificacao: 'codigo_verificacao',
   codigo_gerado_em: 'codigo_gerado_em',
   tentativas_login: 'tentativas_login',
@@ -160,12 +159,6 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-exports.periodo_escolar = exports.$Enums.periodo_escolar = {
-  Manh_: 'Manh_',
-  Tarde: 'Tarde',
-  Noite: 'Noite'
-};
-
 exports.tipo_usuario = exports.$Enums.tipo_usuario = {
   aluno: 'aluno',
   professor: 'professor',

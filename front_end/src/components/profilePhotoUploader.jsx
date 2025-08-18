@@ -63,6 +63,7 @@ export default function ProfilePhotoUploader({ photoUrl, onPhotoChange }) {
 
       <input
         type="file"
+        id="imagemPerfil"
         ref={fileInputRef}
         onChange={handleFileChange}
         accept="image/*"

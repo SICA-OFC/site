@@ -8,8 +8,8 @@ export default function CadastroPage() {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const [rm, setRm] = useState("");
   const [nome, setNome] = useState("");
-  const [periodo, setPeriodo] = useState("Manhã");
-  const [curso, setCurso] = useState("1DS");
+  const [periodo, setPeriodo] = useState("1");
+  const [curso, setCurso] = useState("");
   const [email, setEmail] = useState("");
   const [data_nascimento, setData] = useState("");
   const [senha, setSenha] = useState("");

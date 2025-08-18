@@ -9,11 +9,11 @@ datasource db {
 }
 
 model cursos {
-  id       Int             @id @default(autoincrement())
-  sigla    String          @db.VarChar(10)
+  id       Int        @id @default(autoincrement())
+  sigla    String     @db.VarChar(10)
   ano      Int
-  nome     String          @db.VarChar(100)
-  periodo  periodo_escolar
+  nome     String     @db.VarChar(100)
+  periodo  Int
   usuarios usuarios[]
 }
 
@@ -29,18 +29,11 @@ model usuarios {
   telefone           String?       @db.VarChar(15)
   criado_em          DateTime      @default(now()) @db.Timestamptz(6)
   atualizado_em      DateTime?     @default(now()) @db.Timestamptz(6)
-  verificado         Boolean       @default(false)
   codigo_verificacao Int?
   codigo_gerado_em   DateTime?     @db.Timestamptz(6)
   tentativas_login   Int           @default(0)
   tipo_usuario       tipo_usuario? @default(aluno)
   cursos             cursos        @relation(fields: [curso_id], references: [id])
-}
-
-enum periodo_escolar {
-  Manh_ @map("Manhã")
-  Tarde
-  Noite
 }
 
 enum tipo_usuario {
