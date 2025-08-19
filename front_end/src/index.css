@@ -1,0 +1,25 @@
+* {
+  -webkit-user-select: none; 
+  -ms-user-select: none;
+  user-select: none; 
+}
+
+body {
+  background-color: #f5f5f5;
+}
+
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Energy";
+  src: url(assets/font/LTEnergy-Semi-Italic.otf);
+}
+
+
+@theme {
+  --color-neutra-branca: #f5f5f5;
+  --color-primaria: #de6d3d;
+  --color-destaque: #f18e2c;
+  --color-secundaria: #092843;
+  --color-neutra-preta: #001429;
+}
