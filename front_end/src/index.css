@@ -1,7 +1,7 @@
 * {
-  -webkit-user-select: none; 
+  -webkit-user-select: none;
   -ms-user-select: none;
-  user-select: none; 
+  user-select: none;
 }
 
 body {
@@ -14,7 +14,6 @@ body {
   font-family: "Energy";
   src: url(assets/font/LTEnergy-Semi-Italic.otf);
 }
-
 
 @theme {
   --color-neutra-branca: #f5f5f5;

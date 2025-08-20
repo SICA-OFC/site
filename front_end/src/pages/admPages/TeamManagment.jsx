@@ -8,14 +8,14 @@ export default function TeamManagement() {
         <div className="flex items-center justify-center mb-12 -ml-[550px]">
           <img src={logo} alt="Logo" className="w-[80px]" />
           <div className="border-l border-[#001429] w-[10px] h-[60px] mx-4"></div>
-          <h2 className="text-lg font-semibold">Área do Administrador</h2>
+          <h2 className="text-lg font-[energy]">Área do Administrador</h2>
         </div>
 
         <div className="w-full">
-          <h1 className="text-2xl font-semibold text-center text-[#001429] mb-8">
+          <h1 className="text-2xl font-[energy] text-center text-[#001429] mb-8">
             Gerenciamento de Equipes
           </h1>
-          <div className="grid gap-6">
+          <div className="grid gap-6 justify-center">
             <TeamBlock
               image={logo}
               alt={"Equipe A"}

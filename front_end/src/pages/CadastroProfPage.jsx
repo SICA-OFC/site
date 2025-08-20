@@ -19,13 +19,26 @@ function CadastroProfPage() {
   function handleChange(e) {
     const { name, value } = e.target;
     switch (name) {
-      case "rm": setRm(value); break;
-      case "nome": setNome(value); break;
-      case "email": setEmail(value); break;
-      case "nascimento": setData(value); break;
-      case "senha": setSenha(value); break;
-      case "telefone": setTelefone(value); break;
-      default: break;
+      case "rm":
+        setRm(value);
+        break;
+      case "nome":
+        setNome(value);
+        break;
+      case "email":
+        setEmail(value);
+        break;
+      case "nascimento":
+        setData(value);
+        break;
+      case "senha":
+        setSenha(value);
+        break;
+      case "telefone":
+        setTelefone(value);
+        break;
+      default:
+        break;
     }
   }
 
@@ -39,7 +52,9 @@ function CadastroProfPage() {
 
     try {
       const tokenCaptcha = await executeRecaptcha("login_form");
-      const verifyResponse = await fetch(`${BASE_URL}/usuario/captcha?token=${tokenCaptcha}`);
+      const verifyResponse = await fetch(
+        `${BASE_URL}/usuario/captcha?token=${tokenCaptcha}`
+      );
       const verifyResult = await verifyResponse.json();
 
       if (!verifyResult.success || verifyResult.score < 0.5) {
@@ -66,7 +81,9 @@ function CadastroProfPage() {
       const result = await response.json();
 
       if (response.ok) {
-        navigate("/confirmacao-cadastro", { state: { accessToken: result.accessToken } });
+        navigate("/confirmacao-cadastro", {
+          state: { accessToken: result.accessToken },
+        });
       } else {
         alert(result.message || "Erro no cadastro");
       }
@@ -83,20 +100,24 @@ function CadastroProfPage() {
     >
       <div className="flex max-w-7xl w-full bg-gray-100 shadow-md rounded-lg overflow-hidden">
         <div className="flex-1 p-10 flex flex-col gap-4 justify-center">
-          <div className="flex items-center justify-evenly w-52 mb-4">
-            <div className="flex items-center mb-1">
-              <img src={logo} alt="Logo SICA" className="w-10 h-10 mr-1" />
-            </div>
-            <div className="h-px w-full bg-gray-400 mx-2"></div>
-            <h2 className="text-2xl font-semibold text-[#001429]">Cadastro - 2</h2>
+          <div className="flex flex-rol items-center gap-2 w-full">
+            <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
+            <div className="h-9 border-l border-black" />
+            <h1 className="font-[energy]">Cadastro</h1>
           </div>
 
-          <form onSubmit={handleSubmit} className="w-full flex flex-col items-center gap-10" noValidate>
+          <form
+            onSubmit={handleSubmit}
+            className="w-full flex flex-col items-center gap-10"
+            noValidate
+          >
             <div className="flex gap-10 w-full">
               {/* Coluna esquerda */}
               <div className="flex flex-col gap-4 w-1/2">
                 <div className="flex flex-col">
-                  <label htmlFor="rm" className="text-[#001429] mb-1">RM</label>
+                  <label htmlFor="rm" className="text-[#001429] mb-1">
+                    RM
+                  </label>
                   <input
                     id="rm"
                     name="rm"
@@ -112,7 +133,9 @@ function CadastroProfPage() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="nome" className="text-[#001429] mb-1">Nome</label>
+                  <label htmlFor="nome" className="text-[#001429] mb-1">
+                    Nome
+                  </label>
                   <input
                     id="nome"
                     name="nome"
@@ -126,7 +149,9 @@ function CadastroProfPage() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="email" className="text-[#001429] mb-1">Email</label>
+                  <label htmlFor="email" className="text-[#001429] mb-1">
+                    Email
+                  </label>
                   <input
                     id="email"
                     name="email"
@@ -142,7 +167,9 @@ function CadastroProfPage() {
               {/* Coluna direita */}
               <div className="flex flex-col gap-4 w-1/2">
                 <div className="flex flex-col">
-                  <label htmlFor="nascimento" className="text-[#001429] mb-1">Data de Nascimento</label>
+                  <label htmlFor="nascimento" className="text-[#001429] mb-1">
+                    Data de Nascimento
+                  </label>
                   <input
                     id="nascimento"
                     name="nascimento"
@@ -157,7 +184,9 @@ function CadastroProfPage() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="senha" className="text-[#001429] mb-1">Senha</label>
+                  <label htmlFor="senha" className="text-[#001429] mb-1">
+                    Senha
+                  </label>
                   <input
                     id="senha"
                     name="senha"
@@ -170,7 +199,9 @@ function CadastroProfPage() {
                 </div>
 
                 <div className="flex flex-col">
-                  <label htmlFor="telefone" className="text-[#001429] mb-1">Telefone</label>
+                  <label htmlFor="telefone" className="text-[#001429] mb-1">
+                    Telefone
+                  </label>
                   <input
                     id="telefone"
                     name="telefone"
@@ -186,7 +217,7 @@ function CadastroProfPage() {
 
             <button
               type="submit"
-              className="mt-1 px-6 py-3 bg-[#092843] text-white rounded-md w-1/2 hover:bg-white hover:text-[#001429] hover:border hover:border-[#001429] transition-colors"
+              className="mt-1 px-6 py-3 bg-[#092843] text-white rounded-md w-1/2 hover:bg-white hover:text-[#001429] hover:border hover:border-[#001429] transition-colors cursor-pointer"
             >
               Cadastrar
             </button>

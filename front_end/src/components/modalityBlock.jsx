@@ -1,12 +1,12 @@
 export default function ModalityBlock({ modality, image, alt }) {
   return (
     <div className="relative flex flex-col items-center justify-center w-[425px] bg-[#f18e2c] rounded-b-[5px] transition-transform duration-300 hover:scale-[1.04]">
-      <button className="w-[50px] h-[50px] absolute top-[10px] right-[10px] bg-[#001429b6] hover:bg-[#001429] border-none cursor-pointer transition duration-300 flex items-center justify-center">
+      <button className="w-[50px] h-[50px] absolute top-[10px] right-[10px] bg-[#001429b6] hover:bg-[#001429] border-transparent rounded-2xl cursor-pointer transition duration-300 flex items-center justify-center">
         <svg
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="w-[35px] h-[35px] -ml-[11px] -mt-[3px]"
+          className="w-[35px] h-[35px]"
         >
           <path
             d="M10 11V17"
@@ -46,8 +46,8 @@ export default function ModalityBlock({ modality, image, alt }) {
         </svg>
       </button>
       <img className="w-full object-cover" src={image} alt={alt} />
-      <div>
-        <h2>{modality}</h2>
+      <div className="p-2">
+        <h1 className="font-[energy] text-white">{modality}</h1>
       </div>
     </div>
   );

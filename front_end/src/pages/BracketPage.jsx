@@ -26,7 +26,7 @@ export default function BracketPage() {
       <Header />
       <section className="min-h-[746px]">
         <div
-          className="w-4/5 max-w-[1770px] mx-auto py-10 flex flex-row justify-evenly"
+          className="w-4/5 max-w-[1770px] mx-auto py-10 flex flex-row justify-evenly pt-80.25 pb-80.25"
           ref={containerRef}
         >
           <div className="bracket-division flex flex-col justify-around h-[250px]">

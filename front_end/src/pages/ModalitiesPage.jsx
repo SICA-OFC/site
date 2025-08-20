@@ -8,16 +8,15 @@ export default function Modalidades() {
   return (
     <div>
       <Header />
-
       {/* Banner com imagem e texto sobreposto */}
       <div className="relative w-full">
         <img
           src={Banner}
           alt="Garota fazendo ginástica artística"
-          className="w-full h-auto mt-[-90px]"
+          className="w-full h-auto"
         />
         <div className="absolute top-[20%] left-[55%] text-[#f5f5f5]">
-          <h1 className="text-[2.5rem] leading-tight">
+          <h1 className="text-[2.5rem] leading-tight font-[energy]">
             Desafie-se
             <br />
             Conquiste
@@ -29,7 +28,9 @@ export default function Modalidades() {
 
       {/* Conteúdo principal */}
       <div className="w-[80%] max-w-[1770px] mx-auto">
-        <h1 className="my-[150px] text-center text-[2.5rem]">Modalidades</h1>
+        <h1 className="my-[150px] text-center text-[2.5rem] font-[energy]">
+          Modalidades
+        </h1>
         <div className="mb-[150px]">
           <Carousel />
         </div>

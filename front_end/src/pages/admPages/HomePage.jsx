@@ -14,48 +14,48 @@ export default function ADMHomePage() {
           <div className="flex items-center gap-2">
             <img src={Logo} alt="Imagem do logo" className="w-[10%] pb-10" />
             <div className="border-l border-[#0c2442] w-[10px] h-[50px] mb-4"></div>
-            <div className="font-semibold text-sm">
+            <div className="text-lg font-[energy]">
               <h1>Área do Administrador</h1>
             </div>
           </div>
         </div>
 
         {/* Título */}
-        <h1 className="text-[1.875rem] font-semibold text-[#0c2442] mb-[10%]">
+        <h1 className="text-[1.875rem] font-[energy] text-[#0c2442] mb-[10%]">
           Olá, Nome do ADM!
         </h1>
 
         {/* Botões de gerenciamento */}
         <div className="grid grid-cols-2 gap-4 w-full mb-8">
           <Link to="/adm/modalidade/gerenciar-chaves">
-            <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442]">
-              GERENCIAR CHAVES
+            <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442] cursor-pointer">
+              Gerenciar Chaves
             </button>
           </Link>
 
           <Link to="/adm/modalidade/gerenciar-times">
-            <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442]">
-              GERENCIAR TIMES
+            <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442] cursor-pointer">
+              Gerenciar Times
             </button>
           </Link>
 
           <Link to="/adm/modalidade/gerenciar-usuarios">
-            <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442]">
-              GERENCIAR USUÁRIOS
+            <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442] cursor-pointer">
+              Gerenciar Usuários
             </button>
           </Link>
 
           <Link to="/adm/modalidade/criar-torneio">
-            <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442]">
-              CRIAR TORNEIO
+            <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442] cursor-pointer">
+              Criar Torneios
             </button>
           </Link>
         </div>
 
         {/* Botão voltar */}
         <Link to="/adm">
-          <button className="bg-[#f18e2c] text-[#f5f5f5] py-3 px-6 rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#f18e2c] hover:border hover:border-[#f18e2c]">
-            VOLTAR
+          <button className="bg-[#f18e2c] text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#f18e2c] hover:border hover:border-[#f18e2c] cursor-pointer">
+            Voltar
           </button>
         </Link>
       </div>

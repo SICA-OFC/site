@@ -17,7 +17,7 @@ export default function ManagementModalitiesPage() {
           <div className="flex items-center gap-2">
             <img src={Logo} alt="Imagem do logo" className="w-[10%] pb-10" />
             <div className="border-l border-[#0c2442] w-[10px] h-[50px] mb-4"></div>
-            <div className="font-semibold text-sm text-[#0c2442]">
+            <div className="font-[energy] text-[#0c2442]">
               <h1>Área do Administrador</h1>
             </div>
           </div>
@@ -48,7 +48,7 @@ export default function ManagementModalitiesPage() {
                   />
                 </svg>
               </div>
-              <div className="text-center text-white font-semibold py-4">
+              <div className="text-center text-white font-[energy] py-2">
                 <h2>Adicionar modalidade</h2>
               </div>
             </div>
@@ -56,13 +56,13 @@ export default function ManagementModalitiesPage() {
         </div>
 
         {/* Botão Voltar */}
-        <div className="w-full flex justify-evenly px-[30%] mt-8">
+        {/* <div className="w-full flex justify-evenly px-[30%] mt-8">
           <Link to="/adm">
-            <button className="bg-[#f18e2c] text-[#001429] py-3 px-6 rounded-md border border-[#f18e2c] transition-colors duration-300 hover:bg-[#f5f5f5] hover:text-[#f18e2c] hover:border-[#f18e2c]">
+            <button className="bg-[#f18e2c]  text-[#f5f5f5] py-3 px-6 rounded-md border border-[#f18e2c] transition-colors duration-300 hover:bg-[#f5f5f5] hover:text-[#f18e2c] hover:border-[#f18e2c] cursor-pointer">
               Voltar
             </button>
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );

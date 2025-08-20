@@ -29,9 +29,19 @@ const Header = () => {
     }
 
     if (burgerRef.current) {
-      classToggle(burgerRef.current.children[0], "rotate-45", "translate-y-1", "-translate-y-0.5");
+      classToggle(
+        burgerRef.current.children[0],
+        "rotate-45",
+        "translate-y-1",
+        "-translate-y-0.5"
+      );
       classToggle(burgerRef.current.children[1], "opacity-0");
-      classToggle(burgerRef.current.children[2], "-rotate-45", "-translate-y-1", "translate-y-0.5");
+      classToggle(
+        burgerRef.current.children[2],
+        "-rotate-45",
+        "-translate-y-1",
+        "translate-y-0.5"
+      );
     }
   };
 
@@ -94,22 +104,34 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed z-30 w-full bg-white md:backdrop-blur md:bg-white/5 border-b border-white/20">
+      <header className="fixed z-30 w-full bg-secundaria md:backdrop-opacity-40 md:bg-secundaria/80 border-b border-secundaria/50 shadow-md p-2">
         <div className="flex items-center justify-between px-10 py-2">
           <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
 
           <div className="hidden md:flex items-center gap-5">
             <nav className="flex gap-8 text-destaque font-medium text-lg">
-              <Link to="/" className="hover:border-b-2 border-primaria transition">
+              <Link
+                to="/"
+                className="hover:border-b-2 hover:border-primaria transition border-b-2 border-transparent"
+              >
                 Home
               </Link>
-              <Link to="/equipes" className="hover:border-b-2 border-primaria transition">
+              <Link
+                to="/equipes"
+                className="hover:border-b-2 border-primaria transition"
+              >
                 Equipes
               </Link>
-              <Link to="/chaves" className="hover:border-b-2 border-primaria transition">
+              <Link
+                to="/chaves"
+                className="hover:border-b-2 border-primaria transition"
+              >
                 Chaves
               </Link>
-              <Link to="/modalidades" className="hover:border-b-2 border-primaria transition">
+              <Link
+                to="/modalidades"
+                className="hover:border-b-2 border-primaria transition"
+              >
                 Modalidades
               </Link>
             </nav>
@@ -122,7 +144,11 @@ const Header = () => {
                 onClick={AbrirFecharMenu}
                 className="hidden md:flex items-center justify-center border-none hover:cursor-pointer p-0 size-12.5"
               >
-                <svg className="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <svg
+                  className="w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 448 512"
+                >
                   <path
                     fill="#f18e2c"
                     d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"
@@ -146,7 +172,7 @@ const Header = () => {
             </>
           ) : (
             <Link to="/login">
-              <button className="hidden md:block bg-primaria text-[#f5f5f5] w-24 h-12 hover:cursor-pointer hover:outline-blue-700 hover:outline-1 hover:bg- font-semibold text-xl rounded-lg shadow transition">
+              <button className="hidden md:block bg-destaque text-[#f5f5f5] w-24 h-12 hover:cursor-pointer hover:bg-[#BF6A1F] hover:outline-1 hover:border-destaque font-semibold text-xl rounded-lg shadow transition">
                 Login
               </button>
             </Link>
@@ -193,7 +219,11 @@ const Header = () => {
             <>
               <Link to="/editar-perfil" onClick={handleClick}>
                 <button className="flex items-center gap-3 border-none hover:cursor-pointer">
-                  <svg className="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                  <svg
+                    className="size-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                  >
                     <path
                       fill="#f18e2c"
                       d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"

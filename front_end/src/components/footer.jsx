@@ -4,9 +4,11 @@ import ListIcon from "./listIcon";
 const Footer = () => {
   return (
     <footer className="w-full bg-secundaria">
-      <div className="flex items-center justify-between px-10 py-2">
+      <div className="flex items-center justify-between px-30 py-5">
         <img src={logo} alt="Logo" className="size-15 object-contain" />
-        <h1 className="text-white text-2xl hidden md:block font-[Energy]">O esporte que move o mundo</h1>
+        <h1 className="text-white text-2xl hidden md:block font-[Energy]">
+          O esporte que move o mundo
+        </h1>
         <div className="flex justify-center items-center gap-5 h-5">
           <ListIcon
             href={"#"}

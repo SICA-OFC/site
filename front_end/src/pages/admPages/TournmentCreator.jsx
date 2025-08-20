@@ -17,7 +17,7 @@ export default function TournmentCreatorPage() {
         <div className="flex items-center justify-center mb-12 -ml-[550px]">
           <img src={logo} alt="Logo" className="w-[80px]" />
           <div className="border-l border-[#001429] w-[10px] h-[60px] mx-4"></div>
-          <h2 className="text-lg font-semibold">Área do Administrador</h2>
+          <h2 className="text-lg font-[energy]">Área do Administrador</h2>
         </div>
 
         {/* Formulário */}
@@ -25,7 +25,9 @@ export default function TournmentCreatorPage() {
           <div className="grid grid-cols-2 gap-5">
             {/* Nome do Torneio */}
             <div className="flex flex-col">
-              <label className="mb-1 text-sm font-medium">Nome do Torneio</label>
+              <label className="mb-1 text-sm font-medium">
+                Nome do Torneio
+              </label>
               <input
                 type="text"
                 className="p-2 border border-[#001429] rounded"
@@ -54,7 +56,9 @@ export default function TournmentCreatorPage() {
 
             {/* Quantidade de Times */}
             <div className="flex flex-col">
-              <label className="mb-1 text-sm font-medium">Quantidade de Times</label>
+              <label className="mb-1 text-sm font-medium">
+                Quantidade de Times
+              </label>
               <input
                 type="number"
                 className="p-2 border border-[#001429] rounded"
@@ -72,7 +76,9 @@ export default function TournmentCreatorPage() {
 
             {/* Quantidade de Jogos */}
             <div className="flex flex-col">
-              <label className="mb-1 text-sm font-medium">Quantidade de Jogos</label>
+              <label className="mb-1 text-sm font-medium">
+                Quantidade de Jogos
+              </label>
               <input
                 type="number"
                 className="p-2 border border-[#001429] rounded"
@@ -81,7 +87,9 @@ export default function TournmentCreatorPage() {
 
             {/* Calendário */}
             <div className="col-span-2 mt-6 flex flex-col items-start">
-              <label className="mb-2 font-medium text-sm">Selecione a Data:</label>
+              <label className="mb-2 font-medium text-sm">
+                Selecione a Data:
+              </label>
               <DatePicker
                 selected={selectedDate}
                 onChange={(date) => setSelectedDate(date)}
@@ -107,11 +115,12 @@ export default function TournmentCreatorPage() {
               Limpar Campos
             </button>
             <Link to="/adm/modalidade">
-            <button type="back"
-            className="bg-[red] text-white px-6 py-2 rounded-lg border-[#f5f5f5] hover:bg-white hover:text-[red] border transparent hover:border-[red] transition cursor-pointer"
-            >
-              Voltar
-            </button>
+              <button
+                type="back"
+                className="bg-[red] text-white px-6 py-2 rounded-lg border-[#f5f5f5] hover:bg-white hover:text-[red] border transparent hover:border-[red] transition cursor-pointer"
+              >
+                Voltar
+              </button>
             </Link>
           </div>
         </form>
