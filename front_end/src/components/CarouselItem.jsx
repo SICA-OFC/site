@@ -7,7 +7,7 @@ export default function CarouselItem({ image, alt, title }) {
       className="transition-transform duration-300 hover:scale-105 font-[energy] text-[#f5f5f5] no-underline"
       to="#"
     >
-      <div className="flex flex-col justify-center items-center w-[400px] h-[270px] rounded-b-[5px] bg-[#DE6C3C] text-[#f5f5f5] m-[20px_50px]">
+      <div className="flex flex-col justify-center items-center w-full h-[270px] rounded-b-[5px] bg-[#DE6C3C] text-[#f5f5f5]">
         <img
           src={image}
           alt={alt}

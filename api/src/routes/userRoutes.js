@@ -26,9 +26,11 @@ router.post("/verificarSessao", catchAsync(userController.VerificarSessao));
 // Rotas protegidas (requerem autenticação)
 router.use(authToken);
 router.get("/", catchAsync(userController.VerUsuario));
+router.get("/verUsuarios", catchAsync(userController.VerUsuarios));
 router.post("/verificar", catchAsync(userController.Verificar));
 router.post("/enviarCodigo", catchAsync(userController.EnviarCodigo));
 router.patch("/editar", upload.single("photo"), catchAsync(userController.EditarUsuario));
+router.patch("/editar/:id", upload.single("photo"), catchAsync(userController.EditarUsuario));
 router.patch("/redefinirSenha", catchAsync(userController.RedefinirSenha));
 router.delete("/deletar", catchAsync(userController.DeletarUsuario));
 router.post("/logout", catchAsync(userController.Logout));

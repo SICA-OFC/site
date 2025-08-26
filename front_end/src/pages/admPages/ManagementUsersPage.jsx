@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import Logo from "../../assets/logo.png";
 import ProfileUploader from "../../components/ProfileUploader.jsx";
-import genericProfilePhoto from "../../assets/profilePhoto.png";
+import SelectCursos from "../../components/selectCursos.jsx";
+import { Bounce, toast } from "react-toastify";
 
 function ClickableUserEntry({ name, rm, course, modality }) {
   return (
-    <p className="text-sm mb-1">
+    <p className="text-sm">
       <span className="text-[#f26522]">
         {name} | {rm} | {course} | {modality}
       </span>
@@ -16,24 +17,153 @@ function ClickableUserEntry({ name, rm, course, modality }) {
 }
 
 export default function ManagementUsersPage() {
-  const users = Array(12)
-    .fill(0)
-    .map((_, i) => ({
-      name: `Fulano ${i + 1}`,
-      rm: 33197 + i,
-      course: "Mecânica",
-      modality: "Futebol",
-      categoria: "SUB 17",
-    }));
+  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
 
-  const [selectedUser, setSelectedUser] = React.useState(users[0]);
+  // Estados
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  const [id, setId] = useState("");
+  const [rm, setRm] = useState("");
+  const [nome, setNome] = useState("");
+  const [periodo, setPeriodo] = useState("");
+  const [curso, setCurso] = useState("");
+  const [email, setEmail] = useState("");
+  const [data_nascimento, setDataNascimento] = useState("");
+  const [telefone, setTelefone] = useState("");
+  const [file, setFile] = useState("");
+
+  const toastSettings = {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+    transition: Bounce,
+  };
+
+  const fetchedRef = useRef(false);
+  const nomeRef = useRef(false);
+
+  function ChangeForm(usuario) {
+    nomeRef.current = usuario.nome;
+    setId(usuario.id);
+    setRm(usuario.rm);
+    setNome(usuario.nome);
+    setEmail(usuario.email);
+    setDataNascimento(
+      new Date(usuario.data_nascimento).toISOString().split("T")[0]
+    );
+    setTelefone(usuario.telefone);
+    setPeriodo(`${usuario.cursos.periodo}`);
+    setCurso(usuario.curso_id);
+    setFile(usuario.foto_perfil || null);
+  }
+
+  useEffect(() => {
+    if (fetchedRef.current) return;
+
+    const verUsuario = async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/usuario/verUsuarios`, {
+          method: "GET",
+          credentials: "include",
+        });
+        const result = await response.json();
+
+        if (response.ok) {
+          const usuarios = result.usuarios;
+
+          if (usuarios.length > 0) {
+            setUsers(usuarios);
+            
+            const primeiro = usuarios[0];
+            setSelectedUser(primeiro);
+            ChangeForm(primeiro);
+          }
+        } else {
+          toast.error(result.erro, toastSettings);
+        }
+      } catch (error) {
+        toast.error(
+          "Algo deu errado ao consultar os alunos! Tente novamente!",
+          toastSettings
+        );
+        console.error("Erro ao verificar autenticação:", error);
+      }
+    };
+
+    verUsuario();
+    fetchedRef.current = true;
+  }, [BASE_URL]);
+
+  useEffect(() => {
+    if (selectedUser) {
+      ChangeForm(selectedUser);
+    }
+  }, [selectedUser]);
+
+  function handleRmChange(e) {
+    setRm(e.target.value);
+  }
+
+  function handleNomeChange(e) {
+    setNome(e.target.value);
+  }
+
+  function handleEmailChange(e) {
+    setEmail(e.target.value);
+  }
+
+  function handleDataChange(e) {
+    setDataNascimento(e.target.value);
+  }
+
+  function handleTelefoneChange(e) {
+    setTelefone(e.target.value);
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("rm", rm);
+    formData.append("nome", nome);
+    formData.append("email", email);
+    formData.append("data_nascimento", new Date(data_nascimento).toISOString());
+    formData.append("telefone", telefone);
+    formData.append("curso_id", parseInt(curso));
+
+    if (file) {
+      formData.append("photo", file);
+    }
+
+    const response = await fetch(`${BASE_URL}/usuario/editar/${id}`, {
+      method: "PATCH",
+      body: formData,
+      credentials: "include",
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      toast.success(result.mensagem, toastSettings);
+      nomeRef.current = nome;
+    } else {
+      throw new Error(result.message || "Erro na edição");
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-cover font-montserrat">
-      <div className="bg-white p-12 mt-[100px] ml-[340px] w-[90%] max-w-[1200px] shadow-md rounded">
+    <div className="flex items-center justify-center min-h-screen w-full font-montserrat">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 w-[80%] max-w-[1200px] shadow-md rounded"
+      >
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
             <img src={Logo} alt="Logo" className="w-[50px] h-[50px]" />
             <div className="border-l border-[#0c2442] w-[10px] h-[50px]"></div>
             <h1 className="text-lg font-[energy] mt-5">
@@ -43,82 +173,157 @@ export default function ManagementUsersPage() {
         </div>
 
         {/* Content */}
-        <div className="flex gap-8">
+        <div className="flex gap-8 h-[60vh]">
           {/* Lista de usuários */}
-          <div className="flex-1">
-            <h2 className="text-lg mb-2 font-[energy]">VISUALIZAR ALUNOS</h2>
-            <div className="h-px bg-black mb-4"></div>
-            {users.map((user, i) => (
-              <div
-                key={i}
-                className={`text-sm mb-1 p-1 rounded cursor-pointer ${
-                  selectedUser && selectedUser.rm === user.rm
-                    ? "bg-gray-300"
-                    : "hover:bg-gray-100"
-                }`}
-                onClick={() => setSelectedUser(user)}
-              >
-                <ClickableUserEntry
-                  name={user.name}
-                  rm={user.rm}
-                  course={user.course}
-                  modality={user.modality}
-                />
-              </div>
-            ))}
+          <div className="h-[85%] w-[50%]">
+            <h2 className="text-lg font-[energy] border-b-2 border-b-black">
+              VISUALIZAR ALUNOS
+            </h2>
+            <div className="w-full overflow-y-scroll flex flex-col">
+              {users.map((u) => (
+                <div
+                  key={u.id}
+                  onClick={() => setSelectedUser(u)}
+                  className="cursor-pointer hover:bg-gray-100 p-1"
+                >
+                  <ClickableUserEntry
+                    name={u.nome}
+                    rm={u.rm}
+                    course={u.cursos?.nome || "—"}
+                    modality={u.modality || "—"}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Info do aluno selecionado */}
-          <div className="flex-1">
-            <h2 className="text-xl font-bold mb-4">
-              {selectedUser ? selectedUser.name : ""}
+          <div className="h-[85%] w-[50%] overflow-y-scroll flex flex-col">
+            <h2 className="text-xl font-bold  border-b-2 border-b-black font-[Energy]">
+              {selectedUser ? selectedUser.nome : "ALUNO"}
             </h2>
-
-            {/* Campos */}
-            {["rm", "course", "modality", "categoria"].map((field, idx) => (
-              <div className="mb-4 relative" key={idx}>
-                <label className="block text-xs text-gray-600 uppercase mb-1">
-                  {field.toUpperCase()}
+            <div className="flex flex-col justify-around w-full gap-1 md:gap-2">
+              {/* Dados Pessoais */}
+              <h4 className="text-[#001429] font-bold">Dados Pessoais</h4>
+              <div className="flex flex-col mb-2">
+                <input type="hidden" name="id" value={id} />
+                <label htmlFor="rm" className="mb-1 text-[#001429]">
+                  RM
+                </label>
+                <input
+                  type="number"
+                  id="rm"
+                  name="rm"
+                  min="10000"
+                  max="99999"
+                  pattern="\d{5}"
+                  value={rm}
+                  onChange={handleRmChange}
+                  disabled
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#aaa] text-base w-full"
+                />
+              </div>
+              <div className="flex flex-col mb-2">
+                <label htmlFor="name" className="mb-1 text-[#001429]">
+                  Nome
                 </label>
                 <input
                   type="text"
-                  value={selectedUser ? selectedUser[field] : ""}
-                  readOnly
-                  className="w-full p-2 text-base border border-gray-300 rounded"
+                  id="name"
+                  name="name"
+                  value={nome}
+                  onChange={handleNomeChange}
+                  required
+                  autoComplete="name"
+                  pattern="[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+( [a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+)*"
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
                 />
-                <button className="decoration-none absolute right-0 mt-2.5 mr-2.5">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-[25px] h-[25px] cursor-pointer"
-                  >
-                    <path
-                      d="M1 22C1 21.4477 1.44772 21 2 21H22C22.5523 21 23 21.4477 23 22C23 22.5523 22.5523 23 22 23H2C1.44772 23 1 22.5523 1 22Z"
-                      fill="#001429be"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M18.3056 1.87868C17.1341 0.707107 15.2346 0.707107 14.063 1.87868L3.38904 12.5526C2.9856 12.9561 2.70557 13.4662 2.5818 14.0232L2.04903 16.4206C1.73147 17.8496 3.00627 19.1244 4.43526 18.8069L6.83272 18.2741C7.38969 18.1503 7.89981 17.8703 8.30325 17.4669L18.9772 6.79289C20.1488 5.62132 20.1488 3.72183 18.9772 2.55025L18.3056 1.87868ZM15.4772 3.29289C15.8677 2.90237 16.5009 2.90237 16.8914 3.29289L17.563 3.96447C17.9535 4.35499 17.9535 4.98816 17.563 5.37868L15.6414 7.30026L13.5556 5.21448L15.4772 3.29289ZM12.1414 6.62869L4.80325 13.9669C4.66877 14.1013 4.57543 14.2714 4.53417 14.457L4.0014 16.8545L6.39886 16.3217C6.58452 16.2805 6.75456 16.1871 6.88904 16.0526L14.2272 8.71448L12.1414 6.62869Z"
-                      fill="#001429be"
-                    />
-                  </svg>
-                </button>
               </div>
-            ))}
+              <div className="flex flex-col mb-2">
+                <label htmlFor="email" className="mb-1 text-[#001429]">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  required
+                  autoComplete="email"
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                />
+              </div>
+              <div className="flex flex-col mb-2">
+                <label htmlFor="telefone" className="mb-1 text-[#001429]">
+                  Telefone
+                </label>
+                <input
+                  type="text"
+                  maxLength="19"
+                  id="telefone"
+                  name="telefone"
+                  value={telefone}
+                  onChange={handleTelefoneChange}
+                  required
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                />
+              </div>
+              <div className="flex flex-col mb-2">
+                <label htmlFor="dataNascimento" className="mb-1 text-[#001429]">
+                  Data de Nascimento
+                </label>
+                <input
+                  type="date"
+                  id="dataNascimento"
+                  value={data_nascimento}
+                  onChange={handleDataChange}
+                  min="2000-01-01"
+                  max={new Date().toISOString().split("T")[0]}
+                  required
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                />
+              </div>
 
-            {/* Foto de perfil */}
-            <div className="mb-4">
-              <label className="block text-xs text-gray-600 uppercase mb-1">
-                Foto de Perfil
-              </label>
-              <ProfileUploader
-                photoUrl={genericProfilePhoto}
-                onPhotoChange={(newPhoto) =>
-                  console.log("New photo URL:", newPhoto)
-                }
-              />
+              {/* Informações Acadêmicas */}
+              <h4 className="text-[#001429] font-bold">
+                Informações Acadêmicas
+              </h4>
+              <div className="flex flex-col mb-2">
+                <label htmlFor="curso" className="mb-1 text-[#001429]">
+                  Curso
+                  <SelectCursos
+                    periodo={periodo}
+                    curso={curso}
+                    onPeriodoChange={setPeriodo}
+                    onCursoChange={setCurso}
+                  />
+                </label>
+              </div>
+
+              {/* Modalidades */}
+              <div className="flex flex-col mb-2">
+                <label htmlFor="modalidades" className="mb-1 text-[#001429]">
+                  Modalidades
+                </label>
+                <select
+                  id="modalidades"
+                  name="modalidades"
+                  required
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                >
+                  <option value="futebol">Futebol</option>
+                  <option value="volei">Vôlei</option>
+                  <option value="basquete">Basquete</option>
+                  <option value="natacao">Natação</option>
+                </select>
+              </div>
+
+              {/* Imagem de Perfil */}
+              <h4 className="text-[#001429] mb-2">Imagem de Perfil</h4>
+              <div className="flex flex-col mb-2">
+                <ProfileUploader file={file} onFileChange={setFile} />
+              </div>
             </div>
           </div>
         </div>
@@ -134,7 +339,7 @@ export default function ManagementUsersPage() {
             </button>
           </Link>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

@@ -13,12 +13,14 @@ router.post(
     const default_headers = {
       "Content-Type": "application/json",
       Authorization: auth_header,
+      credentials: "include"
     };
 
     const { route, method, extra_headers, body } = req.body;
 
     const url = `https://api.challonge.com/v1/${route}`;
-
+    
+    console.log(url, method)
     const response = await fetch(url, {
       method,
       headers: {

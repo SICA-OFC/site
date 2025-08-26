@@ -128,6 +128,17 @@ exports.Prisma.CursosScalarFieldEnum = {
   periodo: 'periodo'
 };
 
+exports.Prisma.Membros_timeScalarFieldEnum = {
+  time_id: 'time_id',
+  membro_id: 'membro_id',
+  funcao: 'funcao'
+};
+
+exports.Prisma.TimeScalarFieldEnum = {
+  id: 'id',
+  nome: 'nome'
+};
+
 exports.Prisma.UsuariosScalarFieldEnum = {
   id: 'id',
   rm: 'rm',
@@ -137,13 +148,13 @@ exports.Prisma.UsuariosScalarFieldEnum = {
   email: 'email',
   senha: 'senha',
   telefone: 'telefone',
+  foto_perfil: 'foto_perfil',
   criado_em: 'criado_em',
   atualizado_em: 'atualizado_em',
   codigo_verificacao: 'codigo_verificacao',
   codigo_gerado_em: 'codigo_gerado_em',
   tentativas_login: 'tentativas_login',
-  tipo_usuario: 'tipo_usuario',
-  foto_perfil: 'foto_perfil'
+  tipo_usuario: 'tipo_usuario'
 };
 
 exports.Prisma.SortOrder = {
@@ -160,6 +171,12 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
+exports.tipo_funcao = exports.$Enums.tipo_funcao = {
+  capitao: 'capitao',
+  jogador: 'jogador',
+  reserva: 'reserva'
+};
+
 exports.tipo_usuario = exports.$Enums.tipo_usuario = {
   aluno: 'aluno',
   professor: 'professor',
@@ -170,6 +187,8 @@ exports.tipo_usuario = exports.$Enums.tipo_usuario = {
 
 exports.Prisma.ModelName = {
   cursos: 'cursos',
+  membros_time: 'membros_time',
+  time: 'time',
   usuarios: 'usuarios'
 };
 

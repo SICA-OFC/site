@@ -257,12 +257,13 @@ module.exports = {
       return res.status(404).json({ error: "Usuário não logado." });
     }
 
+    const params_id = parseInt(req.params.id);
     const { nome, curso_id, email, data_nascimento, telefone } = req.body;
 
     let imageUrl = null;
     if (req.file) {
       const usuarioAtual = await prisma.usuarios.findUnique({
-        where: { id: data.id },
+        where: { id: params_id || data.id },
       });
 
       if (usuarioAtual.foto_perfil) {
@@ -286,7 +287,7 @@ module.exports = {
     }
 
     const usuario = await prisma.usuarios.update({
-      where: { id: data.id },
+      where: { id: params_id || data.id },
       data: {
         nome: nome ?? undefined,
         email: email ?? undefined,
@@ -410,6 +411,38 @@ module.exports = {
     }
 
     res.json({ mensagem: "O usuário está logado.", usuario });
+  },
+
+  VerUsuarios: async (req, res) => {
+    const data = req.user;
+    if (!data) {
+      return res.status(404).json({ erro: "Usuário não logado." });
+    }
+    if (data.tipo_usuario == "aluno") {
+      return res.status(404).json({ erro: "Usuário sem permissões de administrador." });
+    }
+
+    const usuarios = await prisma.usuarios.findMany({
+      where: { tipo_usuario: "aluno" },
+      orderBy: { id: "asc" }, 
+      select: {
+        id: true,
+        rm: true,
+        nome: true,
+        email: true,
+        data_nascimento: true,
+        telefone: true,
+        curso_id: true,
+        foto_perfil: true,
+        cursos: true
+      }
+    });
+
+    if (!usuarios || usuarios.length === 0) {
+      return res.status(404).json({ error: "Nenhum aluno encontrado." });
+    }
+
+    res.json({ usuarios });
   },
 
   Logout: async (req, res) => {

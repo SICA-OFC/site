@@ -56,20 +56,20 @@ CREATE TABLE usuarios (
   rm         		           VARCHAR(5)    NOT NULL UNIQUE,
   nome			               VARCHAR(100)   NOT NULL,
   data_nascimento          DATE,
-  curso_id                 INTEGER        NOT NULL
+  curso_id                 INTEGER        NULL
     REFERENCES cursos(id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
   email                    VARCHAR(255)   NOT NULL UNIQUE,
   senha                    TEXT           NOT NULL,
-  telefone                 VARCHAR(15),
-  foto_perfil              TEXT           NOT NULL,
+  telefone                 VARCHAR(15)    NOT NULL,
+  foto_perfil              TEXT           NULL,
   criado_em                TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-  atualizado_em            TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  atualizado_em            TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
   codigo_verificacao       INTEGER CHECK (codigo_verificacao BETWEEN 100000 AND 999999),
   codigo_gerado_em         TIMESTAMP WITH TIME ZONE,
   tentativas_login         INTEGER        NOT NULL DEFAULT 0,
-  tipo_usuario             tipo_usuario   DEFAULT 'aluno'
+  tipo_usuario             tipo_usuario   NOT NULL DEFAULT 'aluno'
 );
 
 -- Função e trigger para atualizar atualizado_em em projetos
@@ -85,3 +85,29 @@ CREATE TRIGGER atualiza_data_usuario
 BEFORE UPDATE ON usuarios
 FOR EACH ROW
 EXECUTE FUNCTION atualizar_data_modificacao();
+
+CREATE TABLE time (
+  id                       INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  nome			               VARCHAR(100)   NOT NULL UNIQUE
+)
+
+CREATE TYPE tipo_funcao AS ENUM (
+  'capitao',
+  'jogador',
+  'reserva'
+);
+
+CREATE TABLE membros_time (
+    time_id                 INTEGER        NULL
+    REFERENCES time(id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+    membro_id                 INTEGER        NULL
+    REFERENCES usuarios(id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
+    funcao    tipo_funcao,
+    PRIMARY KEY (time_id, membro_id)
+)
+
+select * from usuarios order by id asc;

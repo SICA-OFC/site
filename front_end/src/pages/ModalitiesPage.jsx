@@ -9,29 +9,25 @@ export default function Modalidades() {
     <div>
       <Header />
       {/* Banner com imagem e texto sobreposto */}
-      <div className="relative w-full">
-        <img
-          src={Banner}
-          alt="Garota fazendo ginástica artística"
-          className="w-full h-auto"
-        />
-        <div className="absolute top-[20%] left-[55%] text-[#f5f5f5]">
-          <h1 className="text-[2.5rem] leading-tight font-[energy]">
-            Desafie-se
-            <br />
-            Conquiste
-            <br />
-            Celebre!
-          </h1>
-        </div>
-      </div>
+      <section
+        className="bg-no-repeat bg-cover bg-top h-75 pb-5 md:pb-15 w-full text-center flex justify-center items-end"
+        style={{ backgroundImage: `url(${Banner})` }}
+      >
+        <h1 className="text-[2.5rem] text-white ml-32 leading-tight font-[energy]">
+          Desafie-se
+          <br />
+          Conquiste
+          <br />
+          Celebre!
+        </h1>
+      </section>
 
       {/* Conteúdo principal */}
       <div className="w-[80%] max-w-[1770px] mx-auto">
-        <h1 className="my-[150px] text-center text-[2.5rem] font-[energy]">
+        <h1 className="my-[50px] text-center text-[2.5rem] font-[energy]">
           Modalidades
         </h1>
-        <div className="mb-[150px]">
+        <div className="mb-[50px]">
           <Carousel />
         </div>
       </div>

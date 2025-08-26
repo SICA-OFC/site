@@ -54,7 +54,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/confirmacao-email",
+    path: "/confirmacao",
     element: <EmailConfirmPage />,
   },
   {
@@ -72,7 +72,7 @@ const router = createBrowserRouter([
 
   // Páginas do administrador
   {
-    path: "/adm/modalidade",
+    path: "/adm",
     element: <AdmHomePage />,
   },
   {
@@ -80,7 +80,7 @@ const router = createBrowserRouter([
     element: <ManagmentUsersPage />,
   },
   {
-    path: "/adm",
+    path: "/adm/modalidade",
     element: <ManagmentModalityPage />, // Placeholder, replace with actual component
   },
   {

@@ -8,6 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model cursos {
   id       Int        @id @default(autoincrement())
   sigla    String     @db.VarChar(10)
@@ -17,24 +18,47 @@ model cursos {
   usuarios usuarios[]
 }
 
+model membros_time {
+  time_id   Int
+  membro_id Int
+  funcao    tipo_funcao?
+  usuarios  usuarios     @relation(fields: [membro_id], references: [id])
+  time      time         @relation(fields: [time_id], references: [id])
+
+  @@id([time_id, membro_id])
+}
+
+model time {
+  id           Int            @id @default(autoincrement())
+  nome         String         @unique @db.VarChar(100)
+  membros_time membros_time[]
+}
+
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model usuarios {
-  id                 Int           @id @default(autoincrement())
-  rm                 String        @unique @db.VarChar(5)
-  nome               String        @db.VarChar(100)
-  data_nascimento    DateTime?     @db.Date
-  curso_id           Int
-  email              String        @unique @db.VarChar(255)
+  id                 Int            @id @default(autoincrement())
+  rm                 String         @unique @db.VarChar(5)
+  nome               String         @db.VarChar(100)
+  data_nascimento    DateTime?      @db.Date
+  curso_id           Int?
+  email              String         @unique @db.VarChar(255)
   senha              String
-  telefone           String?       @db.VarChar(15)
-  criado_em          DateTime      @default(now()) @db.Timestamptz(6)
-  atualizado_em      DateTime?     @default(now()) @db.Timestamptz(6)
-  codigo_verificacao Int?
-  codigo_gerado_em   DateTime?     @db.Timestamptz(6)
-  tentativas_login   Int           @default(0)
-  tipo_usuario       tipo_usuario? @default(aluno)
+  telefone           String         @db.VarChar(15)
   foto_perfil        String?
-  cursos             cursos        @relation(fields: [curso_id], references: [id])
+  criado_em          DateTime       @default(now()) @db.Timestamptz(6)
+  atualizado_em      DateTime       @default(now()) @db.Timestamptz(6)
+  codigo_verificacao Int?
+  codigo_gerado_em   DateTime?      @db.Timestamptz(6)
+  tentativas_login   Int            @default(0)
+  tipo_usuario       tipo_usuario   @default(aluno)
+  membros_time       membros_time[]
+  cursos             cursos?        @relation(fields: [curso_id], references: [id], onDelete: Restrict)
+}
+
+enum tipo_funcao {
+  capitao
+  jogador
+  reserva
 }
 
 enum tipo_usuario {

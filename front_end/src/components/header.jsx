@@ -155,7 +155,7 @@ const Header = () => {
                   />
                 </svg>
               </button>
-              <div className="menu hidden md:hidden bg-white h-15 w-15 rounded-xl absolute right-8.5 top-14 flex-col justify-center items-center">
+              <div className="menu hidden md:hidden bg-white h-15 w-15 rounded-xl absolute right-11 top-14 flex-col justify-center items-center">
                 <Link
                   to="/editar-perfil"
                   className="h-[50%] flex justify-center items-center text-destaque font-semibold"

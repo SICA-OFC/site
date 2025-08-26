@@ -4,6 +4,7 @@ const cookieParser = require("cookie-parser");
 const limiter = require('./middlewares/rateLimit.js')
 const errorHandler = require("./middlewares/errorHandler.js");
 const userRoutes = require("./routes/userRoutes.js");
+const teamRoutes = require("./routes/teamRoutes.js");
 const bracketsRoutes = require("./routes/bracketsRoutes.js");
 const path = require("path");
 
@@ -18,6 +19,7 @@ app.use(cors({
 app.use(limiter);
 
 app.use("/usuario", userRoutes);
+app.use("/time", teamRoutes);
 app.use("/chaveamento", bracketsRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
