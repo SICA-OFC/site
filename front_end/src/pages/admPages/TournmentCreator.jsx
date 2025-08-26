@@ -175,6 +175,7 @@ export default function TournmentCreatorPage() {
       const result = await response.json();
       if (response.ok) {
         setNome("");
+        setChaveamento();
         verCampeonatos();
         toast.success("Torneio criado com sucesso!", toastSettings);
       } else {
@@ -204,13 +205,17 @@ export default function TournmentCreatorPage() {
         name: t.nome,
         seed: index + 1,
       }));
-
-    const tournamentInfo2 = {
-      route: `tournaments/${selectedTournament.id}/participants/bulk_add.json`,
-      method: "POST",
-      body: { participants },
-    };
-
+      
+      const tournamentInfo2= {
+        route: `tournaments/${selectedTournament.id}/participants/clear.json`,
+        method: "DELETE",
+      };
+      
+      const tournamentInfo3 = {
+        route: `tournaments/${selectedTournament.id}/participants/bulk_add.json`,
+        method: "POST",
+        body: { participants },
+      };
     try {
       const response = await fetch(`${BASE_URL}/chaveamento`, {
         method: "POST",
@@ -218,18 +223,25 @@ export default function TournmentCreatorPage() {
         body: JSON.stringify(tournamentInfo),
         credentials: "include",
       });
-
-      const response2 = await fetch(`${BASE_URL}/chaveamento`, {
+      
+      await fetch(`${BASE_URL}/chaveamento`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(tournamentInfo2),
         credentials: "include",
       });
 
+      const response3 = await fetch(`${BASE_URL}/chaveamento`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(tournamentInfo3),
+        credentials: "include",
+      });
+
       const result = await response.json();
-      const result2 = await response2.json();
-      console.log(result2);
-      if (response.ok && response2.ok) {
+      const result3 = await response3.json();
+      console.log(result3);
+      if (response.ok && response3.ok) {
         setNome("");
         verCampeonatos();
         toast.success("Torneio editado com sucesso!", toastSettings);
@@ -261,6 +273,7 @@ export default function TournmentCreatorPage() {
       const result = await response.json();
       if (response.ok) {
         setNome("");
+        setChaveamento("");
         verCampeonatos();
         toast.success("Torneio deletado com sucesso!", toastSettings);
       } else {
@@ -360,7 +373,7 @@ export default function TournmentCreatorPage() {
               </div>
               <img
                 src={`${chaveamento}`}
-                className="w-full h-[100px] object-cover object-center rounded"
+                className="w-full h-[200px] object-cover object-center rounded"
                 width="100%"
                 height="300"
                 frameborder="0"
