@@ -6,6 +6,7 @@ import { toast, Bounce } from "react-toastify";
 const Header = () => {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const menuRef = useRef(null);
   const burgerRef = useRef(null);
   const fetchedRef = useRef(false);
@@ -55,8 +56,16 @@ const Header = () => {
           credentials: "include",
         });
 
+        const result = await response.json();
+        console.log(result);
         if (response.ok) {
           setIsLoggedIn(true);
+          if (result.usuario.tipo_usuario == "professor") {
+            console.log("admin");
+            setIsAdmin(true);
+          } else {
+            setIsAdmin(false);
+          }
         } else {
           setIsLoggedIn(false);
         }

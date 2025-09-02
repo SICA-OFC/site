@@ -7,6 +7,7 @@ export default function ADMHomePage() {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const fetchedRef = useRef(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate(false);
   const toastSettings = {
     position: "bottom-right",
@@ -30,13 +31,15 @@ export default function ADMHomePage() {
           credentials: "include",
         });
 
-        const result = response.json();
-        if (response.ok) {
-          console.log(result);
+        const result = await response.json();
+        if (response.ok && result.usuario.tipo_usuario == "professor") {
+          console.log("admin");
           setIsLoggedIn(true);
+          setIsAdmin(true);
         } else {
-          navigate('/');
           toast.warn("Você não é um administrador ou não está logado", toastSettings);
+          navigate('/');
+          setIsAdmin(false);
         }
       } catch (error) {
         console.error("Erro ao verificar a sessão:", error);
@@ -115,9 +118,9 @@ export default function ADMHomePage() {
 
         {/* Botão voltar */}
         <div className="flex flex-row w-full gap-5 mt-4 justify-center items-center">
-        <Link to="/adm">
+        <Link to="/">
           <button className="w-30 bg-[#f18e2c] text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#f18e2c] hover:border hover:border-[#f18e2c] cursor-pointer">
-            Voltar
+            Home
           </button>
         </Link>
           <button onClick={handleLogout} className="w-30 bg-red-500 text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-red-500 hover:border hover:border-red-500 cursor-pointer">
