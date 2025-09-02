@@ -62,10 +62,6 @@ export default function EditProfilePage() {
     fetchedRef.current = true;
   }, [BASE_URL]);
 
-  function handleRmChange(e) {
-    setRm(e.target.value);
-  }
-
   function handleNomeChange(e) {
     setNome(e.target.value);
   }
@@ -85,7 +81,6 @@ export default function EditProfilePage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("rm", rm);
     formData.append("nome", nome);
     formData.append("email", email);
     formData.append("data_nascimento", new Date(data_nascimento).toISOString());
@@ -156,9 +151,8 @@ export default function EditProfilePage() {
                         max="99999"
                         pattern="\d{5}"
                         value={rm}
-                        onChange={handleRmChange}
-                        required
-                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                        disabled
+                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#a5a5a5] text-base w-full"
                       />
                     </div>
                     <div className="flex flex-col mb-2">
