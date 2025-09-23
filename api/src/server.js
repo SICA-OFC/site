@@ -13,9 +13,10 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: "http://localhost:5173", 
+  origin: process.env.FRONTEND_URL, 
   credentials: true
 }));
+app.set('trust proxy', 1);
 app.use(limiter);
 
 app.use("/usuario", userRoutes);

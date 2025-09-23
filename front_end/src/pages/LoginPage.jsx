@@ -2,15 +2,12 @@ import logo from "../assets/logo.png";
 import sideImage from "../assets/sideImage1.png";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { toast, Bounce } from "react-toastify";
 
 export default function LoginPage() {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-
-  const { executeRecaptcha } = useGoogleReCaptcha();
 
   const navigate = useNavigate();
 
@@ -79,46 +76,33 @@ export default function LoginPage() {
     setSenha(e.target.value);
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!executeRecaptcha) {
-      toast.error("Algo deu errado ao logar! Tente novamente!", toastSettings);
-      return;
-    }
 
-    executeRecaptcha("login_form").then(async (tokenCaptcha) => {
-      const verifyResponse = await fetch(`${BASE_URL}/usuario/captcha?token=${tokenCaptcha}`);
-      const verifyResult = await verifyResponse.json();
-      if (!verifyResult.success || verifyResult.score < 0.5) {
-        toast.error("Verificação do reCAPTCHA falhou. Ação bloqueada.", toastSettings);
-        throw new Error("reCAPTCHA inválido.");
+    const userInfo = {
+      email,
+      senha,
+    };
+
+    await fetch(`${BASE_URL}/usuario/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userInfo),
+    }).then(async (response) => {
+      const result = await response.json();
+
+      if (!response.ok) {
+        toast.error(result.erro, toastSettings);
       }
 
-      const userInfo = {
-        email,
-        senha,
-      };
-
-      return await fetch(`${BASE_URL}/usuario/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userInfo),
-      }).then(async (response) => {
-        const result = await response.json();
-
-        if (!response.ok) {
-          toast.error(result.erro, toastSettings);
-        }
-
-        const accessToken = result.accessToken;
-        if (accessToken) {
-          toast.success("Logado feito com sucesso, prossiga pra autentificação de 2 fatores!", toastSettings);
-          navigate("/confirmacao", {
-            state: { accessToken },
-          });
-        }
-      });
+      const accessToken = result.accessToken;
+      if (accessToken) {
+        toast.success("Logado feito com sucesso, prossiga pra autentificação de 2 fatores!", toastSettings);
+        navigate("/confirmacao", {
+          state: { accessToken },
+        });
+      }
     });
   };
 

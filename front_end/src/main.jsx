@@ -20,9 +20,7 @@ import TeamManagement from "./pages/admPages/TeamManagment.jsx";
 import TournmentCreator from "./pages/admPages/TournmentCreator.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
-const RECAPTCHA_KEY = import.meta.env.VITE_APP_RECAPTCHA_KEY;
 const router = createBrowserRouter([
   // Páginas principais
   {
@@ -32,25 +30,19 @@ const router = createBrowserRouter([
   {
     path: "/cadastro",
     element: (
-      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
         <CadastroPage />
-      </GoogleReCaptchaProvider>
     ),
   },
   {
     path: "/cadastro-professor",
     element: (
-      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
         <CadastroProfPage />
-      </GoogleReCaptchaProvider>
     ),
   },
   {
     path: "/login",
     element: (
-      <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
         <LoginPage />
-      </GoogleReCaptchaProvider>
     ),
   },
   {

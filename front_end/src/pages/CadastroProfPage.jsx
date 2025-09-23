@@ -1,7 +1,6 @@
 import logo from "../assets/logo.png";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import SelectCursos from "../components/selectCursos.jsx";
 import { toast, Bounce } from "react-toastify";
 
@@ -29,8 +28,6 @@ export default function CadastroPage() {
     transition: Bounce,
   };
 
-  const { executeRecaptcha } = useGoogleReCaptcha();
-
   function handleRmChange(e) {
     setRm(e.target.value);
   }
@@ -54,60 +51,46 @@ export default function CadastroPage() {
   function handleTelefoneChange(e) {
     setTelefone(e.target.value);
   }
-  
+
   function handleCodChange(e) {
     setCod(e.target.value);
   }
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!executeRecaptcha) {
-      toast.error("Algo deu errado ao cadastrar! Tente novamente!", toastSettings);
-      return;
+    if (cod != ADMIN_COD) {
+      toast.error("Código inválido.", toastSettings);
+      throw new Error("Codigo inválido.");
     }
 
-    executeRecaptcha("login_form").then(async (tokenCaptcha) => {
-      const verifyResponse = await fetch(`${BASE_URL}/usuario/captcha?token=${tokenCaptcha}`);
-      const verifyResult = await verifyResponse.json();
-      if (!verifyResult.success || verifyResult.score < 0.5) {
-        toast.error("Verificação do reCAPTCHA falhou. Ação bloqueada.", toastSettings);
-        throw new Error("reCAPTCHA inválido.");
-      }
-      
-      if (cod != ADMIN_COD) {
-        toast.error("Código inválido.", toastSettings);
-        throw new Error("Codigo inválido.");
-      }
+    const userInfo = {
+      rm,
+      nome,
+      email,
+      data_nascimento: new Date(data_nascimento),
+      senha,
+      telefone,
+      tipo_usuario: "professor",
+    };
 
-      const userInfo = {
-        rm,
-        nome,
-        email,
-        data_nascimento: new Date(data_nascimento),
-        senha,
-        telefone,
-        tipo_usuario: "professor",
-      };
-
-      const response = await fetch(`${BASE_URL}/usuario/cadastro`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userInfo),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        toast.success("Cadastro feito com sucesso, prossiga pra autentificação de 2 fatores!", toastSettings);
-        navigate("/confirmacao", {
-          state: { accessToken: result.accessToken },
-        });
-      } else {
-        toast.error("Algo deu errado ao cadastrar! Tente novamente!", toastSettings);
-        throw new Error(result.message || "Erro no cadastro");
-      }
+    const response = await fetch(`${BASE_URL}/usuario/cadastro`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(userInfo),
     });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      toast.success("Cadastro feito com sucesso, prossiga pra autentificação de 2 fatores!", toastSettings);
+      navigate("/confirmacao", {
+        state: { accessToken: result.accessToken },
+      });
+    } else {
+      toast.error("Algo deu errado ao cadastrar! Tente novamente!", toastSettings);
+      throw new Error(result.message || "Erro no cadastro");
+    }
   };
 
   return (
