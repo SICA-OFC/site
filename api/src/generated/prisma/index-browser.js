@@ -154,12 +154,18 @@ exports.Prisma.UsuariosScalarFieldEnum = {
   codigo_verificacao: 'codigo_verificacao',
   codigo_gerado_em: 'codigo_gerado_em',
   tentativas_login: 'tentativas_login',
-  tipo_usuario: 'tipo_usuario'
+  tipo_usuario: 'tipo_usuario',
+  modalidades: 'modalidades'
 };
 
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -170,6 +176,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.tipo_funcao = exports.$Enums.tipo_funcao = {
   capitao: 'capitao',

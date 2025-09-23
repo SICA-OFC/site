@@ -4587,6 +4587,7 @@ export namespace Prisma {
     codigo_gerado_em: number
     tentativas_login: number
     tipo_usuario: number
+    modalidades: number
     _all: number
   }
 
@@ -4657,6 +4658,7 @@ export namespace Prisma {
     codigo_gerado_em?: true
     tentativas_login?: true
     tipo_usuario?: true
+    modalidades?: true
     _all?: true
   }
 
@@ -4762,6 +4764,7 @@ export namespace Prisma {
     codigo_gerado_em: Date | null
     tentativas_login: number
     tipo_usuario: $Enums.tipo_usuario
+    modalidades: JsonValue | null
     _count: UsuariosCountAggregateOutputType | null
     _avg: UsuariosAvgAggregateOutputType | null
     _sum: UsuariosSumAggregateOutputType | null
@@ -4799,6 +4802,7 @@ export namespace Prisma {
     codigo_gerado_em?: boolean
     tentativas_login?: boolean
     tipo_usuario?: boolean
+    modalidades?: boolean
     membros_time?: boolean | usuarios$membros_timeArgs<ExtArgs>
     cursos?: boolean | usuarios$cursosArgs<ExtArgs>
     _count?: boolean | UsuariosCountOutputTypeDefaultArgs<ExtArgs>
@@ -4820,6 +4824,7 @@ export namespace Prisma {
     codigo_gerado_em?: boolean
     tentativas_login?: boolean
     tipo_usuario?: boolean
+    modalidades?: boolean
     cursos?: boolean | usuarios$cursosArgs<ExtArgs>
   }, ExtArgs["result"]["usuarios"]>
 
@@ -4839,6 +4844,7 @@ export namespace Prisma {
     codigo_gerado_em?: boolean
     tentativas_login?: boolean
     tipo_usuario?: boolean
+    modalidades?: boolean
     cursos?: boolean | usuarios$cursosArgs<ExtArgs>
   }, ExtArgs["result"]["usuarios"]>
 
@@ -4858,9 +4864,10 @@ export namespace Prisma {
     codigo_gerado_em?: boolean
     tentativas_login?: boolean
     tipo_usuario?: boolean
+    modalidades?: boolean
   }
 
-  export type usuariosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rm" | "nome" | "data_nascimento" | "curso_id" | "email" | "senha" | "telefone" | "foto_perfil" | "criado_em" | "atualizado_em" | "codigo_verificacao" | "codigo_gerado_em" | "tentativas_login" | "tipo_usuario", ExtArgs["result"]["usuarios"]>
+  export type usuariosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rm" | "nome" | "data_nascimento" | "curso_id" | "email" | "senha" | "telefone" | "foto_perfil" | "criado_em" | "atualizado_em" | "codigo_verificacao" | "codigo_gerado_em" | "tentativas_login" | "tipo_usuario" | "modalidades", ExtArgs["result"]["usuarios"]>
   export type usuariosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     membros_time?: boolean | usuarios$membros_timeArgs<ExtArgs>
     cursos?: boolean | usuarios$cursosArgs<ExtArgs>
@@ -4895,6 +4902,7 @@ export namespace Prisma {
       codigo_gerado_em: Date | null
       tentativas_login: number
       tipo_usuario: $Enums.tipo_usuario
+      modalidades: Prisma.JsonValue | null
     }, ExtArgs["result"]["usuarios"]>
     composites: {}
   }
@@ -5335,6 +5343,7 @@ export namespace Prisma {
     readonly codigo_gerado_em: FieldRef<"usuarios", 'DateTime'>
     readonly tentativas_login: FieldRef<"usuarios", 'Int'>
     readonly tipo_usuario: FieldRef<"usuarios", 'tipo_usuario'>
+    readonly modalidades: FieldRef<"usuarios", 'Json'>
   }
     
 
@@ -5849,7 +5858,8 @@ export namespace Prisma {
     codigo_verificacao: 'codigo_verificacao',
     codigo_gerado_em: 'codigo_gerado_em',
     tentativas_login: 'tentativas_login',
-    tipo_usuario: 'tipo_usuario'
+    tipo_usuario: 'tipo_usuario',
+    modalidades: 'modalidades'
   };
 
   export type UsuariosScalarFieldEnum = (typeof UsuariosScalarFieldEnum)[keyof typeof UsuariosScalarFieldEnum]
@@ -5861,6 +5871,14 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
   export const QueryMode: {
@@ -5877,6 +5895,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -5951,6 +5978,20 @@ export namespace Prisma {
    * Reference to a field of type 'tipo_usuario[]'
    */
   export type ListEnumtipo_usuarioFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tipo_usuario[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -6140,6 +6181,7 @@ export namespace Prisma {
     codigo_gerado_em?: DateTimeNullableFilter<"usuarios"> | Date | string | null
     tentativas_login?: IntFilter<"usuarios"> | number
     tipo_usuario?: Enumtipo_usuarioFilter<"usuarios"> | $Enums.tipo_usuario
+    modalidades?: JsonNullableFilter<"usuarios">
     membros_time?: Membros_timeListRelationFilter
     cursos?: XOR<CursosNullableScalarRelationFilter, cursosWhereInput> | null
   }
@@ -6160,6 +6202,7 @@ export namespace Prisma {
     codigo_gerado_em?: SortOrderInput | SortOrder
     tentativas_login?: SortOrder
     tipo_usuario?: SortOrder
+    modalidades?: SortOrderInput | SortOrder
     membros_time?: membros_timeOrderByRelationAggregateInput
     cursos?: cursosOrderByWithRelationInput
   }
@@ -6183,6 +6226,7 @@ export namespace Prisma {
     codigo_gerado_em?: DateTimeNullableFilter<"usuarios"> | Date | string | null
     tentativas_login?: IntFilter<"usuarios"> | number
     tipo_usuario?: Enumtipo_usuarioFilter<"usuarios"> | $Enums.tipo_usuario
+    modalidades?: JsonNullableFilter<"usuarios">
     membros_time?: Membros_timeListRelationFilter
     cursos?: XOR<CursosNullableScalarRelationFilter, cursosWhereInput> | null
   }, "id" | "rm" | "email">
@@ -6203,6 +6247,7 @@ export namespace Prisma {
     codigo_gerado_em?: SortOrderInput | SortOrder
     tentativas_login?: SortOrder
     tipo_usuario?: SortOrder
+    modalidades?: SortOrderInput | SortOrder
     _count?: usuariosCountOrderByAggregateInput
     _avg?: usuariosAvgOrderByAggregateInput
     _max?: usuariosMaxOrderByAggregateInput
@@ -6229,6 +6274,7 @@ export namespace Prisma {
     codigo_gerado_em?: DateTimeNullableWithAggregatesFilter<"usuarios"> | Date | string | null
     tentativas_login?: IntWithAggregatesFilter<"usuarios"> | number
     tipo_usuario?: Enumtipo_usuarioWithAggregatesFilter<"usuarios"> | $Enums.tipo_usuario
+    modalidades?: JsonNullableWithAggregatesFilter<"usuarios">
   }
 
   export type cursosCreateInput = {
@@ -6378,6 +6424,7 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeCreateNestedManyWithoutUsuariosInput
     cursos?: cursosCreateNestedOneWithoutUsuariosInput
   }
@@ -6398,6 +6445,7 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUncheckedCreateNestedManyWithoutUsuariosInput
   }
 
@@ -6415,6 +6463,7 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUpdateManyWithoutUsuariosNestedInput
     cursos?: cursosUpdateOneWithoutUsuariosNestedInput
   }
@@ -6435,6 +6484,7 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUncheckedUpdateManyWithoutUsuariosNestedInput
   }
 
@@ -6454,6 +6504,7 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type usuariosUpdateManyMutationInput = {
@@ -6470,6 +6521,7 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type usuariosUncheckedUpdateManyInput = {
@@ -6488,6 +6540,7 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -6748,6 +6801,29 @@ export namespace Prisma {
     notIn?: $Enums.tipo_usuario[] | ListEnumtipo_usuarioFieldRefInput<$PrismaModel>
     not?: NestedEnumtipo_usuarioFilter<$PrismaModel> | $Enums.tipo_usuario
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type CursosNullableScalarRelationFilter = {
     is?: cursosWhereInput | null
@@ -6770,6 +6846,7 @@ export namespace Prisma {
     codigo_gerado_em?: SortOrder
     tentativas_login?: SortOrder
     tipo_usuario?: SortOrder
+    modalidades?: SortOrder
   }
 
   export type usuariosAvgOrderByAggregateInput = {
@@ -6892,6 +6969,32 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumtipo_usuarioFilter<$PrismaModel>
     _max?: NestedEnumtipo_usuarioFilter<$PrismaModel>
+  }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type usuariosCreateNestedManyWithoutCursosInput = {
@@ -7325,6 +7428,29 @@ export namespace Prisma {
     _min?: NestedEnumtipo_usuarioFilter<$PrismaModel>
     _max?: NestedEnumtipo_usuarioFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type usuariosCreateWithoutCursosInput = {
     rm: string
@@ -7340,6 +7466,7 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeCreateNestedManyWithoutUsuariosInput
   }
 
@@ -7358,6 +7485,7 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUncheckedCreateNestedManyWithoutUsuariosInput
   }
 
@@ -7406,6 +7534,7 @@ export namespace Prisma {
     codigo_gerado_em?: DateTimeNullableFilter<"usuarios"> | Date | string | null
     tentativas_login?: IntFilter<"usuarios"> | number
     tipo_usuario?: Enumtipo_usuarioFilter<"usuarios"> | $Enums.tipo_usuario
+    modalidades?: JsonNullableFilter<"usuarios">
   }
 
   export type usuariosCreateWithoutMembros_timeInput = {
@@ -7422,6 +7551,7 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
     cursos?: cursosCreateNestedOneWithoutUsuariosInput
   }
 
@@ -7441,6 +7571,7 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type usuariosCreateOrConnectWithoutMembros_timeInput = {
@@ -7487,6 +7618,7 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
     cursos?: cursosUpdateOneWithoutUsuariosNestedInput
   }
 
@@ -7506,6 +7638,7 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type timeUpsertWithoutMembros_timeInput = {
@@ -7670,6 +7803,7 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type usuariosUpdateWithoutCursosInput = {
@@ -7686,6 +7820,7 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUpdateManyWithoutUsuariosNestedInput
   }
 
@@ -7704,6 +7839,7 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUncheckedUpdateManyWithoutUsuariosNestedInput
   }
 
@@ -7722,6 +7858,7 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type membros_timeCreateManyTimeInput = {

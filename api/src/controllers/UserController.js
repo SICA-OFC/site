@@ -8,15 +8,15 @@ const path = require("path");
 const sharp = require("sharp");
 
 const { loadTemplate, enviarEmail } = require("../services/enviarEmail.js");
-const { verificarAccessToken, regerarAccessToken } = require("../services/verificarToken.js");
+const { verificarAccessToken } = require("../services/verificarToken.js");
 const { sendEvent } = require("../services/sseService.js");
 const gerarCodigo = require("../services/gerarCodigo.js");
-const { gerarAccessToken, gerarRefreshToken } = require("../services/gerarToken.js");
+const { gerarAccessToken, gerarRefreshToken, regerarAccessToken } = require("../services/gerarToken.js");
 const BASE_URL = process.env.BASE_URL;
 
 module.exports = {
   CriarUsuario: async (req, res) => {
-    const { rm, nome, curso_id, email, data_nascimento, senha, telefone, tipo_usuario } = req.body;
+    const { rm, nome, curso_id, email, data_nascimento, senha, telefone, tipo_usuario, modalidades } = req.body;
 
     const salt = await bcrypt.genSalt(10);
     const senhaHash = await bcrypt.hash(senha, salt);
@@ -34,6 +34,7 @@ module.exports = {
         codigo_verificacao,
         codigo_gerado_em: new Date(),
         tipo_usuario,
+        modalidades,
       },
     });
 
@@ -258,7 +259,7 @@ module.exports = {
     }
 
     const params_id = parseInt(req.params.id);
-    const { nome, curso_id, email, data_nascimento, telefone } = req.body;
+    const { nome, curso_id, email, data_nascimento, telefone, modalidades } = req.body;
 
     let imageUrl = null;
     if (req.file) {
@@ -295,6 +296,7 @@ module.exports = {
         telefone: telefone ?? undefined,
         foto_perfil: imageUrl ?? undefined,
         cursos: { connect: { id: parseInt(curso_id) ?? undefined } },
+        modalidades: modalidades ?? undefined,
       },
     });
 
@@ -307,6 +309,7 @@ module.exports = {
         data_nascimento: usuario.data_nascimento,
         telefone: usuario.telefone,
         foto_perfil: imageUrl,
+        modalidades: usuario.modalidades,
       },
     });
   },
@@ -434,7 +437,8 @@ module.exports = {
         telefone: true,
         curso_id: true,
         foto_perfil: true,
-        cursos: true
+        cursos: true,
+        modalidades: true
       }
     });
 

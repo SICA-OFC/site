@@ -69,7 +69,8 @@ CREATE TABLE usuarios (
   codigo_verificacao       INTEGER CHECK (codigo_verificacao BETWEEN 100000 AND 999999),
   codigo_gerado_em         TIMESTAMP WITH TIME ZONE,
   tentativas_login         INTEGER        NOT NULL DEFAULT 0,
-  tipo_usuario             tipo_usuario   NOT NULL DEFAULT 'aluno'
+  tipo_usuario             tipo_usuario   NOT NULL DEFAULT 'aluno',
+  modalidades              JSONB          NOT NULL
 );
 
 -- Função e trigger para atualizar atualizado_em em projetos

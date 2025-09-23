@@ -20,7 +20,6 @@ router.post(
 
     const url = `https://api.challonge.com/v1/${route}`;
     
-    console.log(url, method)
     const response = await fetch(url, {
       method,
       headers: {

@@ -91,9 +91,9 @@ export default function ADMHomePage() {
 
         {/* Botões de gerenciamento */}
         <div className="grid md:grid-cols-2 gap-4 w-full">
-          <Link to="/adm/modalidade/gerenciar-chaves">
+          <Link to="/adm/modalidade/gerenciar-usuarios">
             <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442] cursor-pointer">
-              Gerenciar Chaves
+              Gerenciar Usuários
             </button>
           </Link>
 
@@ -103,15 +103,15 @@ export default function ADMHomePage() {
             </button>
           </Link>
 
-          <Link to="/adm/modalidade/gerenciar-usuarios">
-            <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442] cursor-pointer">
-              Gerenciar Usuários
-            </button>
-          </Link>
-
           <Link to="/adm/modalidade/criar-torneio">
             <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442] cursor-pointer">
               Gerenciar Torneios
+            </button>
+          </Link>
+          
+          <Link to="/adm/modalidade/gerenciar-chaves">
+            <button className="w-full bg-[#0c2442] text-[#f5f5f5] py-3 px-6 border border-transparent rounded transition duration-300 hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border hover:border-[#0c2442] cursor-pointer">
+              Gerenciar Chaves
             </button>
           </Link>
         </div>

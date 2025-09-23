@@ -51,6 +51,7 @@ model usuarios {
   codigo_gerado_em   DateTime?      @db.Timestamptz(6)
   tentativas_login   Int            @default(0)
   tipo_usuario       tipo_usuario   @default(aluno)
+  modalidades        Json?          @default("{}")
   membros_time       membros_time[]
   cursos             cursos?        @relation(fields: [curso_id], references: [id], onDelete: Restrict)
 }
