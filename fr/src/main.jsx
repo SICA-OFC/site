@@ -2,13 +2,13 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { ToastContainer } from "react-toastify";
-import App from "./App.jsx";
 
+import HomePage from "./pages/HomePage.jsx";
 import CadastroPage from "./pages/CadastroPage.jsx";
 import CadastroProfPage from "./pages/CadastroProfPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import EditProfilePage from "./pages/EditProfilePage.jsx";
-import EmailConfirmPage from "./pages/EmailConfirmPage.jsx"
+import EmailConfirmPage from "./pages/EmailConfirmPage.jsx";
 import BracketPage from "./pages/BracketPage.jsx";
 
 import AdmHomePage from "./pages/admPages/HomePage.jsx";
@@ -20,28 +20,21 @@ import TournmentCreator from "./pages/admPages/TournmentCreator.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
-  // Páginas principais
   {
     path: "/",
-    element: <App />,
+    element: <HomePage />,
   },
   {
     path: "/cadastro",
-    element: (
-        <CadastroPage />
-    ),
+    element: <CadastroPage />,
   },
   {
     path: "/cadastro-professor",
-    element: (
-        <CadastroProfPage />
-    ),
+    element: <CadastroProfPage />,
   },
   {
     path: "/login",
-    element: (
-        <LoginPage />
-    ),
+    element: <LoginPage />,
   },
   {
     path: "/confirmacao",
@@ -56,7 +49,6 @@ const router = createBrowserRouter([
     element: <EditProfilePage />,
   },
 
-  // Páginas do administrador
   {
     path: "/adm",
     element: <AdmHomePage />,

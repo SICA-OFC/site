@@ -1,12 +1,11 @@
-import logo from "../assets/logo.png";
+import { BASE_URL, ADMIN_COD } from "../utils/enviromentSettings.js";
 import { useState } from "react";
+import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import SelectCursos from "../components/selectCursos.jsx";
-import { toast, Bounce } from "react-toastify";
+import { toast } from "react-toastify";
+import { toastSettings } from "../utils/toastSettings.js";
 
 export default function CadastroPage() {
-  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
-  const ADMIN_COD = import.meta.env.VITE_APP_ADMIN_COD;
   const [rm, setRm] = useState("");
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
@@ -16,50 +15,40 @@ export default function CadastroPage() {
   const [cod, setCod] = useState("");
 
   const navigate = useNavigate();
-  const toastSettings = {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: false,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    transition: Bounce,
-  };
 
-  function handleRmChange(e) {
-    setRm(e.target.value);
+  function formatTelefone(value) {
+    value = value.replace(/\D/g, "");
+    value = value.substring(0, 11);
+
+    if (value.length > 10) {
+      return value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+    }
+    if (value.length > 6) {
+      return value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+    }
+    if (value.length > 2) {
+      return value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
+    }
   }
 
-  function handleNomeChange(e) {
-    setNome(e.target.value);
-  }
-
-  function handleEmailChange(e) {
-    setEmail(e.target.value);
-  }
-
-  function handleDataChange(e) {
-    setData(e.target.value);
-  }
-
-  function handleSenhaChange(e) {
-    setSenha(e.target.value);
-  }
-
-  function handleTelefoneChange(e) {
-    setTelefone(e.target.value);
-  }
-
-  function handleCodChange(e) {
-    setCod(e.target.value);
+  function handleChange(e) {
+    const { name, value } = e.target;
+    const setters = {
+      rm: (v) => setRm(v.replace(/\D/g, "")),
+      nome: setNome,
+      email: setEmail,
+      data_nascimento: setData,
+      senha: setSenha,
+      telefone: (v) => setTelefone(formatTelefone(v)),
+      cod,
+      setCod,
+    };
+    setters[name]?.(value);
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(ADMIN_COD, cod)
     const userInfo = {
       rm,
       nome,
@@ -91,131 +80,137 @@ export default function CadastroPage() {
 
   return (
     <div className="bg-[url(/src/assets/background.png)] bg-no-repeat bg-cover bg-center h-screen flex flex-col justify-center items-center gap-2">
-      <div className="bg-[#f5f5f5] rounded-md w-[80%] h-fit flex flex-row justify-between items-start">
-        <div className="flex flex-col items-center gap-2 w-full p-6">
-          <div className="flex flex-rol items-center gap-2 w-full">
+      <div className="bg-neutra-branca rounded-xl shadow-lg w-[80%] h-[96%] flex flex-row justify-between items-start p-6">
+        <div className="flex flex-col items-center gap-4 w-full">
+          <div className="flex flex-row items-center gap-2 w-full">
             <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
             <div className="h-9 border-l border-black" />
-            <h1 className="font-[energy]">Cadastro Professor</h1>
+            <h1 className="font-[energy] text-xl">Cadastro Professor</h1>
           </div>
-          <form className="flex flex-col justify-center items-center gap-5 w-[80%] space-y-2.5" onSubmit={handleSubmit}>
-            <div className="flex flex-col md:flex-row justify-start items-start gap-[5%]">
-              <div className="w-full md:w-[50%]">
-                <label className="text-sm text-center w-full" htmlFor="rm">
+
+          <form className="flex flex-col justify-center items-center gap-5 w-[80%]" onSubmit={handleSubmit}>
+            <div className="flex flex-row justify-start items-start gap-[5%] w-full">
+              {/* Coluna Esquerda */}
+              <div className="w-[50%] space-y-2">
+                <label className="text-sm" htmlFor="rm">
                   RM
                 </label>
                 <input
-                  className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+                  className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-full"
                   value={rm}
-                  onChange={handleRmChange}
+                  onChange={handleChange}
                   type="number"
                   id="rm"
                   name="rm"
                   min="10000"
                   max="99999"
-                  pattern="\d{5}"
                   required
                 />
 
-                <label className="text-sm text-center w-full" htmlFor="nome">
+                <label className="text-sm" htmlFor="nome">
                   Nome
                 </label>
                 <input
-                  className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+                  className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-full"
                   value={nome}
-                  onChange={handleNomeChange}
+                  onChange={handleChange}
                   type="text"
                   id="nome"
                   name="nome"
-                  pattern="[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+( [a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+)*"
+                  pattern="[a-zA-ZÀ-ÖØ-öø-ÿ]+( [a-zA-ZÀ-ÖØ-öø-ÿ]+)*"
                   required
                 />
-                <label className="text-sm text-center w-full" htmlFor="nascimento">
+
+                <label className="text-sm" htmlFor="nascimento">
                   Data de Nascimento
                 </label>
                 <input
-                  className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+                  className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-full"
                   value={data_nascimento}
-                  onChange={handleDataChange}
+                  onChange={handleChange}
                   type="date"
                   id="nascimento"
-                  name="nascimento"
-                  min="1900-01-01"
+                  name="data_nascimento"
+                  min="2000-01-01"
                   max={new Date().toISOString().split("T")[0]}
                   required
                 />
-                <label className="text-sm text-center w-full" htmlFor="email">
+              </div>
+
+              {/* Coluna Direita */}
+              <div className="w-[50%] space-y-2">
+                <label className="text-sm" htmlFor="email">
                   Email
                 </label>
                 <input
-                  className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+                  className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-full"
                   value={email}
-                  onChange={handleEmailChange}
+                  onChange={handleChange}
                   type="email"
                   id="email"
                   name="email"
                   autoComplete="email"
                   required
                 />
-              </div>
-              <div className="w-full md:w-[50%]">
-                <label className="text-sm text-center w-full" htmlFor="senha">
+
+                <label className="text-sm" htmlFor="senha">
                   Senha
                 </label>
                 <input
-                  className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+                  className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-full"
                   value={senha}
-                  onChange={handleSenhaChange}
+                  onChange={handleChange}
                   type="password"
                   id="senha"
                   name="senha"
                   required
                 />
 
-                <label className="text-sm text-center w-full" htmlFor="telefone">
+                <label className="text-sm" htmlFor="telefone">
                   Telefone
                 </label>
                 <input
-                  className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
-                  maxLength="19"
+                  className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-full"
+                  maxLength="15"
+                  minLength="13"
                   value={telefone}
-                  onChange={handleTelefoneChange}
+                  onChange={handleChange}
                   type="text"
                   id="telefone"
                   name="telefone"
                   required
                 />
-
-                <label className="text-sm text-center w-full" htmlFor="telefone">
-                  Código
-                </label>
-                <input
-                  className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
-                  maxLength="100"
-                  value={cod}
-                  onChange={handleCodChange}
-                  type="text"
-                  id="cod"
-                  name="cod"
-                  required
-                />
               </div>
             </div>
-            <button
-              className="bg-secundaria text-white rounded-md font-semibold h-[50px] w-[50%] hover:bg-neutra-branca hover:text-[#001429] hover:border-secundaria hover:border-1 cursor-pointer transition"
-              type="submit"
-              name="submit"
-              value="login"
-            >
-              Cadastrar
-            </button>
-            <div className="flex flex-col items-center justify-center w-full">
-              <span className="text-sm text-center w-full">Já tem conta?</span>
-              <span>
-                <Link to="/login" className="text-primaria text-sm text-center w-full">
+            <label className="text-sm w-full" htmlFor="telefone">
+              Código
+              <input
+                className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+                maxLength="100"
+                value={cod}
+                onChange={handleChange}
+                type="text"
+                id="cod"
+                name="cod"
+                required
+              />
+            </label>
+            <div className="flex flex-col justify-center items-center gap-[5%] w-full">
+              <button
+                type="submit"
+                className="bg-secundaria text-white rounded-md font-semibold h-[50px] w-1/2 cursor-pointer 
+              transition-all duration-300 hover:bg-neutra-branca hover:text-secundaria hover:border 
+              hover:border-secundaria"
+              >
+                Cadastrar
+              </button>
+
+              <div className="flex flex-col items-center justify-center w-full">
+                <span className="text-sm text-center">Já tem conta?</span>
+                <Link to="/login" className="text-primaria text-sm text-center hover:underline">
                   Entre!
                 </Link>
-              </span>
+              </div>
             </div>
           </form>
         </div>

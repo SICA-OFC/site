@@ -35,7 +35,7 @@ export default function HomePage() {
             <img src={image2} alt="Competição de natação" className="w-[70%]" />
           </section>
 
-          <section className="bg-secundaria text-white flex flex-col flex-row justify-center items-center w-[80%]">
+          <section className="bg-secundaria text-white flex flex-row justify-center items-center w-[80%]">
             <img src={image3} alt="Competição de natação" className="w-[70%]" />
             <p className="p-5 font-sans">
               Permitindo cadastrar novos eventos de forma simples e rápida. Os usuários podem visualizar
