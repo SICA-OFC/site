@@ -40,11 +40,10 @@ module.exports = {
 
     const titulo = "Confirmar Cadastro";
     const texto = `Seu código de verificação é: ${codigo_verificacao}`;
-    await enviarEmail(email, titulo, texto, null);
+    enviarEmail(email, titulo, texto, null);
     const accessToken = await gerarAccessToken(novoUsuario);
 
     res.status(200).json({
-      mensagem: "Cadastro bem-sucedido",
       accessToken,
     });
   },
@@ -57,7 +56,7 @@ module.exports = {
     });
 
     if (!usuario) {
-      return res.status(400).json({ erro: "Usuário não existente" });
+      return res.status(400).json({ erro: "Email ou Senha incorreto" });
     }
 
     const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
@@ -67,7 +66,7 @@ module.exports = {
           where: { email: email },
           data: { tentativas_login: usuario.tentativas_login + 1 },
         });
-        return res.status(400).json({ erro: "Senha ou email incorreto" });
+        return res.status(400).json({ erro: "Email ou Senha incorreto" });
       }
     } else {
       const { tentativas_login } = await prisma.usuarios.update({
@@ -77,13 +76,16 @@ module.exports = {
           tentativas_login: true,
         },
       });
-      if (tentativas_login % 5 == 0) {
-        const novoCodigo = await gerarCodigo();
+
+      if (tentativas_login % 5 != 0) {
+        return res.status(423).json({ erro: "Sua conta foi bloqueada" });
+      } else {
+        const codigo_verificacao = await gerarCodigo();
         const action = "unlock";
         await prisma.usuarios.update({
           where: { email: email },
           data: {
-            codigo_verificacao: novoCodigo,
+            codigo_verificacao,
             codigo_gerado_em: new Date(),
           },
         });
@@ -101,7 +103,6 @@ module.exports = {
         enviarEmail(email, titulo, texto, html);
         return res.status(423).json({ erro: "Sua conta foi bloqueada. Um e-mail com instruções foi enviado." });
       }
-      return res.status(423).json({ erro: "Sua conta foi bloqueada" });
     }
 
     const codigo_verificacao = await gerarCodigo();
@@ -113,11 +114,10 @@ module.exports = {
 
     const titulo = "Confirmar Login";
     const texto = `Seu código de verificação é: ${codigo_verificacao}`;
-    await enviarEmail(email, titulo, texto, null);
+    enviarEmail(email, titulo, texto, null);
     const accessToken = await gerarAccessToken(usuario);
 
     res.status(200).json({
-      mensagem: "Login bem-sucedido",
       accessToken,
     });
   },
@@ -220,7 +220,6 @@ module.exports = {
         })
         .status(200)
         .json({
-          mensagem: "Usuário verificado com sucesso!",
           accessToken,
           refreshToken,
         });
@@ -249,7 +248,7 @@ module.exports = {
     const texto = `Seu código de verificação é: ${novoCodigo}`;
     await enviarEmail(data.email, titulo, texto);
 
-    res.status(200).json({ mensagem: "Código de verificação enviado com sucesso!" });
+    res.status(201);
   },
 
   EditarUsuario: async (req, res) => {
@@ -258,13 +257,13 @@ module.exports = {
       return res.status(404).json({ error: "Usuário não logado." });
     }
 
-    const params_id = parseInt(req.params.id);
+    const id = parseInt(req.params.id);
     const { nome, curso_id, email, data_nascimento, telefone, modalidades } = req.body;
 
     let imageUrl = null;
     if (req.file) {
       const usuarioAtual = await prisma.usuarios.findUnique({
-        where: { id: params_id || data.id },
+        where: { id: id || data.id },
       });
 
       if (usuarioAtual.foto_perfil) {
@@ -288,7 +287,7 @@ module.exports = {
     }
 
     const usuario = await prisma.usuarios.update({
-      where: { id: params_id || data.id },
+      where: { id: id || data.id },
       data: {
         nome: nome ?? undefined,
         email: email ?? undefined,
@@ -300,8 +299,27 @@ module.exports = {
       },
     });
 
+    if (!id && (data.email != email)) {
+      const accessToken = await gerarAccessToken(usuario);
+      const refreshToken = await gerarRefreshToken(usuario);
+
+      res
+        .cookie(process.env.REFRESH_TOKEN, refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "Lax",
+          overwrite: true,
+        })
+        .cookie(process.env.ACCESS_TOKEN, accessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "Lax",
+          maxAge: 15 * 60 * 1000,
+          overwrite: true,
+        });
+    }
+
     res.status(200).json({
-      mensagem: "Usuário editado com sucesso!",
       usuario: {
         nome: usuario.nome,
         curso_id: usuario.curso_id,
@@ -335,7 +353,6 @@ module.exports = {
     });
 
     res.status(200).json({
-      mensagem: "Usuário teve sua senha alterada!",
       usuario: {
         nome: usuario.nome,
         senha: usuario.senha,
@@ -349,12 +366,12 @@ module.exports = {
       return res.status(404).json({ error: "Usuário não logado." });
     }
 
+    const id = parseInt(req.params.id);
     const usuario = await prisma.usuarios.delete({
-      where: { id: data.id },
+      where: { id: id || data.id },
     });
 
-    res.status(200).json({
-      mensagem: "Usuário Deletado!",
+    res.clearCookie(process.env.REFRESH_TOKEN).clearCookie(process.env.ACCESS_TOKEN).status(200).json({
       usuario: usuario.id,
     });
   },
@@ -386,24 +403,25 @@ module.exports = {
     }
 
     const usuario = await prisma.usuarios.findUnique({
-      where: { email: data.email },
+      where: { id: data.id },
     });
 
     if (!usuario) {
       return res.status(404).json({ erro: "Usuário não encontrado" });
     }
 
-    res.json({ mensagem: "O usuário está logado.", usuario });
+    res.json({ usuario });
   },
 
   VerUsuario: async (req, res) => {
     const data = req.user;
     if (!data) {
-      return res.status(404).json({ erro: "Usuário não encontrado" });
+      return res.status(404).json({ erro: "Usuário não logado." });
     }
 
+    const id = parseInt(req.params.id);
     const usuario = await prisma.usuarios.findUnique({
-      where: { email: data.email },
+      where: { id: id || data.id },
       include: {
         cursos: true,
       },
@@ -413,7 +431,7 @@ module.exports = {
       return res.status(404).json({ error: "Usuário não encontrado." });
     }
 
-    res.json({ mensagem: "O usuário está logado.", usuario });
+    res.json({ usuario });
   },
 
   VerUsuarios: async (req, res) => {
@@ -427,7 +445,7 @@ module.exports = {
 
     const usuarios = await prisma.usuarios.findMany({
       where: { tipo_usuario: "aluno" },
-      orderBy: { id: "asc" }, 
+      orderBy: { id: "asc" },
       select: {
         id: true,
         rm: true,
@@ -438,8 +456,8 @@ module.exports = {
         curso_id: true,
         foto_perfil: true,
         cursos: true,
-        modalidades: true
-      }
+        modalidades: true,
+      },
     });
 
     if (!usuarios || usuarios.length === 0) {
@@ -450,10 +468,6 @@ module.exports = {
   },
 
   Logout: async (req, res) => {
-    return res
-      .clearCookie(process.env.REFRESH_TOKEN)
-      .clearCookie(process.env.ACCESS_TOKEN)
-      .status(200)
-      .json({ mensagem: "Logout realizado com sucesso" });
+    return res.clearCookie(process.env.REFRESH_TOKEN).clearCookie(process.env.ACCESS_TOKEN).status(200);
   },
 };

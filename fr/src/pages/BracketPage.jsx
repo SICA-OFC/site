@@ -68,7 +68,7 @@ export default function BracketPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex flex-col items-center gap-6 py-10 bg-[#f5f5f5] flex-1">
+      <main className="flex flex-col items-center gap-6 py-10 bg-neutra-branca flex-1">
         <h1 className="text-2xl font-bold mb-6">Torneios Públicos</h1>
 
         {/* Lista de torneios */}

@@ -290,11 +290,11 @@ export default function TournmentCreatorPage() {
       className="min-h-screen bg-cover bg-center flex flex-col gap-5 py-5 items-center justify-center"
       style={{ backgroundImage: "url('/assets/AdmBG.png')" }}
     >
-      <div className="bg-[#f5f5f5] rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[3%] max-w-[500px] w-full flex flex-col items-center">
+      <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[3%] max-w-[500px] w-full flex flex-col items-center">
         {/* Cabeçalho */}
         <div className="flex items-center w-full">
           <img src={logo} alt="Logo" className="w-[80px]" />
-          <div className="border-l border-[#001429] w-[10px] h-[60px] mx-4"></div>
+          <div className="border-l border-neutra-preta w-[10px] h-[60px] mx-4"></div>
           <h2 className="text-lg font-[energy]">Área do Administrador</h2>
         </div>
 
@@ -331,14 +331,14 @@ export default function TournmentCreatorPage() {
           <div className="flex justify-center gap-5 mt-8">
             <button
               type="submit"
-              className="bg-[#001429] text-white px-6 py-2 rounded-lg border-[#f5f5f5] hover:bg-white hover:text-[#001429] border hover:border-[#001429] transition cursor-pointer"
+              className="bg-neutra-preta text-white px-6 py-2 rounded-lg border-neutra-branca hover:bg-white hover:text-neutra-preta border hover:border-neutra-preta transition cursor-pointer"
             >
               Cadastrar Torneio
             </button>
             <Link to="/adm">
               <button
                 type="back"
-                className="bg-destaque text-white px-6 py-2 rounded-lg border-[#f5f5f5] hover:bg-white hover:text-[red] border transparent hover:border-[red] transition cursor-pointer"
+                className="bg-destaque text-white px-6 py-2 rounded-lg border-neutra-branca hover:bg-white hover:text-[red] border transparent hover:border-[red] transition cursor-pointer"
               >
                 Voltar
               </button>
@@ -347,7 +347,7 @@ export default function TournmentCreatorPage() {
         </form>
       </div>
 
-      <div className="bg-[#f5f5f5] rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[3%] max-w-[500px] w-full flex flex-col items-center">
+      <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[3%] max-w-[500px] w-full flex flex-col items-center">
         {tournaments?.length > 0 ? (
           <form onSubmit={handleEdit} className="w-full">
             <div className="w-full">
@@ -441,14 +441,14 @@ export default function TournmentCreatorPage() {
             <div className="flex justify-center gap-5 mt-8">
               <button
                 type="submit"
-                className="bg-[#001429] text-white px-6 py-2 rounded-lg border-[#f5f5f5] hover:bg-white hover:text-[#001429] border hover:border-[#001429] transition cursor-pointer"
+                className="bg-neutra-preta text-white px-6 py-2 rounded-lg border-neutra-branca hover:bg-white hover:text-neutra-preta border hover:border-neutra-preta transition cursor-pointer"
               >
                 Atualizar Campeonato
               </button>
               <button
                 onClick={handleDelete}
                 type="button"
-                className="bg-[red] text-white px-6 py-2 rounded-lg border-[#f5f5f5] hover:bg-white hover:text-[red] border transparent hover:border-[red] transition cursor-pointer"
+                className="bg-[red] text-white px-6 py-2 rounded-lg border-neutra-branca hover:bg-white hover:text-[red] border transparent hover:border-[red] transition cursor-pointer"
               >
                 Deletar Campeonato
               </button>

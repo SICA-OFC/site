@@ -5,17 +5,17 @@ import { ToastContainer } from "react-toastify";
 
 import HomePage from "./pages/HomePage.jsx";
 import CadastroPage from "./pages/CadastroPage.jsx";
-import CadastroProfPage from "./pages/CadastroProfPage.jsx";
+import CadastroProfPage from "./pages/admPages/CadastroProfPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import EditProfilePage from "./pages/EditProfilePage.jsx";
 import EmailConfirmPage from "./pages/EmailConfirmPage.jsx";
 import BracketPage from "./pages/BracketPage.jsx";
 
 import AdmHomePage from "./pages/admPages/HomePage.jsx";
-import ManagmentUsersPage from "./pages/admPages/ManagementUsersPage.jsx";
-import BracketEditor from "./pages/admPages/BracketEditor.jsx";
-import TeamManagement from "./pages/admPages/TeamManagment.jsx";
-import TournmentCreator from "./pages/admPages/TournmentCreator.jsx";
+import ManagmentUsersPage from "./pages/admPages/UsersPage.jsx";
+import BracketEditor from "./pages/admPages/BracketPage.jsx";
+import TeamManagement from "./pages/admPages/TeamPage.jsx";
+import TournmentCreator from "./pages/admPages/TournamentPage.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 

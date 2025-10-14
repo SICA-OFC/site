@@ -13,7 +13,6 @@ export default function ProfileUploader({ file, onFileChange }) {
     const fileObj = e.target.files && e.target.files[0];
     if (!fileObj) return;
 
-    console.log(fileObj);
     setPreview(URL.createObjectURL(fileObj));
     onFileChange(fileObj);
   };

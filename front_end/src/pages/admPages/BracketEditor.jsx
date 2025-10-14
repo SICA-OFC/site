@@ -26,12 +26,12 @@ const BracketEditorPage = () => {
       className="min-h-screen bg-cover bg-center flex items-center justify-center"
       style={{ backgroundImage: `url('/assets/AdmBG.png')` }}
     >
-      <div className="bg-[#f5f5f5] rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] px-[10%] py-[3%] max-w-[1000px] w-full flex flex-col items-center">
+      <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] px-[10%] py-[3%] max-w-[1000px] w-full flex flex-col items-center">
         {/* Header */}
         <div className="w-full flex justify-between mb-10 -mt-8 -ml-24">
           <div className="flex items-center gap-2">
             <img src={Logo} alt="Imagem do logo" className="w-[10%] pb-10" />
-            <div className="border-l border-[#0c2442] w-[10px] h-[50px] mb-4"></div>
+            <div className="border-l border-neutra-pretaw-[10px] h-[50px] mb-4"></div>
             <div className="font-[energy]">
               <h1>Área do Administrador</h1>
             </div>
@@ -53,12 +53,12 @@ const BracketEditorPage = () => {
           <div className="flex flex-row justify-evenly w-full mt-4">
             <button
               onClick={salvar}
-              className="bg-[#f18e2c] text-white px-5 py-2 rounded-lg border border-transparent hover:bg-gray-100 hover:text-[#f18e2c] hover:border-[#f18e2c] transition-all duration-300 cursor-pointer"
+              className="bg-destaque text-white px-5 py-2 rounded-lg border border-transparent hover:bg-gray-100 hover:text-destaque hover:border-destaque transition-all duration-300 cursor-pointer"
             >
               Salvar
             </button>
             <Link to="/adm" className="no-underline">
-              <button className="bg-[#0c2442] text-[#f5f5f5] px-5 py-2 rounded-lg border border-transparent hover:bg-gray-100 hover:text-[#0c2442] hover:border-[#0c2442] transition-all duration-300 cursor-pointer">
+              <button className="bg-neutra-pretatext-neutra-branca px-5 py-2 rounded-lg border border-transparent hover:bg-gray-100 hover:text-neutra-pretahover:border-neutra-pretatransition-all duration-300 cursor-pointer">
                 Voltar
               </button>
             </Link>

@@ -2,9 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 import { Bounce, toast } from "react-toastify";
+import { toastSettings } from "../../utils/toastSettings";
+import { BASE_URL } from "../../utils/enviromentSettings";
 
-function ClickableUserEntry({ name, rm, course, modality }) {
-  const parts = [name, rm, course, modality].filter(Boolean);
+function ClickableUserEntry({ name, rm, course }) {
+  const parts = [name, rm, course].filter(Boolean);
   return (
     <p className="text-sm">
       <span className="text-[#f26522]">{parts.join(" | ")}</span>
@@ -13,7 +15,6 @@ function ClickableUserEntry({ name, rm, course, modality }) {
 }
 
 export default function TournmentCreatorPage() {
-  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const fetchedRef = useRef(false);
 
   const [users, setUsers] = useState([]);
@@ -25,22 +26,17 @@ export default function TournmentCreatorPage() {
   const [editNome, setEditNome] = useState("");
   const [selectedTeam, setSelectedTeam] = useState([]);
   const [selectedTeamIds, setSelectedTeamIds] = useState([]);
-
-  const toastSettings = {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: false,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    transition: Bounce,
-  };
+  const [modalidades, setModalidades] = useState({
+    futebol: false,
+    vôlei: false,
+    basquete: false,
+    natação: false,
+  });
+  const [filtro, setFiltro] = useState(false);
 
   const verUsuario = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/usuario/verUsuarios`, {
+      const response = await fetch(`${BASE_URL}/usuario/`, {
         method: "GET",
         credentials: "include",
       });
@@ -48,7 +44,7 @@ export default function TournmentCreatorPage() {
 
       if (response.ok) {
         const usuarios = result.usuarios;
-
+        
         if (usuarios.length > 0) {
           setUsers(usuarios);
         }
@@ -56,10 +52,7 @@ export default function TournmentCreatorPage() {
         toast.error(result.erro, toastSettings);
       }
     } catch (error) {
-      toast.error(
-        "Algo deu errado ao consultar os alunos! Tente novamente!",
-        toastSettings
-      );
+      toast.error("Algo deu errado ao consultar os alunos! Tente novamente!", toastSettings);
       console.error("Erro ao verificar autenticação:", error);
     }
   };
@@ -79,10 +72,7 @@ export default function TournmentCreatorPage() {
         toast.error(result.erro, toastSettings);
       }
     } catch (error) {
-      toast.error(
-        "Algo deu errado ao consultar os times! Tente novamente!",
-        toastSettings
-      );
+      toast.error("Algo deu errado ao consultar os times! Tente novamente!", toastSettings);
       console.error("Erro ao verificar autenticação:", error);
     }
   };
@@ -103,16 +93,16 @@ export default function TournmentCreatorPage() {
     setEditNome(e.target.value);
   }
 
+  const handleFiltroChange = (e) => {
+    setFiltro(e.target.value);
+  };
+
   function toggleUserId(id) {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   }
 
   function toggleEditUserId(id) {
-    setSelectedTeamIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    setSelectedTeamIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   }
 
   const handleSubmit = async (e) => {
@@ -213,18 +203,17 @@ export default function TournmentCreatorPage() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center flex flex-col gap-5 py-5 items-center justify-center"
-      style={{ backgroundImage: "url('/assets/AdmBG.png')" }}
+      className="min-h-screen bg-[url('/assets/AdmBG.png')]  bg-cover bg-center flex 
+      flex-col gap-5 py-5 items-center justify-center"
     >
+      {/* CADASTRAR TIME */}
       <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[3%] max-w-[500px] w-full flex flex-col items-center">
-        {/* Cabeçalho */}
         <div className="flex items-center w-full">
           <img src={logo} alt="Logo" className="w-[80px]" />
           <div className="border-l border-neutra-preta w-[10px] h-[60px] mx-4"></div>
           <h2 className="text-lg font-[energy]">Área do Administrador</h2>
         </div>
 
-        {/* Formulário */}
         <form onSubmit={handleSubmit} className="w-full">
           <div className="w-full">
             <label className="text-sm text-center w-full" htmlFor="nome">
@@ -240,53 +229,71 @@ export default function TournmentCreatorPage() {
               pattern="[a-zA-Z0-9\u00C0-\u024F\s-]+"
               required
             />
-            <label className="text-sm text-center w-full" htmlFor="tipo">
-              Membros
-            </label>
 
+            <span className="text-sm text-center w-full mt-3">
+              Membros
+            </span>
             <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
-              {users.map((u) => (
-                <div
-                  key={u.id}
-                  className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between"
-                >
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      name="checkbox"
-                      checked={selectedIds.includes(u.id)}
-                      onChange={(ev) => {
-                        ev.stopPropagation();
-                        toggleUserId(u.id);
-                      }}
-                      className="w-4 h-4"
-                    />
-                    <ClickableUserEntry
-                      name={u.nome}
-                      rm={u.rm}
-                      course={u.cursos?.nome || "—"}
-                      modality={u.modality || "—"}
-                    />
+              {users
+                .filter((u) => {
+                  if (!filtro) return true;
+                  const userModalidades = JSON.parse(u.modalidades || "{}");
+                  return !!userModalidades[filtro];
+                })
+                .map((u) => (
+                  <div key={u.id} className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        name="checkbox"
+                        checked={selectedIds.includes(u.id)}
+                        onChange={(ev) => {
+                          ev.stopPropagation();
+                          toggleUserId(u.id);
+                        }}
+                        className="w-4 h-4"
+                      />
+                      <ClickableUserEntry name={u.nome} rm={u.rm} course={u.cursos?.nome || "—"} />
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
 
-            {/* mostrar quantos selecionados (opcional) */}
             <p className="text-xs mt-2">Selecionados: {selectedIds.length}</p>
+
+            <label className="text-sm text-center w-full mt-3" htmlFor="filtro">
+              Modalidade
+            </label>
+            <select
+              id="filtro"
+              value={filtro}
+              onChange={handleFiltroChange}
+              className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+            >
+              <option value="" disabled>
+                Selecione uma modalidade
+              </option>
+              {Object.keys(modalidades).map((mod) => (
+                <option key={mod} value={mod}>
+                  {mod.charAt(0).toUpperCase() + mod.slice(1)}
+                </option>
+              ))}
+            </select>
           </div>
+
           {/* Botões */}
           <div className="flex justify-center gap-5 mt-8">
             <button
               type="submit"
-              className="bg-neutra-preta text-white px-6 py-2 rounded-lg border-neutra-branca hover:bg-white hover:text-neutra-preta border hover:border-neutra-preta transition cursor-pointer"
+              className="bg-neutra-preta text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
             >
               Cadastrar Time
             </button>
+
             <Link to="/adm">
               <button
                 type="button"
-                className="bg-destaque text-white px-6 py-2 rounded-lg border-neutra-branca hover:bg-white hover:text-[red] border transparent hover:border-[red] transition cursor-pointer"
+                className="bg-destaque text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-destaque hover:border-destaque"
               >
                 Voltar
               </button>
@@ -295,93 +302,83 @@ export default function TournmentCreatorPage() {
         </form>
       </div>
 
+      {/* EDITAR TIME */}
       <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[3%] max-w-[500px] w-full flex flex-col items-center">
         {teams.length > 0 ? (
           <form onSubmit={handleEdit} className="w-full">
-            <div className="w-full">
-              <label className="text-sm text-center w-full" htmlFor="nome">
-                Times
-              </label>
-              <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
-                {teams.map((t) => (
-                  <div
-                    key={t.id}
-                    onClick={() => {
-                      setSelectedTeam(t);
-                      setEditNome(t.nome);
-                      setSelectedTeamIds(
-                        t.membros_time?.map((m) => m.membro_id) || []
-                      );
-                    }}
-                    className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <ClickableUserEntry
-                        name={t.nome}
-                        modality={t.modality || "—"}
-                      />
-                    </div>
+            <label className="text-sm text-center w-full" htmlFor="nome">
+              Times
+            </label>
+            <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
+              {teams.map((t) => (
+                <div
+                  key={t.id}
+                  onClick={() => {
+                    setSelectedTeam(t);
+                    setEditNome(t.nome);
+                    setSelectedTeamIds(t.membros_time?.map((m) => m.membro_id) || []);
+                  }}
+                  className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <ClickableUserEntry name={t.nome} modality={t.modality || "—"} />
                   </div>
-                ))}
-              </div>
-              <label className="text-sm text-center w-full" htmlFor="editNome">
-                Nome do time
-              </label>
-              <input
-                className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
-                value={editNome}
-                onChange={handleEditNomeChange}
-                type="text"
-                id="editNome"
-                name="editNome"
-                required
-              />
-              <label className="text-sm text-center w-full" htmlFor="tipo">
-                Membros
-              </label>
-
-              <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
-                {users.map((u) => (
-                  <div
-                    key={u.id}
-                    className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        name="checkbox"
-                        checked={selectedTeamIds.includes(u.id)}
-                        onChange={(ev) => {
-                          ev.stopPropagation();
-                          toggleEditUserId(u.id);
-                        }}
-                        className="w-4 h-4"
-                      />
-                      <ClickableUserEntry name={u.nome} />
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* mostrar quantos selecionados (opcional) */}
-              <p className="text-xs mt-2">
-                Selecionados: {selectedTeamIds.length}
-              </p>
+                </div>
+              ))}
             </div>
-            {/* Botões */}
+
+            <label className="text-sm text-center w-full mt-3" htmlFor="editNome">
+              Nome do time
+            </label>
+            <input
+              className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+              value={editNome}
+              onChange={handleEditNomeChange}
+              type="text"
+              id="editNome"
+              name="editNome"
+              required
+            />
+
+            <span className="text-sm text-center w-full mt-3">
+              Membros
+            </span>
+            <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
+              {users.map((u) => (
+                <div key={u.id} className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      name="checkbox"
+                      checked={selectedTeamIds.includes(u.id)}
+                      onChange={(ev) => {
+                        ev.stopPropagation();
+                        toggleEditUserId(u.id);
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <ClickableUserEntry name={u.nome} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-xs mt-2">Selecionados: {selectedTeamIds.length}</p>
+
             <div className="flex justify-center gap-5 mt-8">
               <button
                 type="submit"
-                className="bg-neutra-preta text-white px-6 py-2 rounded-lg border-neutra-branca hover:bg-white hover:text-neutra-preta border hover:border-neutra-preta transition cursor-pointer"
+                className="bg-neutra-preta text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
               >
                 Atualizar Time
               </button>
+
               <button
                 onClick={handleDelete}
                 type="button"
-                className="bg-[red] text-white px-6 py-2 rounded-lg border-neutra-branca hover:bg-white hover:text-[red] border transparent hover:border-[red] transition cursor-pointer"
+                className="bg-[red] text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-[red] hover:border-[red]"
               >
-                Deletar time
+                Deletar Time
               </button>
             </div>
           </form>

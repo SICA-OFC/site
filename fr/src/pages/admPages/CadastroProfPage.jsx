@@ -1,9 +1,10 @@
-import { BASE_URL, ADMIN_COD } from "../utils/enviromentSettings.js";
+import { BASE_URL, ADMIN_COD } from "../../utils/enviromentSettings.js";
 import { useState } from "react";
-import logo from "../assets/logo.png";
+import logo from "../../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { toastSettings } from "../utils/toastSettings.js";
+import { toastSettings } from "../../utils/toastSettings.js";
+import { Cadastrar } from "../../hooks/api.js";
 
 export default function CadastroPage() {
   const [rm, setRm] = useState("");
@@ -40,8 +41,7 @@ export default function CadastroPage() {
       data_nascimento: setData,
       senha: setSenha,
       telefone: (v) => setTelefone(formatTelefone(v)),
-      cod,
-      setCod,
+      cod: setCod,
     };
     setters[name]?.(value);
   }
@@ -49,7 +49,11 @@ export default function CadastroPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const userInfo = {
+    if (cod != ADMIN_COD) {
+      toast.error("Código inválido!", toastSettings);
+      return false;
+    }
+    const data = {
       rm,
       nome,
       email,
@@ -59,22 +63,9 @@ export default function CadastroPage() {
       tipo_usuario: "professor",
     };
 
-    const response = await fetch(`${BASE_URL}/usuario/cadastro`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userInfo),
-    });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      toast.success("Cadastro feito com sucesso, prossiga pra autentificação de 2 fatores!", toastSettings);
-      navigate("/confirmacao", {
-        state: { accessToken: result.accessToken },
-      });
-    } else {
-      toast.error("Algo deu errado ao cadastrar! Tente novamente!", toastSettings);
-      throw new Error(result.message || "Erro no cadastro");
+    const result = await Cadastrar(data);
+    if (result) {
+      navigate("/confirmacao", { state: { accessToken: result.accessToken } });
     }
   };
 

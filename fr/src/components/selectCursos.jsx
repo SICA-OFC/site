@@ -47,28 +47,26 @@ export default function SelectCursos({ periodo, curso, onPeriodoChange, onCursoC
   }, [onCursoChange, periodo]);
   return (
     <>
-<div className="flex gap-2">
-    {["1", "2", "3"].map((p, i) => {
-      const labelText = ["Manhã", "Tarde", "Noite"][i];
-      return (
-        <label key={p} className="flex items-center gap-1 cursor-pointer r">
-          <input
-            type="radio"
-            name="periodo"
-            value={p}
-            checked={periodo === p}
-            onChange={(e) => onPeriodoChange(e.target.value)}
-            required
-            className="appearance-none w-3 h-3 border border-[#f1832c] outline-0 bg-[#f5f5f5] cursor-pointer rounded-lg"
-            style={{
-              backgroundColor: periodo === p ? "#001429" : "#f5f5f5",
-            }}
-          />
-          {labelText}
-        </label>
-      );
-    })}
-  </div>
+      <div className="flex gap-2">
+        {["1", "2", "3"].map((p, i) => {
+          const labelText = ["Manhã", "Tarde", "Noite"][i];
+          return (
+            <label key={p} className="flex items-center gap-1 cursor-pointer r">
+              <input
+                type="radio"
+                name="periodo"
+                value={p}
+                checked={periodo === p}
+                onChange={(e) => onPeriodoChange(e.target.value)}
+                required
+                className="appearance-none w-3 h-3 border border-destaque rounded-lg bg-neutra-branca
+                cursor-pointer checked:bg-[#001429]"
+              />
+              {labelText}
+            </label>
+          );
+        })}
+      </div>
 
       <select
         className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"

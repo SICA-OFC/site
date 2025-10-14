@@ -156,7 +156,8 @@ export default function BracketEditorPage() {
         normalized.forEach((mm) => {
           if (!mm) return;
           const csv = mm.scores_csv || "";
-          let p1 = "", p2 = "";
+          let p1 = "",
+            p2 = "";
           if (csv && csv.includes("-")) {
             const first = csv.split(",")[0].trim();
             const [a, b] = first.split("-").map((s) => s.trim());
@@ -342,7 +343,10 @@ export default function BracketEditorPage() {
         ]);
 
         if (resOcc.ok && resTarget.ok) {
-          toast.success(`Swap realizado: ${occupant.name || occupant.display_name} ↔ ${target.name || target.display_name}`, toastSettings);
+          toast.success(
+            `Swap realizado: ${occupant.name || occupant.display_name} ↔ ${target.name || target.display_name}`,
+            toastSettings
+          );
           await loadTournamentData(selectedTournament);
           setChaveamentoTs(Date.now());
         } else {
@@ -375,14 +379,14 @@ export default function BracketEditorPage() {
 
   return (
     <div
-      className="min-h-screen bg-cover bg-center flex flex-col gap-5 py-5 items-center justify-center"
-      style={{ backgroundImage: "url('/assets/AdmBG.png')" }}
+      className="min-h-screen bg-[url('/assets/AdmBG.png')]  bg-cover bg-center flex 
+      flex-col gap-5 py-5 items-center justify-center"
     >
       {/* Container 1: Torneios */}
-      <div className="bg-[#f5f5f5] rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[500px] w-full flex flex-col items-center">
+      <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[500px] w-full flex flex-col items-center">
         <div className="flex items-center w-full">
           <img src={logo} alt="Logo" className="w-[80px]" />
-          <div className="border-l border-[#001429] w-[10px] h-[60px] mx-4"></div>
+          <div className="border-l border-neutra-preta w-[10px] h-[60px] mx-4"></div>
           <h2 className="text-lg font-[energy]">Área do Administrador</h2>
         </div>
 
@@ -445,17 +449,9 @@ export default function BracketEditorPage() {
             <Link to="/adm">
               <button
                 type="button"
-                className="bg-destaque text-white px-6 py-2 rounded-lg border-[#f5f5f5] border cursor-pointer transition"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "white";
-                  e.currentTarget.style.color = "red";
-                  e.currentTarget.style.borderColor = "red";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#F18E2C"; // cor do destaque
-                  e.currentTarget.style.color = "white";
-                  e.currentTarget.style.borderColor = "#f5f5f5";
-                }}
+                className="bg-destaque text-white px-6 py-2 rounded-lg border border-neutra-branca
+                 cursor-pointer transition-colors duration-300 hover:bg-white hover:text-red-500 
+                 hover:border-red-500"
               >
                 Voltar
               </button>
@@ -469,7 +465,7 @@ export default function BracketEditorPage() {
       {/* Container 2 OR 3 depending on state */}
       {selectedTournament && selectedTournament.state !== "underway" ? (
         // Container 2 (pre-start): mostra participantes + botão verde Iniciar Torneio
-        <div className="bg-[#f5f5f5] rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[900px] w-full flex flex-col items-center">
+        <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[900px] w-full flex flex-col items-center">
           <div className="w-full">
             <h3 className="text-lg font-[energy] mb-2">Participantes (pré-início)</h3>
 
@@ -501,17 +497,9 @@ export default function BracketEditorPage() {
 
                         <button
                           onClick={() => updateParticipantSeed(p.id)}
-                          className="bg-[#001429] text-white px-3 py-1 rounded-lg border-[#f5f5f5] border cursor-pointer transition"
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = "white";
-                            e.currentTarget.style.color = "#001429";
-                            e.currentTarget.style.borderColor = "#001429";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = "#001429";
-                            e.currentTarget.style.color = "white";
-                            e.currentTarget.style.borderColor = "#f5f5f5";
-                          }}
+                          className="bg-neutra-preta text-white px-3 py-1 rounded-lg border 
+                          border-neutra-branca cursor-pointer transition-colors duration-300 
+                          hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
                         >
                           Editar Seed
                         </button>
@@ -526,12 +514,10 @@ export default function BracketEditorPage() {
             <div className="flex justify-center gap-5 mt-6">
               <button
                 onClick={startTournament}
-                className="bg-green-600 text-white px-6 py-2 rounded-lg border-[#f5f5f5] hover:bg-white hover:text-green-600 border hover:border-green-600 transition cursor-pointer"
-                style={{
-                  backgroundColor: "green"
-                }}
+                className="bg-green-600 text-white px-6 py-2 rounded-lg border-neutra-branca 
+                hover:bg-white hover:text-green-600 border hover:border-green-600 transition 
+                cursor-pointer"
               >
-
                 Iniciar Torneio
               </button>
             </div>
@@ -539,7 +525,7 @@ export default function BracketEditorPage() {
         </div>
       ) : selectedTournament && selectedTournament.state === "underway" ? (
         // Container 3 (tournament open): mostra TODAS as partidas e botão para atualizar cada placar + campo winner_id
-        <div className="bg-[#f5f5f5] rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[900px] w-full flex flex-col items-center">
+        <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[900px] w-full flex flex-col items-center">
           <div className="w-full">
             <h3 className="text-lg font-[energy] mb-2">Partidas (Torneio Aberto)</h3>
 
@@ -548,12 +534,16 @@ export default function BracketEditorPage() {
             ) : (
               <div className="w-full overflow-y-auto max-h-[60vh] grid gap-3">
                 {matches.map((m) => (
-                  <div key={m.id || `${m.player1_id}-${m.player2_id}-${m.round}`} className="bg-white p-3 rounded shadow-sm">
+                  <div
+                    key={m.id || `${m.player1_id}-${m.player2_id}-${m.round}`}
+                    className="bg-white p-3 rounded shadow-sm"
+                  >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium">{m.round ? `Round ${m.round}` : `Match ${m.id}`}</p>
                         <p className="text-xs text-gray-600">
-                          {participantMap[m.player1_id]?.name || m.player1_name || "—"} vs {participantMap[m.player2_id]?.name || m.player2_name || "—"}
+                          {participantMap[m.player1_id]?.name || m.player1_name || "—"} vs{" "}
+                          {participantMap[m.player2_id]?.name || m.player2_name || "—"}
                         </p>
                       </div>
 
@@ -564,7 +554,9 @@ export default function BracketEditorPage() {
                     <div className="mt-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                       <div className="flex items-center gap-3">
                         <div className="flex flex-col">
-                          <span className="text-xs text-gray-600">{participantMap[m.player1_id]?.name || m.player1_name || "—"}</span>
+                          <span className="text-xs text-gray-600">
+                            {participantMap[m.player1_id]?.name || m.player1_name || "—"}
+                          </span>
                           <input
                             type="text"
                             inputMode="numeric"
@@ -577,7 +569,9 @@ export default function BracketEditorPage() {
                         <div className="text-lg font-bold">—</div>
 
                         <div className="flex flex-col">
-                          <span className="text-xs text-gray-600">{participantMap[m.player2_id]?.name || m.player2_name || "—"}</span>
+                          <span className="text-xs text-gray-600">
+                            {participantMap[m.player2_id]?.name || m.player2_name || "—"}
+                          </span>
                           <input
                             type="text"
                             inputMode="numeric"
@@ -606,17 +600,9 @@ export default function BracketEditorPage() {
 
                         <button
                           onClick={() => updateMatchScore(m)}
-                          className="bg-[#001429] text-white px-4 py-2 rounded-lg border-[#f5f5f5] border cursor-pointer transition"
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = "white";
-                            e.currentTarget.style.color = "#001429";
-                            e.currentTarget.style.borderColor = "#001429";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = "#001429";
-                            e.currentTarget.style.color = "white";
-                            e.currentTarget.style.borderColor = "#f5f5f5";
-                          }}
+                          className="bg-neutra-preta text-white px-4 py-2 rounded-lg border 
+                          border-neutra-branca cursor-pointer transition-colors duration-300 
+                          hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
                         >
                           Atualizar Placar
                         </button>

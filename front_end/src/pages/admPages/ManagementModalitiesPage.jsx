@@ -11,12 +11,12 @@ export default function ManagementModalitiesPage() {
       className="min-h-screen bg-cover bg-center flex items-center justify-center"
       style={{ backgroundImage: "url('/assets/AdmBG.png')" }}
     >
-      <div className="bg-[#f5f5f5] rounded-md shadow-[0_0_30px_rgba(0,0,0,0.1)] px-[10%] py-[3%] max-w-[1500px] w-full flex flex-col items-center">
+      <div className="bg-neutra-branca rounded-md shadow-[0_0_30px_rgba(0,0,0,0.1)] px-[10%] py-[3%] max-w-[1500px] w-full flex flex-col items-center">
         {/* Header */}
         <div className="w-full flex justify-between mb-10 -mt-8 -ml-[300px]">
           <div className="flex items-center gap-2">
             <img src={Logo} alt="Imagem do logo" className="w-[10%] pb-10" />
-            <div className="border-l border-[#0c2442] w-[10px] h-[50px] mb-4"></div>
+            <div className="border-l border-neutra-pretaw-[10px] h-[50px] mb-4"></div>
             <div className="font-[energy] text-[#0c2442]">
               <h1>Área do Administrador</h1>
             </div>
@@ -30,7 +30,7 @@ export default function ManagementModalitiesPage() {
           </Link>
 
           <Link to="#" className="no-underline">
-            <div className="flex flex-col items-center justify-center w-[425px] bg-[#f18e2c] rounded-b-md transition-transform duration-300 hover:scale-105">
+            <div className="flex flex-col items-center justify-center w-[425px] bg-destaque rounded-b-md transition-transform duration-300 hover:scale-105">
               <div className="flex items-center justify-center bg-[#0c24428a] w-full h-[250px]">
                 <svg
                   width="200px"
@@ -58,7 +58,7 @@ export default function ManagementModalitiesPage() {
         {/* Botão Voltar */}
         {/* <div className="w-full flex justify-evenly px-[30%] mt-8">
           <Link to="/adm">
-            <button className="bg-[#f18e2c]  text-[#f5f5f5] py-3 px-6 rounded-md border border-[#f18e2c] transition-colors duration-300 hover:bg-[#f5f5f5] hover:text-[#f18e2c] hover:border-[#f18e2c] cursor-pointer">
+            <button className="bg-destaque  text-neutra-branca py-3 px-6 rounded-md border border-destaque transition-colors duration-300 hover:bg-neutra-branca hover:text-destaque hover:border-destaque cursor-pointer">
               Voltar
             </button>
           </Link>

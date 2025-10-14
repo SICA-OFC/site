@@ -24,14 +24,14 @@ export default function TournmentCreatorPage() {
 
   const [nome, setNome] = useState("");
   const [tipo, setTipo] = useState("single elimination");
-  const [modalidade, setModalidade] = useState('');
+  const [modalidade, setModalidade] = useState("");
 
   const modalidades = {
     futebol: "Futebol",
     vôlei: "Vôlei",
     basquete: "Basquete",
     natação: "Natação",
-  }
+  };
 
   const [editNome, setEditNome] = useState("");
   const [editTipo, setEditTipo] = useState("single elimination");
@@ -68,18 +68,15 @@ export default function TournmentCreatorPage() {
 
   const handleModalidadeChange = (e) => {
     setModalidade(e.target.value);
-    console.log(e.target.value);
   };
 
   function toggleTeamId(id) {
-    setSelectedTeamIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
+    setSelectedTeamIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   }
 
   const verUsuario = async () => {
     try {
-      const response = await fetch(`${BASE_URL}/usuario/verUsuarios`, {
+      const response = await fetch(`${BASE_URL}/usuario/`, {
         method: "GET",
         credentials: "include",
       });
@@ -95,10 +92,7 @@ export default function TournmentCreatorPage() {
         toast.error(result.erro, toastSettings);
       }
     } catch (error) {
-      toast.error(
-        "Algo deu errado ao consultar os alunos! Tente novamente!",
-        toastSettings
-      );
+      toast.error("Algo deu errado ao consultar os alunos! Tente novamente!", toastSettings);
       console.error("Erro ao verificar autenticação:", error);
     }
   };
@@ -118,10 +112,7 @@ export default function TournmentCreatorPage() {
         toast.error(result.erro, toastSettings);
       }
     } catch (error) {
-      toast.error(
-        "Algo deu errado ao consultar os times! Tente novamente!",
-        toastSettings
-      );
+      toast.error("Algo deu errado ao consultar os times! Tente novamente!", toastSettings);
       console.error("Erro ao verificar autenticação:", error);
     }
   };
@@ -148,10 +139,7 @@ export default function TournmentCreatorPage() {
         toast.error(result.erro, toastSettings);
       }
     } catch (error) {
-      toast.error(
-        "Algo deu errado ao consultar os campeonatos! Tente novamente!",
-        toastSettings
-      );
+      toast.error("Algo deu errado ao consultar os campeonatos! Tente novamente!", toastSettings);
       console.error("Erro ao verificar autenticação:", error);
     }
   };
@@ -174,7 +162,7 @@ export default function TournmentCreatorPage() {
       body: {
         name: nome,
         tournament_type: tipo,
-        description: modalidade
+        description: modalidade,
       },
     };
 
@@ -300,26 +288,24 @@ export default function TournmentCreatorPage() {
   };
 
   return (
-    <div
-      className="min-h-screen bg-cover bg-center flex flex-col gap-5 py-5 items-center justify-center"
-      style={{ backgroundImage: "url('/assets/AdmBG.png')" }}
-    >
-      <div className="bg-[#f5f5f5] rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[500px] w-full flex flex-col items-center">
+    <div className="min-h-screen bg-[url('/assets/AdmBG.png')] bg-cover bg-center flex flex-col gap-5 py-5 items-center justify-center">
+      {/* Card de Criação */}
+      <div className="bg-neutra-branca rounded shadow-lg shadow-black/10 p-[2%] max-w-[500px] w-full flex flex-col items-center">
         {/* Cabeçalho */}
         <div className="flex items-center w-full">
           <img src={logo} alt="Logo" className="w-[80px]" />
-          <div className="border-l border-[#001429] w-[10px] h-[60px] mx-4"></div>
+          <div className="border-l border-neutra-preta w-[10px] h-[60px] mx-4"></div>
           <h2 className="text-lg font-[energy]">Área do Administrador</h2>
         </div>
 
-        {/* Formulário */}
+        {/* Formulário de Cadastro */}
         <form onSubmit={handleSubmit} className="w-full">
           <div className="w-full">
             <label className="text-sm text-center w-full" htmlFor="nome">
               Nome do torneio
             </label>
             <input
-              className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+              className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
               value={nome}
               onChange={handleNomeChange}
               type="text"
@@ -332,7 +318,7 @@ export default function TournmentCreatorPage() {
               Tipo de torneio
             </label>
             <select
-              className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+              className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
               value={tipo}
               id="tipo"
               onChange={handleTipoChange}
@@ -340,54 +326,28 @@ export default function TournmentCreatorPage() {
             >
               <option value="single elimination">Eliminação</option>
             </select>
+
             {Object.keys(modalidades).map((mod) => (
-              <label key={mod} style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                width: "10%",
-              }}>
-                <input
-                  type="radio"
-                  name="modalidades"
-                  value={mod}
-                  onChange={handleModalidadeChange}
-                />
+              <label key={mod} className="flex flex-row gap-2 mt-2">
+                <input type="radio" name="modalidades" value={mod} onChange={handleModalidadeChange} />
                 {" " + mod.charAt(0).toUpperCase() + mod.slice(1)}
               </label>
             ))}
           </div>
+
           {/* Botões */}
           <div className="flex justify-center gap-5 mt-8">
             <button
               type="submit"
-              className="bg-[#001429] text-white px-6 py-2 rounded-lg border-[#f5f5f5] border cursor-pointer transition"
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "white";
-                e.currentTarget.style.color = "#001429";
-                e.currentTarget.style.borderColor = "#001429";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#001429";
-                e.currentTarget.style.color = "white";
-                e.currentTarget.style.borderColor = "#f5f5f5";
-              }}
+              className="bg-neutra-preta text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
             >
               Cadastrar Torneio
             </button>
+
             <Link to="/adm">
               <button
                 type="button"
-                className="bg-destaque text-white px-6 py-2 rounded-lg border-[#f5f5f5] border cursor-pointer transition"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "white";
-                  e.currentTarget.style.color = "red";
-                  e.currentTarget.style.borderColor = "red";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#F18E2C"; // cor do destaque
-                  e.currentTarget.style.color = "white";
-                  e.currentTarget.style.borderColor = "#f5f5f5";
-                }}
+                className="bg-destaque text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-red-500 hover:border-red-500"
               >
                 Voltar
               </button>
@@ -396,21 +356,23 @@ export default function TournmentCreatorPage() {
         </form>
       </div>
 
-      <div className="bg-[#f5f5f5] rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[500px] w-full flex flex-col items-center">
+      {/* Card de Edição */}
+      <div className="bg-neutra-branca rounded shadow-lg shadow-black/10 p-[2%] max-w-[500px] w-full flex flex-col items-center">
         {tournaments?.length > 0 ? (
           <form onSubmit={handleEdit} className="w-full">
             <div className="w-full">
               <label className="text-sm text-center w-full" htmlFor="nome">
                 Campeonatos
               </label>
+
               <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
-                {tournaments?.map((t) => (
+                {tournaments.map((t) => (
                   <div
                     key={t.tournament.id}
                     onClick={() => {
                       setSelectedTournament(t.tournament);
                       setEditNome(t.tournament.name || "");
-                      setChaveamento(t.tournament.participants_count != 0 ? t.tournament.live_image_url : "");
+                      setChaveamento(t.tournament.participants_count !== 0 ? t.tournament.live_image_url : "");
                     }}
                     className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between"
                   >
@@ -420,21 +382,20 @@ export default function TournmentCreatorPage() {
                   </div>
                 ))}
               </div>
-              <img
-                src={`${chaveamento}`}
-                className="w-full max-h-[200px] object-[left 140px] object-cover object-center  rounded"
-                width="100%"
-                height="300"
-                frameborder="0"
-                scrolling="auto"
-                allowtransparency="true"
-              ></img>
 
-              <label className="text-sm text-center w-full" htmlFor="editNome">
+              {chaveamento && (
+                <img
+                  src={chaveamento}
+                  className="w-full max-h-[200px] object-cover object-center rounded mt-3"
+                  alt="Chaveamento"
+                />
+              )}
+
+              <label className="text-sm text-center w-full mt-3" htmlFor="editNome">
                 Nome do Campeonato
               </label>
               <input
-                className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+                className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
                 value={editNome}
                 onChange={handleEditNomeChange}
                 type="text"
@@ -442,11 +403,12 @@ export default function TournmentCreatorPage() {
                 name="editNome"
                 required
               />
-              <label className="text-sm text-center w-full" htmlFor="tipo">
+
+              <label className="text-sm text-center w-full mt-2" htmlFor="tipo">
                 Tipo de torneio
               </label>
               <select
-                className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+                className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
                 value={editTipo}
                 id="tipo"
                 onChange={handleEditTipoChange}
@@ -454,29 +416,29 @@ export default function TournmentCreatorPage() {
               >
                 <option value="single elimination">Eliminação</option>
               </select>
-              <label className="text-sm text-center w-full" htmlFor="tipo">
+
+              <label className="text-sm text-center w-full mt-2" htmlFor="modalidade">
                 Modalidade
               </label>
-              <input type="text"
-                className="bg-neutra-branca text-[#aaa] border-3 border-[#ddd] rounded-lg p-3 w-full"
+              <input
+                type="text"
+                className="bg-neutra-branca text-[#aaa] border border-[#ddd] rounded-lg p-3 w-full"
                 value={
                   typeof selectedTournament?.description === "string"
                     ? selectedTournament.description.charAt(0).toUpperCase() + selectedTournament.description.slice(1)
                     : ""
                 }
-                id="tipo"
-                disabled>
-              </input>
-              <label className="text-sm text-center w-full" htmlFor="tipo">
+                id="modalidade"
+                disabled
+              />
+
+              <label className="text-sm text-center w-full mt-2" htmlFor="tipo">
                 Times
               </label>
 
               <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
                 {teams.map((t) => (
-                  <div
-                    key={t.id}
-                    className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between"
-                  >
+                  <div key={t.id} className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <input
                         type="checkbox"
@@ -486,7 +448,7 @@ export default function TournmentCreatorPage() {
                           ev.stopPropagation();
                           toggleTeamId(t.id);
                         }}
-                        className="w-4 h-4"
+                        className="w-4 h-4 accent-neutra-preta"
                       />
                       <ClickableUserEntry name={t.nome} />
                     </div>
@@ -494,43 +456,22 @@ export default function TournmentCreatorPage() {
                 ))}
               </div>
 
-              {/* mostrar quantos selecionados (opcional) */}
-              <p className="text-xs mt-2">
-                Selecionados: {selectedTeamIds.length}
-              </p>
+              <p className="text-xs mt-2">Selecionados: {selectedTeamIds.length}</p>
             </div>
+
             {/* Botões */}
             <div className="flex justify-center gap-5 mt-8">
               <button
                 type="submit"
-                className="bg-[#001429] text-white px-6 py-2 rounded-lg border-[#f5f5f5] border cursor-pointer transition"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "white";
-                  e.currentTarget.style.color = "#001429";
-                  e.currentTarget.style.borderColor = "#001429";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#001429";
-                  e.currentTarget.style.color = "white";
-                  e.currentTarget.style.borderColor = "#f5f5f5";
-                }}
+                className="bg-neutra-preta text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
               >
                 Atualizar Campeonato
               </button>
+
               <button
                 onClick={handleDelete}
                 type="button"
-                className="bg-[red] text-white px-6 py-2 rounded-lg border-[#f5f5f5] border cursor-pointer transition"
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "white";
-                  e.currentTarget.style.color = "red";
-                  e.currentTarget.style.borderColor = "red";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "red";
-                  e.currentTarget.style.color = "white";
-                  e.currentTarget.style.borderColor = "#f5f5f5";
-                }}
+                className="bg-red-600 text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-red-600 hover:border-red-600"
               >
                 Deletar Campeonato
               </button>
@@ -540,6 +481,6 @@ export default function TournmentCreatorPage() {
           <p className="text-center text-sm text-gray-500 mt-2">Sem torneios</p>
         )}
       </div>
-    </div >
+    </div>
   );
 }

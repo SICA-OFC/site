@@ -117,12 +117,12 @@ export default function EditProfilePage() {
             <div className="flex items-center mb-0.5">
               <img src={Logo} alt="Logo SICA" className="w-10 h-10 mr-0.5" />
             </div>
-            <div className="border-l border-[#092843]" />
-            <h2 className="text-[#092843] self-center">Editar Perfil</h2>
+            <div className="border-l border-secundaria" />
+            <h2 className="text-secundaria self-center">Editar Perfil</h2>
           </div>
 
-          <h3 className="text-[#092843] text-2xl">Olá, {nomeRef.current || "Usuário"}.</h3>
-          <div className="border-t border-[#092843] w-full" />
+          <h3 className="text-secundaria text-2xl">Olá, {nomeRef.current || "Usuário"}.</h3>
+          <div className="border-t border-secundaria w-full" />
 
           <form
             action="#"
@@ -138,9 +138,9 @@ export default function EditProfilePage() {
                 <div className="flex flex-col gap-2 w-full md:w-2/5">
                   {/* Dados Pessoais */}
                   <section className="relative">
-                    <h4 className="text-[#001429] mb-2 font-bold">Dados Pessoais</h4>
+                    <h4 className="text-neutra-preta mb-2 font-bold">Dados Pessoais</h4>
                     <div className="flex flex-col mb-2">
-                      <label htmlFor="rm" className="mb-1 text-[#001429]">
+                      <label htmlFor="rm" className="mb-1 text-neutra-preta">
                         RM
                       </label>
                       <input
@@ -156,7 +156,7 @@ export default function EditProfilePage() {
                       />
                     </div>
                     <div className="flex flex-col mb-2">
-                      <label htmlFor="name" className="mb-1 text-[#001429]">
+                      <label htmlFor="name" className="mb-1 text-neutra-preta">
                         Nome
                       </label>
                       <input
@@ -168,11 +168,11 @@ export default function EditProfilePage() {
                         required
                         autoComplete="name"
                         pattern="[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+( [a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+)*"
-                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
                       />
                     </div>
                     <div className="flex flex-col mb-2">
-                      <label htmlFor="email" className="mb-1 text-[#001429]">
+                      <label htmlFor="email" className="mb-1 text-neutra-preta">
                         Email
                       </label>
                       <input
@@ -183,11 +183,11 @@ export default function EditProfilePage() {
                         onChange={handleEmailChange}
                         required
                         autoComplete="email"
-                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
                       />
                     </div>
                     <div className="flex flex-col mb-2">
-                      <label htmlFor="telefone" className="mb-1 text-[#001429]">
+                      <label htmlFor="telefone" className="mb-1 text-neutra-preta">
                         Telefone
                       </label>
                       <input
@@ -198,11 +198,11 @@ export default function EditProfilePage() {
                         value={telefone}
                         onChange={handleTelefoneChange}
                         required
-                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
                       />
                     </div>
                     <div className="flex flex-col mb-2">
-                      <label htmlFor="dataNascimento" className="mb-1 text-[#001429]">
+                      <label htmlFor="dataNascimento" className="mb-1 text-neutra-preta">
                         Data de Nascimento
                       </label>
                       <input
@@ -213,7 +213,7 @@ export default function EditProfilePage() {
                         min="2000-01-01"
                         max={new Date().toISOString().split("T")[0]}
                         required
-                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
                       />
                     </div>
                   </section>
@@ -222,9 +222,9 @@ export default function EditProfilePage() {
                 <div className="flex flex-col gap-2 w-full md:w-2/5">
                   {/* Informações Acadêmicas */}
                   <section className="relative">
-                    <h4 className="text-[#001429] mb-2 font-bold">Informações Acadêmicas</h4>
+                    <h4 className="text-neutra-preta mb-2 font-bold">Informações Acadêmicas</h4>
                     <div className="flex flex-col mb-2">
-                      <label htmlFor="curso" className="mb-1 text-[#001429]">
+                      <label htmlFor="curso" className="mb-1 text-neutra-preta">
                         Curso
                         <SelectCursos
                           periodo={periodo}
@@ -238,14 +238,14 @@ export default function EditProfilePage() {
                   {/* Modalidades */}
                   <section className="relative">
                     <div className="flex flex-col mb-2">
-                      <label htmlFor="modalidades" className="mb-1 text-[#001429]">
+                      <label htmlFor="modalidades" className="mb-1 text-neutra-preta">
                         Modalidades
                       </label>
                       <select
                         id="modalidades"
                         name="modalidades"
                         required
-                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                        className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
                       >
                         <option value="futebol">Futebol</option>
                         <option value="volei">Vôlei</option>
@@ -256,7 +256,7 @@ export default function EditProfilePage() {
                   </section>
                   {/* Imagem de Perfil */}
                   <section className="relative">
-                    <h4 className="text-[#001429] mb-2">Imagem de Perfil</h4>
+                    <h4 className="text-neutra-preta mb-2">Imagem de Perfil</h4>
                     <div className="flex flex-col mb-2">
                       <ProfileUploader file={file} onFileChange={setFile} />
                     </div>
@@ -264,7 +264,7 @@ export default function EditProfilePage() {
                 </div>
               </div>
               <button
-                className="bg-secundaria text-white rounded-md font-semibold h-[50px] w-[30%] hover:bg-neutra-branca hover:text-[#001429] hover:border-secundaria hover:border-1 hover:cursor-pointer transition"
+                className="bg-secundaria text-white rounded-md font-semibold h-[50px] w-[30%] hover:bg-neutra-branca hover:text-neutra-preta hover:border-secundaria hover:border-1 hover:cursor-pointer transition"
                 type="submit"
                 name="submit"
                 value="login"

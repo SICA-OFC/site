@@ -108,7 +108,7 @@ export default function LoginPage() {
 
   return (
     <div className="bg-[url(/src/assets/background.png)] bg-no-repeat bg-cover bg-center h-screen flex flex-col justify-center items-center gap-2">
-      <div className="bg-[#f5f5f5] rounded-md w-[80%] h-fit flex flex-row justify-between items-start">
+      <div className="bg-neutra-branca rounded-md w-[80%] h-fit flex flex-row justify-between items-start">
         <div className="flex flex-col items-center gap-2 w-full md:w-[50%] p-6">
           <div className="flex flex-rol items-center gap-2 w-full">
             <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
@@ -117,7 +117,7 @@ export default function LoginPage() {
           </div>
           <form onSubmit={handleSubmit} className="flex flex-col justify-center items-baseline gap-2 w-fit place-content-between space-y-3.5">
             <div className="space-y-3">
-              <label className="text-[#001429] text-sm" htmlFor="email">
+              <label className="text-neutra-preta text-sm" htmlFor="email">
                 Email
               </label>
               <input
@@ -131,7 +131,7 @@ export default function LoginPage() {
                 required
               />
 
-              <label className="text-[#001429] text-sm" htmlFor="senha">
+              <label className="text-neutra-preta text-sm" htmlFor="senha">
                 Senha
               </label>
               <input
@@ -145,7 +145,7 @@ export default function LoginPage() {
               />
             </div>
             <button
-              className="bg-secundaria text-white rounded-md font-semibold h-[50px] w-full hover:bg-neutra-branca hover:text-[#001429] hover:border-secundaria hover:border-1 hover:cursor-pointer transition"
+              className="bg-secundaria text-white rounded-md font-semibold h-[50px] w-full hover:bg-neutra-branca hover:text-neutra-preta hover:border-secundaria hover:border-1 hover:cursor-pointer transition"
               type="submit"
               name="submit"
               value="login"

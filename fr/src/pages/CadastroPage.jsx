@@ -3,8 +3,7 @@ import { useState } from "react";
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import SelectCursos from "../components/selectCursos.jsx";
-import { toast } from "react-toastify";
-import { toastSettings } from "../utils/toastSettings.js";
+import { Cadastrar } from "../hooks/api.js";
 
 export default function CadastroPage() {
   const navigate = useNavigate();
@@ -63,33 +62,20 @@ export default function CadastroPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const userInfo = {
-        rm,
-        nome,
-        curso_id: parseInt(curso),
-        email,
-        data_nascimento: new Date(data_nascimento),
-        senha,
-        telefone,
-        modalidades: JSON.stringify(modalidades),
-      };
+    const data = {
+      rm,
+      nome,
+      curso_id: parseInt(curso),
+      email,
+      data_nascimento: new Date(data_nascimento),
+      senha,
+      telefone,
+      modalidades: JSON.stringify(modalidades),
+    };
 
-      const response = await fetch(`${BASE_URL}/usuario/cadastro`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userInfo),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) throw new Error(result.erro || "Erro no cadastro");
-
-      toast.success("Cadastro feito com sucesso! Prossiga para autenticação de 2 fatores.", toastSettings);
-
+    const result = await Cadastrar(data);
+    if (result) {
       navigate("/confirmacao", { state: { accessToken: result.accessToken } });
-    } catch (err) {
-      toast.error(err.message || "Algo deu errado ao cadastrar! Tente novamente!", toastSettings);
     }
   };
 

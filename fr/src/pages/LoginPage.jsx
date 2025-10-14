@@ -2,10 +2,10 @@ import logo from "../assets/logo.png";
 import sideImage from "../assets/sideImage1.png";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast, Bounce } from "react-toastify";
+import { Logar } from "../hooks/api";
+import { BASE_URL } from "../utils/enviromentSettings";
 
 export default function LoginPage() {
-  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [hover, setHover] = useState(false);
@@ -14,18 +14,6 @@ export default function LoginPage() {
 
   const evtSourceRef = useRef(null);
   const location = useLocation();
-
-  const toastSettings = {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: false,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    transition: Bounce,
-  };
 
   useEffect(() => {
     const isLoginPage = location.pathname === "/login";
@@ -69,62 +57,53 @@ export default function LoginPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location, email]);
 
-  function handleEmailChange(e) {
-    setEmail(e.target.value);
-  }
-
-  function handleSenhaChange(e) {
-    setSenha(e.target.value);
+  function handleChange(e) {
+    const { name, value } = e.target;
+    const setters = {
+      email: setEmail,
+      senha: setSenha,
+    };
+    setters[name]?.(value);
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
-    const userInfo = {
+    const data = {
       email,
       senha,
     };
 
-    await fetch(`${BASE_URL}/usuario/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userInfo),
-    }).then(async (response) => {
-      const result = await response.json();
+    const result = await Logar(data);
 
-      if (!response.ok) {
-        toast.error(result.erro, toastSettings);
-      }
-
-      const accessToken = result.accessToken;
-      if (accessToken) {
-        toast.success("Logado feito com sucesso, prossiga pra autentificação de 2 fatores!", toastSettings);
-        navigate("/confirmacao", {
-          state: { accessToken },
-        });
-      }
-    });
+    if (result) {
+      navigate("/confirmacao", {
+        state: { accessToken: result.accessToken },
+      });
+    }
   };
 
   return (
     <div className="bg-[url(/src/assets/background.png)] bg-no-repeat bg-cover bg-center h-screen flex flex-col justify-center items-center gap-2">
-      <div className="bg-[#f5f5f5] rounded-md w-[80%] h-fit flex flex-row justify-between items-start">
+      <div className="bg-neutra-branca rounded-md w-[80%] h-fit flex flex-row justify-between items-start">
         <div className="flex flex-col items-center gap-2 w-[50%] p-6">
           <div className="flex flex-rol items-center gap-2 w-full">
             <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
             <div className="h-9 border-l border-black" />
             <h1 className="font-[energy]">Login</h1>
           </div>
-          <form onSubmit={handleSubmit} className="flex flex-col justify-center items-baseline gap-2 w-fit place-content-between space-y-3.5">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col justify-center items-baseline gap-2 w-fit place-content-between space-y-3.5"
+          >
             <div className="space-y-3">
-              <label className="text-[#001429] text-sm" htmlFor="email">
+              <label className="text-neutra-preta text-sm" htmlFor="email">
                 Email
               </label>
               <input
                 className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
                 value={email}
-                onChange={handleEmailChange}
+                onChange={handleChange}
                 type="email"
                 id="email"
                 name="email"
@@ -132,13 +111,13 @@ export default function LoginPage() {
                 required
               />
 
-              <label className="text-[#001429] text-sm" htmlFor="senha">
+              <label className="text-neutra-preta text-sm" htmlFor="senha">
                 Senha
               </label>
               <input
                 className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
                 value={senha}
-                onChange={handleSenhaChange}
+                onChange={handleChange}
                 type="password"
                 id="senha"
                 name="senha"
@@ -146,22 +125,12 @@ export default function LoginPage() {
               />
             </div>
             <button
-              style={{
-                backgroundColor: hover ? "#F5F5F5" : "#092843", // bg-secundaria / hover:bg-neutra-branca
-                color: hover ? "#001429" : "white",            // text-white / hover:text-[#001429]
-                border: hover ? "1px solid #092843" : "none", // hover:border-secundaria
-                borderRadius: "0.375rem",                      // rounded-md
-                fontWeight: 600,                               // font-semibold
-                height: "50px",
-                width: "100%",                                 // w-full
-                cursor: "pointer",                             // cursor-pointer
-                transition: "all 0.3s",                        // transition
-              }}
-              onMouseEnter={() => setHover(true)}
-              onMouseLeave={() => setHover(false)} 
               type="submit"
               name="submit"
               value="login"
+              className="w-full h-[50px] bg-secundaria text-white font-semibold rounded-md transition-all
+               duration-300 hover:bg-neutra-branca hover:text-neutra-preta hover:border 
+               hover:border-secundaria cursor-pointer"
             >
               Entrar
             </button>

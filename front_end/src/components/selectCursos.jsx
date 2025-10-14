@@ -56,7 +56,7 @@ export default function SelectCursos({ periodo, curso, onPeriodoChange, onCursoC
             checked={periodo === "1"}
             onChange={(e) => onPeriodoChange(e.target.value)}
             required
-            className="appearance-none w-3 h-3 border border-[#f1832c] outline-0 bg-[#f5f5f5] cursor-pointer checked:bg-[#001429] rounded-lg"
+            className="appearance-none w-3 h-3 border border-[#f1832c] outline-0 bg-neutra-branca cursor-pointer checked:bg-neutra-preta rounded-lg"
             />
           Manhã
         </label>
@@ -68,7 +68,7 @@ export default function SelectCursos({ periodo, curso, onPeriodoChange, onCursoC
             checked={periodo === "2"}
             onChange={(e) => onPeriodoChange(e.target.value)}
             required
-            className="appearance-none w-3 h-3 border border-[#f1832c] outline-0 bg-[#f5f5f5] cursor-pointer checked:bg-[#001429] rounded-lg"
+            className="appearance-none w-3 h-3 border border-[#f1832c] outline-0 bg-neutra-branca cursor-pointer checked:bg-neutra-preta rounded-lg"
             />
           Tarde
         </label>
@@ -80,7 +80,7 @@ export default function SelectCursos({ periodo, curso, onPeriodoChange, onCursoC
             checked={periodo === "3"}
             onChange={(e) => onPeriodoChange(e.target.value)}
             required
-            className="appearance-none w-3 h-3 border border-[#f1832c] outline-0 bg-[#f5f5f5] cursor-pointer checked:bg-[#001429] rounded-lg"
+            className="appearance-none w-3 h-3 border border-[#f1832c] outline-0 bg-neutra-branca cursor-pointer checked:bg-neutra-preta rounded-lg"
             />
           Noite
         </label>

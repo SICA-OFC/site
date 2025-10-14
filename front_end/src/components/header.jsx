@@ -181,7 +181,7 @@ const Header = () => {
             </>
           ) : (
             <Link to="/login">
-              <button className="hidden md:block bg-destaque text-[#f5f5f5] w-24 h-12 hover:cursor-pointer hover:bg-[#BF6A1F] hover:outline-1 hover:border-destaque font-semibold text-xl rounded-lg shadow transition">
+              <button className="hidden md:block bg-destaque text-neutra-branca w-24 h-12 hover:cursor-pointer hover:bg-[#BF6A1F] hover:outline-1 hover:border-destaque font-semibold text-xl rounded-lg shadow transition">
                 Login
               </button>
             </Link>

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useEffect, useRef, useState } from "react";
-import { toast, Bounce } from "react-toastify";
+import { DeslogarUsuario } from "../hooks/api";
 
 const Header = () => {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
@@ -12,17 +12,6 @@ const Header = () => {
   const menuRef = useRef(null);
   const burgerRef = useRef(null);
   const fetchedRef = useRef(false);
-  const toastSettings = {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: false,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    transition: Bounce,
-  };
 
   const classToggle = (el, ...args) => args.map((e) => el.classList.toggle(e));
   const handleClick = () => {
@@ -32,19 +21,9 @@ const Header = () => {
     }
 
     if (burgerRef.current) {
-      classToggle(
-        burgerRef.current.children[0],
-        "rotate-45",
-        "translate-y-1",
-        "-translate-y-0.5"
-      );
+      classToggle(burgerRef.current.children[0], "rotate-45", "translate-y-1", "-translate-y-0.5");
       classToggle(burgerRef.current.children[1], "opacity-0");
-      classToggle(
-        burgerRef.current.children[2],
-        "-rotate-45",
-        "-translate-y-1",
-        "translate-y-0.5"
-      );
+      classToggle(burgerRef.current.children[2], "-rotate-45", "-translate-y-1", "translate-y-0.5");
     }
   };
 
@@ -84,21 +63,9 @@ const Header = () => {
   const handleLogout = async (e) => {
     e.preventDefault();
 
-    try {
-      const res = await fetch(`${BASE_URL}/usuario/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (res.ok) {
-        toast.success("Você deslogou com sucesso!", toastSettings);
-        setIsLoggedIn(false);
-      } else {
-        toast.error("Algo deu errado ao sair! Tente novamente!", toastSettings);
-      }
-    } catch (err) {
-      toast.error("Algo deu errado ao sair! Tente novamente!", toastSettings);
-      console.error("Erro no logout:", err);
+    const result = await DeslogarUsuario();
+    if (result) {
+      setIsLoggedIn(false);
     }
   };
 
@@ -121,22 +88,13 @@ const Header = () => {
 
           <div className="flex items-center gap-5">
             <nav className="flex gap-8 text-destaque font-medium text-lg">
-              <Link
-                to="/"
-                className="hover:border-b-2 hover:border-primaria transition border-b-2 border-transparent"
-              >
+              <Link to="/" className="hover:border-b-2 hover:border-primaria transition border-b-2 border-transparent">
                 Home
               </Link>
-              <Link
-                to="/equipes"
-                className="hover:border-b-2 border-primaria transition"
-              >
+              <Link to="/equipes" className="hover:border-b-2 border-primaria transition">
                 Equipes
               </Link>
-              <Link
-                to="/campeonatos"
-                className="hover:border-b-2 border-primaria transition"
-              >
+              <Link to="/campeonatos" className="hover:border-b-2 border-primaria transition">
                 Campeonatos
               </Link>
             </nav>
@@ -149,11 +107,7 @@ const Header = () => {
                 onClick={AbrirFecharMenu}
                 className="flex items-center justify-center border-none cursor-pointer p-0 size-12.5"
               >
-                <svg
-                  className="w-5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
-                >
+                <svg className="w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                   <path
                     fill="#f18e2c"
                     d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"
@@ -177,22 +131,11 @@ const Header = () => {
             </>
           ) : (
             <Link to="/login">
-              <button style={{
-                display: "block",                      // block
-                backgroundColor: hover ? "#BF6A1F" : "#F18E2C", // hover:bg / bg-destaque
-                color: "#F5F5F5",                      // texto
-                width: "6rem",                          // w-24 = 24*0.25rem = 6rem
-                height: "3rem",                         // h-12 = 12*0.25rem = 3rem
-                cursor: "pointer",
-                outline: hover ? "1px solid #F18E2C" : "none", // hover:outline-1 + hover:border-destaque
-                fontWeight: 600,                        // font-semibold
-                fontSize: "1.25rem",                    // text-xl
-                borderRadius: "0.5rem",                 // rounded-lg
-                boxShadow: "0 1px 3px rgba(0,0,0,0.1)", // shadow (aprox)
-                transition: "all 0.3s",
-              }}
-                onMouseEnter={() => setHover(true)}
-                onMouseLeave={() => setHover(false)}>
+              <button
+                className="block bg-destaque text-neutra-branca w-24 h-12 cursor-pointer font-semibold
+                    text-xl rounded-lg shadow transition-all duration-300 hover:bg-destaque hover:outline-1
+                    hover:outline-destaque"
+              >
                 Login
               </button>
             </Link>
@@ -239,11 +182,7 @@ const Header = () => {
             <>
               <Link to="/editar-perfil" onClick={handleClick}>
                 <button className="flex items-center gap-3 border-none cursor-pointer">
-                  <svg
-                    className="size-5"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 448 512"
-                  >
+                  <svg className="size-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                     <path
                       fill="#f18e2c"
                       d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z"

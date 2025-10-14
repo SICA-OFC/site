@@ -165,7 +165,7 @@ export default function ManagementUsersPage() {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <img src={Logo} alt="Logo" className="w-[50px] h-[50px]" />
-            <div className="border-l border-[#0c2442] w-[10px] h-[50px]"></div>
+            <div className="border-l border-neutra-pretaw-[10px] h-[50px]"></div>
             <h1 className="text-lg font-[energy] mt-5">
               Área do Administrador
             </h1>
@@ -204,10 +204,10 @@ export default function ManagementUsersPage() {
             </h2>
             <div className="flex flex-col justify-around w-full gap-1 md:gap-2">
               {/* Dados Pessoais */}
-              <h4 className="text-[#001429] font-bold">Dados Pessoais</h4>
+              <h4 className="text-neutra-preta font-bold">Dados Pessoais</h4>
               <div className="flex flex-col mb-2">
                 <input type="hidden" name="id" value={id} />
-                <label htmlFor="rm" className="mb-1 text-[#001429]">
+                <label htmlFor="rm" className="mb-1 text-neutra-preta">
                   RM
                 </label>
                 <input
@@ -224,7 +224,7 @@ export default function ManagementUsersPage() {
                 />
               </div>
               <div className="flex flex-col mb-2">
-                <label htmlFor="name" className="mb-1 text-[#001429]">
+                <label htmlFor="name" className="mb-1 text-neutra-preta">
                   Nome
                 </label>
                 <input
@@ -236,11 +236,11 @@ export default function ManagementUsersPage() {
                   required
                   autoComplete="name"
                   pattern="[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+( [a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+)*"
-                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
                 />
               </div>
               <div className="flex flex-col mb-2">
-                <label htmlFor="email" className="mb-1 text-[#001429]">
+                <label htmlFor="email" className="mb-1 text-neutra-preta">
                   Email
                 </label>
                 <input
@@ -251,11 +251,11 @@ export default function ManagementUsersPage() {
                   onChange={handleEmailChange}
                   required
                   autoComplete="email"
-                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
                 />
               </div>
               <div className="flex flex-col mb-2">
-                <label htmlFor="telefone" className="mb-1 text-[#001429]">
+                <label htmlFor="telefone" className="mb-1 text-neutra-preta">
                   Telefone
                 </label>
                 <input
@@ -266,11 +266,11 @@ export default function ManagementUsersPage() {
                   value={telefone}
                   onChange={handleTelefoneChange}
                   required
-                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
                 />
               </div>
               <div className="flex flex-col mb-2">
-                <label htmlFor="dataNascimento" className="mb-1 text-[#001429]">
+                <label htmlFor="dataNascimento" className="mb-1 text-neutra-preta">
                   Data de Nascimento
                 </label>
                 <input
@@ -281,16 +281,16 @@ export default function ManagementUsersPage() {
                   min="2000-01-01"
                   max={new Date().toISOString().split("T")[0]}
                   required
-                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
                 />
               </div>
 
               {/* Informações Acadêmicas */}
-              <h4 className="text-[#001429] font-bold">
+              <h4 className="text-neutra-preta font-bold">
                 Informações Acadêmicas
               </h4>
               <div className="flex flex-col mb-2">
-                <label htmlFor="curso" className="mb-1 text-[#001429]">
+                <label htmlFor="curso" className="mb-1 text-neutra-preta">
                   Curso
                   <SelectCursos
                     periodo={periodo}
@@ -303,14 +303,14 @@ export default function ManagementUsersPage() {
 
               {/* Modalidades */}
               <div className="flex flex-col mb-2">
-                <label htmlFor="modalidades" className="mb-1 text-[#001429]">
+                <label htmlFor="modalidades" className="mb-1 text-neutra-preta">
                   Modalidades
                 </label>
                 <select
                   id="modalidades"
                   name="modalidades"
                   required
-                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#001429] text-base w-full"
+                  className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
                 >
                   <option value="futebol">Futebol</option>
                   <option value="volei">Vôlei</option>
@@ -320,7 +320,7 @@ export default function ManagementUsersPage() {
               </div>
 
               {/* Imagem de Perfil */}
-              <h4 className="text-[#001429] mb-2">Imagem de Perfil</h4>
+              <h4 className="text-neutra-preta mb-2">Imagem de Perfil</h4>
               <div className="flex flex-col mb-2">
                 <ProfileUploader file={file} onFileChange={setFile} />
               </div>
@@ -330,11 +330,11 @@ export default function ManagementUsersPage() {
 
         {/* Botões */}
         <div className="flex justify-evenly px-[20%] mt-8">
-          <button className="bg-[#0c2442] text-[#f5f5f5] py-3 px-6 rounded border border-[#f5f5f5] hover:bg-[#f5f5f5] hover:text-[#0c2442] hover:border-[#0c2442] transition cursor-pointer">
+          <button className="bg-neutra-pretatext-neutra-branca py-3 px-6 rounded border border-neutra-branca hover:bg-neutra-branca hover:text-neutra-preta hover:border-neutra-pretatransition cursor-pointer">
             Alterar
           </button>
           <Link to="/adm">
-            <button className="bg-[#f18e2c] text-[#001429] py-3 px-6 rounded border border-[#f18e2c] hover:bg-[#f5f5f5] hover:text-[#f18e2c] hover:border-[#f18e2c] transition cursor-pointer">
+            <button className="bg-destaque text-neutra-preta py-3 px-6 rounded border border-destaque hover:bg-neutra-branca hover:text-destaque hover:border-destaque transition cursor-pointer">
               Voltar
             </button>
           </Link>
