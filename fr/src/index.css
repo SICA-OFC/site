@@ -16,8 +16,6 @@ body {
 }
 
 @theme {
-  --breakpoint-*: initial;
-  --breakpoint-md: 1rem;
   --color-neutra-branca: #f5f5f5;
   --color-primaria: #de6d3d;
   --color-destaque: #f18e2c;

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../components/header.jsx";
 import Footer from "../components/footer.jsx";
 import { Bounce, toast } from "react-toastify";
+import { toastSettings } from "../utils/toastSettings.js";
 
 // ...imports e setup continuam iguais
 
@@ -12,18 +13,6 @@ export default function BracketPage() {
   const [selectedTournament, setSelectedTournament] = useState(null);
   const [chaveamento, setChaveamento] = useState("");
   const [chaveamentoTs, setChaveamentoTs] = useState(Date.now());
-
-  const toastSettings = {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: false,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    transition: Bounce,
-  };
 
   async function callChaveamento(route, method = "GET", body = null) {
     const payload = { route, method };

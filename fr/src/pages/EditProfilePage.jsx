@@ -97,7 +97,7 @@ export default function EditProfilePage() {
       style={{ backgroundImage: Logo }}
     >
       <div
-        className="flex max-w-[70vw] w-full bg-gray-100 rounded-lg overflow-hidden 
+        className="flex md:max-w-[70vw] w-[90%] bg-gray-100 rounded-lg overflow-hidden 
         [box-shadow:0px_5px_20px_10px_#aaaaaa78]"
       >
         <div className="flex flex-col gap-1 px-5 py-2 flex-1">
@@ -122,8 +122,8 @@ export default function EditProfilePage() {
             className="flex gap-[10%] w-full"
           >
             <div className="w-full flex flex-col justify-center items-center">
-              <div className="flex flex-row justify-around w-full gap-0">
-                <div className="flex flex-col gap-2 w-2/5">
+              <div className="flex flex-col md:flex-row justify-around w-full gap-0">
+                <div className="flex flex-col gap-2 w-[90%] md:w-2/5">
                   {/* Dados Pessoais */}
                   <section className="relative">
                     <h4 className="text-neutra-preta mb-2 font-bold">Dados Pessoais</h4>
@@ -208,7 +208,7 @@ export default function EditProfilePage() {
                   </section>
                 </div>
 
-                <div className="flex flex-col gap-2 w-2/5">
+                <div className="flex flex-col gap-2 w-[90%] md:w-2/5">
                   {/* Informações Acadêmicas */}
                   <section className="relative">
                     <h4 className="text-neutra-preta mb-2 font-bold">Informações Acadêmicas</h4>

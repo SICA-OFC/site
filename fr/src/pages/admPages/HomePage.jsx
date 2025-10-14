@@ -21,13 +21,14 @@ export default function ADMHomePage() {
         });
 
         const result = await response.json();
+        console.log(result)
         if (response.ok && result.usuario.tipo_usuario === "professor") {
           setIsLoggedIn(true);
           setIsAdmin(true);
         } else {
           toast.warn("Você não é um administrador ou não está logado", toastSettings);
-          navigate("/");
           setIsAdmin(false);
+          navigate("/");
         }
       } catch (error) {
         console.error("Erro ao verificar a sessão:", error);

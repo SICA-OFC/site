@@ -82,7 +82,7 @@ export default function CadastroPage() {
   return (
     <div className="bg-[url(/src/assets/background.png)] bg-no-repeat bg-cover bg-center h-screen flex flex-col justify-center items-center gap-2">
       <div className="bg-neutra-branca rounded-xl shadow-lg w-[80%] h-[96%] flex flex-row justify-between items-start p-6">
-        <div className="flex flex-col items-center gap-4 w-full">
+        <div className="flex flex-col items-center gap-4 w-full h-full overflow-y-scroll md:overflow-y-hidden">
           <div className="flex flex-row items-center gap-2 w-full">
             <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
             <div className="h-9 border-l border-black" />
@@ -90,9 +90,9 @@ export default function CadastroPage() {
           </div>
 
           <form className="flex flex-col justify-center items-center gap-5 w-[80%]" onSubmit={handleSubmit}>
-            <div className="flex flex-row justify-start items-start gap-[5%] w-full">
+            <div className="flex flex-col md:flex-row justify-start items-start gap-[5%] w-full">
               {/* Coluna Esquerda */}
-              <div className="w-[50%] space-y-2">
+              <div className="w-full md:w-[50%] space-y-2">
                 <label className="text-sm" htmlFor="rm">
                   RM
                 </label>
@@ -142,7 +142,7 @@ export default function CadastroPage() {
               </div>
 
               {/* Coluna Direita */}
-              <div className="w-[50%] space-y-2">
+              <div className="w-full md:w-[50%] space-y-2">
                 <label className="text-sm" htmlFor="email">
                   Email
                 </label>

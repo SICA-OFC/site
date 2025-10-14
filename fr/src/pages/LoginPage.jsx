@@ -85,8 +85,8 @@ export default function LoginPage() {
 
   return (
     <div className="bg-[url(/src/assets/background.png)] bg-no-repeat bg-cover bg-center h-screen flex flex-col justify-center items-center gap-2">
-      <div className="bg-neutra-branca rounded-md w-[80%] h-fit flex flex-row justify-between items-start">
-        <div className="flex flex-col items-center gap-2 w-[50%] p-6">
+      <div className="bg-neutra-branca rounded-md h-fit w-[90%] flex flex-row justify-between items-start">
+        <div className="flex flex-col items-center gap-2 w-full md:w-[50%] p-6">
           <div className="flex flex-rol items-center gap-2 w-full">
             <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
             <div className="h-9 border-l border-black" />
@@ -143,7 +143,7 @@ export default function LoginPage() {
             </div>
           </form>
         </div>
-        <img src={sideImage} className="block w-[50%] h-full" />
+        <img src={sideImage} className="hidden md:block w-[50%] h-full" />
       </div>
     </div>
   );
