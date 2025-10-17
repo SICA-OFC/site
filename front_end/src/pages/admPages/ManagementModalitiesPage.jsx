@@ -25,7 +25,7 @@ export default function ManagementModalitiesPage() {
 
         {/* Grid de blocos */}
         <div className="grid grid-cols-2 gap-[100px] mb-8">
-          <Link to="modalidade" className="no-underline">
+          <Link to="/adm/modalidade/torneios" className="no-underline">
             <Block alt="futebol" image={Futebol} modality="Futebol" />
           </Link>
 

@@ -127,19 +127,19 @@ const Header = () => {
               </Link>
               <Link
                 to="/equipes"
-                className="hover:border-b-2 border-primaria transition"
+                className="hover:border-b-2 hover:border-primaria transition border-b-2 border-transparent"
               >
                 Equipes
               </Link>
               <Link
                 to="/chaves"
-                className="hover:border-b-2 border-primaria transition"
+                className="hover:border-b-2 hover:border-primaria transition border-b-2 border-transparent"
               >
                 Chaves
               </Link>
               <Link
                 to="/modalidades"
-                className="hover:border-b-2 border-primaria transition"
+                className="hover:border-b-2 hover:border-primaria transition border-b-2 border-transparent"
               >
                 Modalidades
               </Link>
@@ -181,7 +181,7 @@ const Header = () => {
             </>
           ) : (
             <Link to="/login">
-              <button className="hidden md:block bg-destaque text-neutra-branca w-24 h-12 hover:cursor-pointer hover:bg-[#BF6A1F] hover:outline-1 hover:border-destaque font-semibold text-xl rounded-lg shadow transition">
+              <button className="hidden md:block font-[Energy] bg-destaque text-neutra-branca w-24 h-12 hover:cursor-pointer hover:bg-[#BF6A1F] font-semibold text-xl rounded-[5px] shadow transition">
                 Login
               </button>
             </Link>
