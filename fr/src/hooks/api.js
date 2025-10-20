@@ -87,10 +87,11 @@ export const EditarUsuário = async (data, id) => {
 export const DeletarUsuário = async (id) => {
   try {
     const url = id ? `${BASE_URL}/usuario/${id}` : `${BASE_URL}/usuario/`;
-    const response = await api.delete(url, data);
+    const response = await api.delete(url);
     toast.success("Usuário deletado com sucesso!", toastSettings);
-    return response.data;
+    return true;
   } catch (err) {
+    console.log(err);
     toast.error(err.response?.data?.erro || "Algo deu errado ao deletar o usuário! Tente novamente!", toastSettings);
     return null;
   }

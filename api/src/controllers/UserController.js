@@ -18,7 +18,7 @@ module.exports = {
   CriarUsuario: async (req, res) => {
     const { rm, nome, curso_id, email, data_nascimento, senha, telefone, tipo_usuario, modalidades } = req.body;
 
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(12);
     const senhaHash = await bcrypt.hash(senha, salt);
     const codigo_verificacao = await gerarCodigo();
 
@@ -299,7 +299,7 @@ module.exports = {
       },
     });
 
-    if (!id && (data.email != email)) {
+    if (!id && data.email != email) {
       const accessToken = await gerarAccessToken(usuario);
       const refreshToken = await gerarRefreshToken(usuario);
 
@@ -320,15 +320,7 @@ module.exports = {
     }
 
     res.status(200).json({
-      usuario: {
-        nome: usuario.nome,
-        curso_id: usuario.curso_id,
-        email: usuario.email,
-        data_nascimento: usuario.data_nascimento,
-        telefone: usuario.telefone,
-        foto_perfil: imageUrl,
-        modalidades: usuario.modalidades,
-      },
+      nome: usuario.nome,
     });
   },
 
@@ -342,7 +334,7 @@ module.exports = {
 
     let senhaHash;
     if (senha && senha.trim() !== "") {
-      const salt = await bcrypt.genSalt(10);
+      const salt = await bcrypt.genSalt(12);
       senhaHash = await bcrypt.hash(senha, salt);
     }
     const usuario = await prisma.usuarios.update({
@@ -352,12 +344,7 @@ module.exports = {
       },
     });
 
-    res.status(200).json({
-      usuario: {
-        nome: usuario.nome,
-        senha: usuario.senha,
-      },
-    });
+    res.status(201);
   },
 
   DeletarUsuario: async (req, res) => {
@@ -371,6 +358,13 @@ module.exports = {
       where: { id: id || data.id },
     });
 
+    if (usuario.foto_perfil) {
+      const oldFilePath = path.join(process.cwd(), "uploads", path.basename(usuario.foto_perfil));
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+      }
+    }
+    
     res.clearCookie(process.env.REFRESH_TOKEN).clearCookie(process.env.ACCESS_TOKEN).status(200).json({
       usuario: usuario.id,
     });
@@ -422,8 +416,20 @@ module.exports = {
     const id = parseInt(req.params.id);
     const usuario = await prisma.usuarios.findUnique({
       where: { id: id || data.id },
-      include: {
-        cursos: true,
+      select: {
+        rm: true,
+        nome: true,
+        data_nascimento: true,
+        curso_id: true,
+        email: true,
+        telefone: true,
+        foto_perfil: true,
+        modalidades: true,
+        cursos: {
+          select: {
+            periodo: true,
+          },
+        },
       },
     });
 

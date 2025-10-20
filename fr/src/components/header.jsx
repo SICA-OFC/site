@@ -82,7 +82,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="fixed z-30 w-full bg-secundaria md:backdrop-opacity-40 md:bg-secundaria/80 border-b border-secundaria/50 shadow-md p-2">
+      <header className="fixed z-2 w-full bg-secundaria md:backdrop-opacity-40 md:bg-secundaria/80 border-b border-secundaria/50 shadow-md p-2">
         <div className="flex items-center justify-between px-10 py-2">
           <img src={logo} alt="Logo" className="w-12 h-12 object-contain" />
 
@@ -117,7 +117,7 @@ const Header = () => {
                   />
                 </svg>
               </button>
-              <div className="menu hidden md:hidden bg-white h-15 w-15 rounded-xl absolute right-11 top-14 flex-col justify-center items-center">
+              <div className="menu hidden md:flex bg-white h-15 w-15 rounded-xl absolute right-11 top-14 flex-col justify-center items-center">
                 <Link
                   to="/editar-perfil"
                   className="h-[50%] flex justify-center items-center text-destaque font-semibold"
@@ -161,7 +161,7 @@ const Header = () => {
 
       <aside
         ref={menuRef}
-        className="fixed md:hidden z-40 top-16 right-0 h-full w-55 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out"
+        className="fixed md:hidden z-1 top-17.5 right-0 h-full w-55 bg-white shadow-lg transform translate-x-full transition-transform duration-300 ease-in-out"
       >
         <div className="flex flex-col items-start p-6 space-y-6 text-primaria text-xl font-medium">
           <Link to="/" onClick={handleClick}>

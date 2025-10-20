@@ -154,6 +154,8 @@ export default function CadastroPage() {
                   id="email"
                   name="email"
                   autoComplete="email"
+                  pattern="^[a-zA-Z0-9._]+@(gmail\.com|hotmail\.com|etec\.sp\.gov\.br)$"
+                  title="O email deve ser do domínio gmail.com, hotmail.com ou etec.sp.gov.br"
                   required
                 />
 

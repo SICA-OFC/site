@@ -26,6 +26,7 @@ router.use(authToken);
 router.get("/", catchAsync(userController.VerUsuarios));
 router.get("/:id", catchAsync(userController.VerUsuario));
 router.patch("/:id", upload.single("photo"), catchAsync(userController.EditarUsuario));
+router.delete("/", catchAsync(userController.DeletarUsuario));
 router.delete("/:id", catchAsync(userController.DeletarUsuario));
 router.post("/verificar", catchAsync(userController.Verificar));
 router.post("/enviarCodigo", catchAsync(userController.EnviarCodigo));
