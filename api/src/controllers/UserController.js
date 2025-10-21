@@ -7,6 +7,7 @@ const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
 
+const { check, validationResult } = require('express-validator');
 const { loadTemplate, enviarEmail } = require("../services/enviarEmail.js");
 const { verificarAccessToken } = require("../services/verificarToken.js");
 const { sendEvent } = require("../services/sseService.js");
@@ -16,6 +17,11 @@ const BASE_URL = process.env.BASE_URL;
 
 module.exports = {
   CriarUsuario: async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ erro: errors.array() });
+    }
+
     const { rm, nome, curso_id, email, data_nascimento, senha, telefone, modalidades, codigo } = req.body;
 
     const salt = await bcrypt.genSalt(12);
@@ -60,6 +66,11 @@ module.exports = {
   },
 
   LogarUsuario: async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ erro: errors.array() });
+    }
+    
     const { email, senha } = req.body;
 
     let usuario = await prisma.usuarios.findUnique({

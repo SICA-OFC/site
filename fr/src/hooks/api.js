@@ -14,7 +14,11 @@ export const Cadastrar = async (data) => {
     toast.success("Cadastro feito com sucesso! Prossiga para autenticação de 2 fatores.", toastSettings);
     return response.data;
   } catch (err) {
-    toast.error(err.response?.data?.erro || "Algo deu errado ao cadastrar! Tente novamente!", toastSettings);
+    toast.error(
+      err.response?.data?.erro?.[0]?.msg || err.response?.data?.erro || "Algo deu errado ao cadastrar! Tente novamente!",
+      toastSettings
+    );
+
     return null;
   }
 };

@@ -4,6 +4,7 @@ import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import SelectCursos from "../components/selectCursos.jsx";
 import { Cadastrar } from "../hooks/api.js";
+import { formatTelefone } from "../utils/sanitization.js";
 
 export default function CadastroPage() {
   const navigate = useNavigate();
@@ -22,21 +23,6 @@ export default function CadastroPage() {
     Basquete: false,
     Natação: false,
   });
-
-  function formatTelefone(value) {
-    value = value.replace(/\D/g, "");
-    value = value.substring(0, 11);
-
-    if (value.length > 10) {
-      return value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-    }
-    if (value.length > 6) {
-      return value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
-    }
-    if (value.length > 2) {
-      return value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
-    }
-  }
 
   function handleChange(e) {
     const { name, value } = e.target;

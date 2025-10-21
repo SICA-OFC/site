@@ -1,4 +1,4 @@
-export function formatTelefone(v) {
+export const formatTelefone = async (v) => {
     v = v.replace(/\D/g, "");
     v = v.substring(0, 11);
 

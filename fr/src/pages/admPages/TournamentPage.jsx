@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { toastSettings } from "../../utils/toastSettings";
 import { BASE_URL } from "../../utils/enviromentSettings";
 import { HandleIsAdmin } from "../../utils/handleIsAdmin";
+import { verTimes, verUsuários } from "../../hooks/api";
 
 function ClickableUserEntry({ name, rm, course, modality }) {
   const parts = [name, rm, course, modality].filter(Boolean);
@@ -18,6 +19,7 @@ function ClickableUserEntry({ name, rm, course, modality }) {
 export default function TournmentCreatorPage() {
   const navigate = useNavigate();
 
+  const fetchedRef = useRef(false);
   useEffect(() => {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
@@ -25,14 +27,13 @@ export default function TournmentCreatorPage() {
     (async () => {
       const isAdmin = await HandleIsAdmin(navigate);
       if (isAdmin) {
-        verUsuario();
-        verTimes();
+        HandleUsers();
+        HandleTeams();
         verCampeonatos();
       }
     })();
   }, []);
 
-  const fetchedRef = useRef(false);
   const [tournaments, setTournaments] = useState([]);
 
   const [users, setUsers] = useState([]);
@@ -49,75 +50,51 @@ export default function TournmentCreatorPage() {
     Natação: false,
   });
 
+  const modalidades = {
+    Futebol: false,
+    Vôlei: false,
+    Basquete: false,
+    Natação: false,
+  }
+
   const [editNome, setEditNome] = useState("");
   const [editTipo, setEditTipo] = useState("single elimination");
   const [selectedTournament, setSelectedTournament] = useState("");
   const [selectedTeamIds, setSelectedTeamIds] = useState([]);
 
-  function handleNomeChange(e) {
-    setNome(e.target.value);
+  function handleChange(e) {
+    const { name, value } = e.target;
+    const setters = {
+      nome: setNome,
+      tipo: setTipo,
+      editNome: setEditNome,
+      editTipo: setEditTipo,
+      modalidade: setModalidade,
+    };
+    setters[name]?.(value);
   }
-
-  function handleTipoChange(e) {
-    setTipo(e.target.value);
-  }
-
-  function handleEditNomeChange(e) {
-    setEditNome(e.target.value);
-  }
-
-  function handleEditTipoChange(e) {
-    setEditTipo(e.target.value);
-  }
-
-  const handleModalidadeChange = (e) => {
-    setModalidade(e.target.value);
-  };
 
   function toggleTeamId(id) {
     setSelectedTeamIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   }
 
-  const verUsuario = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/usuario/`, {
-        method: "GET",
-        credentials: "include",
-      });
-      const result = await response.json();
+  const HandleUsers = async () => {
+    const result = await verUsuários();
 
-      if (response.ok) {
-        const usuarios = result.usuarios;
-
-        if (usuarios.length > 0) {
-          setUsers(usuarios);
-        }
-      } else {
-        toast.error(result.erro, toastSettings);
-      }
-    } catch (error) {
-      toast.error("Algo deu errado ao consultar os alunos! Tente novamente!", toastSettings);
-      console.error("Erro ao verificar autenticação:", error);
+    if (result && result.usuarios && result.usuarios.length > 0) {
+      const usuarios = result.usuarios;
+      setUsers(usuarios);
+    } else {
+      setUsers([]);
     }
   };
 
-  const verTimes = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/time`, {
-        method: "GET",
-        credentials: "include",
-      });
-      const result = await response.json();
+  const HandleTeams = async () => {
+    const result = await verTimes();
 
-      if (response.ok) {
-        const teams = result.times;
-        setTeams(teams);
-      } else {
-        toast.error(result.erro, toastSettings);
-      }
-    } catch (error) {
-      toast.error("Algo deu errado ao consultar os times! Tente novamente!", toastSettings);
-      console.error("Erro ao verificar autenticação:", error);
+    if (result) {
+      const teams = result.times;
+      setTeams(teams);
     }
   };
 
@@ -302,7 +279,7 @@ export default function TournmentCreatorPage() {
             <input
               className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
               value={nome}
-              onChange={handleNomeChange}
+              onChange={handleChange}
               type="text"
               id="nome"
               name="nome"
@@ -316,15 +293,16 @@ export default function TournmentCreatorPage() {
               className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
               value={tipo}
               id="tipo"
-              onChange={handleTipoChange}
+              name="tipo"
+              onChange={handleChange}
               required
             >
               <option value="single elimination">Eliminação</option>
             </select>
 
-            {Object.keys(modalidade).map((mod) => (
+            {Object.keys(modalidades).map((mod) => (
               <label key={mod} className="flex flex-row gap-2 mt-2">
-                <input type="radio" name="modalidades" value={mod} onChange={handleModalidadeChange} />
+                <input type="radio" name="modalidade" value={mod} onChange={handleChange} />
                 {mod}
               </label>
             ))}
@@ -392,7 +370,7 @@ export default function TournmentCreatorPage() {
               <input
                 className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
                 value={editNome}
-                onChange={handleEditNomeChange}
+                onChange={handleChange}
                 type="text"
                 id="editNome"
                 name="editNome"
@@ -406,7 +384,8 @@ export default function TournmentCreatorPage() {
                 className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
                 value={editTipo}
                 id="tipo"
-                onChange={handleEditTipoChange}
+                name="editTipo"
+                onChange={handleChange}
                 required
               >
                 <option value="single elimination">Eliminação</option>
