@@ -23,14 +23,17 @@ router.post("/verificarSessao", catchAsync(userController.VerificarSessao));
 
 // Rotas protegidas (requerem autenticação)
 router.use(authToken);
+router.get("/logout", catchAsync(userController.Logout));
+
 router.get("/", catchAsync(userController.VerUsuarios));
 router.get("/:id", catchAsync(userController.VerUsuario));
+
 router.patch("/:id", upload.single("photo"), catchAsync(userController.EditarUsuario));
 router.delete("/", catchAsync(userController.DeletarUsuario));
 router.delete("/:id", catchAsync(userController.DeletarUsuario));
+
 router.post("/verificar", catchAsync(userController.Verificar));
 router.post("/enviarCodigo", catchAsync(userController.EnviarCodigo));
 router.patch("/redefinirSenha", catchAsync(userController.RedefinirSenha));
-router.post("/logout", catchAsync(userController.Logout));
 
 module.exports = router;

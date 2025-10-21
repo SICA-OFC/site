@@ -31,6 +31,7 @@ module.exports = async function authToken(req, res, next) {
     return res.status(401).json({ erro: data.erro });
   }
 
+  console.log(data);
   const usuario = await prisma.usuarios.findUnique({
     where: { id: data.id }
   });

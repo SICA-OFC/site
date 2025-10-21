@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider      = "prisma-client-js"
+  output        = "../src/generated/prisma"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -16,22 +17,6 @@ model cursos {
   nome     String     @db.VarChar(100)
   periodo  Int
   usuarios usuarios[]
-}
-
-model membros_time {
-  time_id   Int
-  membro_id Int
-  funcao    tipo_funcao?
-  usuarios  usuarios     @relation(fields: [membro_id], references: [id])
-  time      time         @relation(fields: [time_id], references: [id])
-
-  @@id([time_id, membro_id])
-}
-
-model time {
-  id           Int            @id @default(autoincrement())
-  nome         String         @unique @db.VarChar(100)
-  membros_time membros_time[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -51,9 +36,26 @@ model usuarios {
   codigo_gerado_em   DateTime?      @db.Timestamptz(6)
   tentativas_login   Int            @default(0)
   tipo_usuario       tipo_usuario   @default(aluno)
-  modalidades        Json?          @default("{}")
+  modalidades        Json?
   membros_time       membros_time[]
   cursos             cursos?        @relation(fields: [curso_id], references: [id], onDelete: Restrict)
+}
+
+model times {
+  id           Int              @id @default(autoincrement())
+  nome         String           @unique @db.VarChar(100)
+  modalidades  tipo_modalidade?
+  membros_time membros_time[]
+}
+
+model membros_time {
+  time_id   Int
+  membro_id Int
+  funcao    tipo_funcao?
+  usuarios  usuarios     @relation(fields: [membro_id], references: [id])
+  times     times        @relation(fields: [time_id], references: [id])
+
+  @@id([time_id, membro_id])
 }
 
 enum tipo_funcao {
@@ -68,4 +70,11 @@ enum tipo_usuario {
   coordenador
   diretor
   visitante
+}
+
+enum tipo_modalidade {
+  Futebol
+  V_lei    @map("Vôlei")
+  Basquete
+  Nata__o  @map("Natação")
 }

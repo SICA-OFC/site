@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/logo.png";
-import { Link } from "react-router-dom";
-import { Bounce, toast } from "react-toastify";
-import { toastSettings } from "../../utils/toastSettings";
-import { BASE_URL } from "../../utils/enviromentSettings";
+import { Link, useNavigate } from "react-router-dom";
+import { HandleIsAdmin } from "../../utils/handleIsAdmin";
+import { criarTime, deletarTime, editarTime, verTimes, verUsuários } from "../../hooks/api";
 
 function ClickableUserEntry({ name, rm, course }) {
   const parts = [name, rm, course].filter(Boolean);
@@ -15,87 +14,72 @@ function ClickableUserEntry({ name, rm, course }) {
 }
 
 export default function TournmentCreatorPage() {
+  const navigate = useNavigate();
   const fetchedRef = useRef(false);
+  useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+
+    (async () => {
+      const isAdmin = await HandleIsAdmin(navigate);
+      if (isAdmin) {
+        HandleUsers();
+        HandleTeams();
+      }
+    })();
+  }, []);
 
   const [users, setUsers] = useState([]);
   const [teams, setTeams] = useState([]);
 
   const [nome, setNome] = useState("");
   const [selectedIds, setSelectedIds] = useState([]);
+  const [filtro, setFiltro] = useState("Futebol");
 
   const [editNome, setEditNome] = useState("");
   const [selectedTeam, setSelectedTeam] = useState([]);
   const [selectedTeamIds, setSelectedTeamIds] = useState([]);
-  const [modalidades, setModalidades] = useState({
-    futebol: false,
-    vôlei: false,
-    basquete: false,
-    natação: false,
-  });
-  const [filtro, setFiltro] = useState(false);
+  const modalidades = {
+    Futebol: false,
+    Vôlei: false,
+    Basquete: false,
+    Natação: false,
+  }
 
-  const verUsuario = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/usuario/`, {
-        method: "GET",
-        credentials: "include",
-      });
-      const result = await response.json();
+  const HandleUsers = async () => {
+    const result = await verUsuários();
 
-      if (response.ok) {
-        const usuarios = result.usuarios;
-        
-        if (usuarios.length > 0) {
-          setUsers(usuarios);
-        }
-      } else {
-        toast.error(result.erro, toastSettings);
+    if (result) {
+      const usuarios = result.usuarios;
+      if (usuarios.length > 0) {
+        setUsers(usuarios);
       }
-    } catch (error) {
-      toast.error("Algo deu errado ao consultar os alunos! Tente novamente!", toastSettings);
-      console.error("Erro ao verificar autenticação:", error);
+    };
+  }
+
+  const HandleTeams = async () => {
+    const result = await verTimes();
+
+    if (result) {
+      const teams = result.times;
+      setTeams(teams);
     }
   };
 
-  const verTimes = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/time`, {
-        method: "GET",
-        credentials: "include",
-      });
-      const result = await response.json();
+  function handleChange(e) {
+    const { name, value } = e.target;
 
-      if (response.ok) {
-        const teams = result.times;
-        setTeams(teams);
-      } else {
-        toast.error(result.erro, toastSettings);
-      }
-    } catch (error) {
-      toast.error("Algo deu errado ao consultar os times! Tente novamente!", toastSettings);
-      console.error("Erro ao verificar autenticação:", error);
-    }
-  };
+    const setters = {
+      nome: setNome,
+      editNome: setEditNome,
+      filtro: (v) => {
+        setFiltro(v);
+        setSelectedIds([]);
+      },
+    };
 
-  useEffect(() => {
-    if (fetchedRef.current) return;
-
-    verUsuario();
-    verTimes();
-    fetchedRef.current = true;
-  }, [BASE_URL]);
-
-  function handleNomeChange(e) {
-    setNome(e.target.value);
+    setters[name]?.(value);
   }
-
-  function handleEditNomeChange(e) {
-    setEditNome(e.target.value);
-  }
-
-  const handleFiltroChange = (e) => {
-    setFiltro(e.target.value);
-  };
 
   function toggleUserId(id) {
     setSelectedIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
@@ -108,96 +92,39 @@ export default function TournmentCreatorPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (selectedIds.length === 0) {
-      toast.warn("Selecione pelo menos um usuário para o time.", toastSettings);
-      return;
-    }
-
-    const timeInfo = {
+    const data = {
       nome,
       member_ids: selectedIds,
     };
 
-    try {
-      const response = await fetch(`${BASE_URL}/time`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(timeInfo),
-        credentials: "include",
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        toast.success("Time criado com sucesso!", toastSettings);
-        setSelectedIds([]);
-        setNome("");
-        verTimes();
-      } else {
-        toast.error(result.erro, toastSettings);
-      }
-    } catch (error) {
-      toast.error("Erro ao criar o time. Tente novamente!", toastSettings);
-      console.error("Erro ao criar o time:", error);
+    const result = await criarTime(data);
+    if (result) {
+      setSelectedIds([]);
+      setNome("");
+      HandleTeams();
     }
   };
 
   const handleEdit = async (e) => {
     e.preventDefault();
-
-    if (selectedTeamIds.length === 0) {
-      toast.warn("Selecione pelo menos um usuário para o time.", toastSettings);
-      return;
-    }
-
-    const timeInfo = {
+    const data = {
       nome: editNome,
       member_ids: selectedTeamIds,
     };
 
-    try {
-      const response = await fetch(`${BASE_URL}/time/${selectedTeam.id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(timeInfo),
-        credentials: "include",
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        toast.success("Time atualizado com sucesso!", toastSettings);
-        verTimes();
-      } else {
-        console.log(result);
-        toast.error("Erro ao atualizar o time", toastSettings);
-      }
-    } catch (error) {
-      toast.error("Erro ao atualizar o time. Tente novamente!", toastSettings);
-      console.error("Erro ao atualizar o time:", error);
+    const result = await editarTime(data, selectedTeam.id);
+    if (result) {
+      HandleTeams();
     }
   };
 
   const handleDelete = async (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch(`${BASE_URL}/time/${selectedTeam.id}`, {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        toast.success("Time deletado com sucesso!", toastSettings);
-        setSelectedTeamIds([]);
-        setEditNome("");
-        verTimes();
-      } else {
-        toast.error(result.erro, toastSettings);
-      }
-    } catch (error) {
-      toast.error("Erro ao deletar o time. Tente novamente!", toastSettings);
-      console.error("Erro ao deletar o time:", error);
+    const result = await deletarTime(selectedTeam.id)
+    if (result) {
+      setSelectedTeamIds([]);
+      setEditNome("");
+      HandleTeams();
     }
   };
 
@@ -222,7 +149,7 @@ export default function TournmentCreatorPage() {
             <input
               className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
               value={nome}
-              onChange={handleNomeChange}
+              onChange={handleChange}
               type="text"
               id="nome"
               name="nome"
@@ -266,8 +193,8 @@ export default function TournmentCreatorPage() {
             </label>
             <select
               id="filtro"
-              value={filtro}
-              onChange={handleFiltroChange}
+              name="filtro"
+              onChange={handleChange}
               className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
             >
               <option value="" disabled>
@@ -304,7 +231,7 @@ export default function TournmentCreatorPage() {
 
       {/* EDITAR TIME */}
       <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[3%] max-w-[500px] w-full flex flex-col items-center">
-        {teams.length > 0 ? (
+        {teams?.length > 0 ? (
           <form onSubmit={handleEdit} className="w-full">
             <label className="text-sm text-center w-full" htmlFor="nome">
               Times
@@ -333,7 +260,7 @@ export default function TournmentCreatorPage() {
             <input
               className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
               value={editNome}
-              onChange={handleEditNomeChange}
+              onChange={handleChange}
               type="text"
               id="editNome"
               name="editNome"

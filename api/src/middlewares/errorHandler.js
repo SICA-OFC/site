@@ -1,4 +1,4 @@
-const { PrismaClientKnownRequestError } = require("../generated/prisma/runtime/library");
+const { PrismaClientKnownRequestError, PrismaClientInitializationError } = require("../generated/prisma/runtime/library");
 
 const errorHandler = function (err, req, res, next) {
   const status = err.statusCode || 500;
@@ -7,6 +7,10 @@ const errorHandler = function (err, req, res, next) {
   const payload = { erro: message };
   if (process.env.NODE_ENV !== "production") {
     payload.stack = err.stack;
+  }
+  
+  if (err instanceof PrismaClientInitializationError) {
+        return res.status(400).json({ erro: `O Banco de Dados não está online.` });
   }
 
   if (err instanceof PrismaClientKnownRequestError) {
@@ -18,7 +22,7 @@ const errorHandler = function (err, req, res, next) {
       case "P2003":
         return res.status(400).json({ erro: `Campo Inválido: ${err.meta.target}` });
       default:
-        return res.status(500).json({ erro: `Algo Deu Errado: ${err.meta.target}` });
+        return res.status(500).json({ erro: `Algo Deu Errado: ${err.meta.target}`, err });
     }
   }
   res.status(status).json(payload);

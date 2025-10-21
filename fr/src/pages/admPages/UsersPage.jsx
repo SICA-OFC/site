@@ -1,11 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
-
+import { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { formatTelefone } from "../../utils/sanitization.js";
 import Logo from "../../assets/logo.png";
 import ProfileUploader from "../../components/ProfileUploader.jsx";
 import SelectCursos from "../../components/selectCursos.jsx";
 import { toast } from "react-toastify";
 import { toastSettings } from "../../utils/toastSettings.js";
+import { BASE_URL } from "../../utils/enviromentSettings.js";
+import { HandleIsAdmin } from "../../utils/handleIsAdmin.js";
+import { EditarUsuário, verUsuários } from "../../hooks/api.js";
 
 function ClickableUserEntry({ name, rm, course }) {
   return (
@@ -18,9 +21,8 @@ function ClickableUserEntry({ name, rm, course }) {
 }
 
 export default function ManagementUsersPage() {
-  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+  const navigate = useNavigate();
 
-  // Estados
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -41,9 +43,8 @@ export default function ManagementUsersPage() {
   });
   const [filtro, setFiltro] = useState(false);
 
-  const fetchedRef = useRef(false);
-  const nomeRef = useRef(false);
 
+  const nomeRef = useRef(false);
   function ChangeForm(usuario) {
     nomeRef.current = usuario.nome;
     setId(usuario.id);
@@ -64,37 +65,27 @@ export default function ManagementUsersPage() {
     });
   }
 
-  const verUsuarios = async () => {
-    try {
-      const response = await fetch(`${BASE_URL}/usuario/`, {
-        method: "GET",
-        credentials: "include",
-      });
-      const result = await response.json();
+  const HandleUsers = async () => {
+    const result = await verUsuários();
 
-      if (response.ok) {
-        const usuarios = result.usuarios;
-        if (usuarios.length > 0) {
-          setUsers(usuarios);
-
-          const primeiro = usuarios[0];
-          setSelectedUser(primeiro);
-          ChangeForm(primeiro);
-        }
-      } else {
-        toast.error(result.erro, toastSettings);
-      }
-    } catch (error) {
-      toast.error("Algo deu errado ao consultar os alunos! Tente novamente!", toastSettings);
-      console.error("Erro ao verificar autenticação:", error);
+    if (result && result.usuarios && result.usuarios.length > 0) {
+      const usuarios = result.usuarios;
+      setUsers(usuarios);
+      setSelectedUser(usuarios[0]);
+    } else {
+      setUsers([]);
+      setSelectedUser(null);
     }
   };
 
+  const fetchedRef = useRef(false);
   useEffect(() => {
     if (fetchedRef.current) return;
-
-    verUsuarios();
     fetchedRef.current = true;
+    (async () => {
+      const isAdmin = await HandleIsAdmin(navigate);
+      if (isAdmin) await HandleUsers();
+    })();
   }, [BASE_URL]);
 
   useEffect(() => {
@@ -102,21 +93,6 @@ export default function ManagementUsersPage() {
       ChangeForm(selectedUser);
     }
   }, [selectedUser]);
-
-  function formatTelefone(value) {
-    value = value.replace(/\D/g, "");
-    value = value.substring(0, 11);
-
-    if (value.length > 10) {
-      return value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-    }
-    if (value.length > 6) {
-      return value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
-    }
-    if (value.length > 2) {
-      return value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
-    }
-  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -165,17 +141,10 @@ export default function ManagementUsersPage() {
       data.append("photo", file);
     }
 
-    const response = await fetch(`${BASE_URL}/usuario/${id}`, {
-      method: "PATCH",
-      body: data,
-      credentials: "include",
-    });
-
-    const result = await response.json();
-    if (response.ok) {
-      toast.success("Usuário atualizado com sucesso!", toastSettings);
+    const result = await EditarUsuário(data, id)
+    if (result) {
       nomeRef.current = nome;
-      verUsuarios();
+      HandleUsers();
     } else {
       throw new Error(result.message || "Erro na edição");
     }
@@ -266,8 +235,8 @@ export default function ManagementUsersPage() {
                   </label>
                   <input
                     type="text"
-                    id="name"
-                    name="name"
+                    id="nome"
+                    name="nome"
                     value={nome}
                     onChange={handleChange}
                     required

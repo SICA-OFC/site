@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRESDB_USER}
+      - POSTGRES_PASSWORD=${POSTGRESDB_ROOT_PASSWORD}
+      - POSTGRES_DB=${POSTGRESDB_DATABASE}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d/
+  api:
+      container_name: api
+      build: ./api
+      restart: always
+      env_file:
+          - .env
+      volumes:
+        - ./api:/api
+        - api_node_modules:/api/node_modules
+      depends_on:
+          - db
+      ports:
+          - "3000:3000"
+      command: npm start
+  front-end:
+      container_name: front-end
+      build: ./fr
+      restart: always
+      env_file:
+          - .env
+      volumes:
+          - ./fr:/fr
+          - front_node_modules:/fr/node_modules
+      ports:
+          - "5173:5173"
+      command: npm run dev -- --host
+volumes:
+  db:
+  front_node_modules:
+  api_node_modules:
+
+

@@ -1,10 +1,8 @@
-import { BASE_URL, ADMIN_COD } from "../../utils/enviromentSettings.js";
 import { useState } from "react";
 import logo from "../../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { toastSettings } from "../../utils/toastSettings.js";
 import { Cadastrar } from "../../hooks/api.js";
+import { formatTelefone } from "../../utils/sanitization.js";
 
 export default function CadastroPage() {
   const [rm, setRm] = useState("");
@@ -13,24 +11,9 @@ export default function CadastroPage() {
   const [data_nascimento, setData] = useState("");
   const [senha, setSenha] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [cod, setCod] = useState("");
+  const [codigo, setCodigo] = useState("");
 
   const navigate = useNavigate();
-
-  function formatTelefone(value) {
-    value = value.replace(/\D/g, "");
-    value = value.substring(0, 11);
-
-    if (value.length > 10) {
-      return value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-    }
-    if (value.length > 6) {
-      return value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
-    }
-    if (value.length > 2) {
-      return value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
-    }
-  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -41,7 +24,7 @@ export default function CadastroPage() {
       data_nascimento: setData,
       senha: setSenha,
       telefone: (v) => setTelefone(formatTelefone(v)),
-      cod: setCod,
+      codigo: setCodigo,
     };
     setters[name]?.(value);
   }
@@ -49,10 +32,6 @@ export default function CadastroPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (cod != ADMIN_COD) {
-      toast.error("Código inválido!", toastSettings);
-      return false;
-    }
     const data = {
       rm,
       nome,
@@ -60,7 +39,7 @@ export default function CadastroPage() {
       data_nascimento: new Date(data_nascimento),
       senha,
       telefone,
-      tipo_usuario: "professor",
+      codigo,
     };
 
     const result = await Cadastrar(data);
@@ -178,11 +157,11 @@ export default function CadastroPage() {
               <input
                 className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
                 maxLength="100"
-                value={cod}
+                value={codigo}
                 onChange={handleChange}
                 type="text"
-                id="cod"
-                name="cod"
+                id="codigo"
+                name="codigo"
                 required
               />
             </label>

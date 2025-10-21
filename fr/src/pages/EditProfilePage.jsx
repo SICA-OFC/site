@@ -4,6 +4,7 @@ import ProfileUploader from "../components/ProfileUploader.jsx";
 import SelectCursos from "../components/selectCursos.jsx";
 import { DeletarUsuário, EditarUsuário, verUsuário } from "../hooks/api.js";
 import { Link, useNavigate } from "react-router-dom";
+import { formatTelefone } from "../utils/sanitization.js";
 
 export default function EditProfilePage() {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ export default function EditProfilePage() {
   const [telefone, setTelefone] = useState("");
   const [file, setFile] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchedRef = useRef(false);
   useEffect(() => {
@@ -34,9 +36,15 @@ export default function EditProfilePage() {
         setEmail(usuario.email);
         setDataNascimento(new Date(usuario.data_nascimento).toISOString().split("T")[0]);
         setTelefone(usuario.telefone);
-        setPeriodo(`${usuario.cursos.periodo}`);
-        setCurso(usuario.curso_id);
         setFile(usuario.foto_perfil || null);
+
+        const isUserAdmin = usuario.tipo_usuario === "professor";
+        setIsAdmin(isUserAdmin);
+        if (!isUserAdmin) {
+          setPeriodo(`${usuario.cursos.periodo}`);
+          setCurso(usuario.curso_id);
+        }
+
       } else {
         navigate("/");
       }
@@ -45,20 +53,6 @@ export default function EditProfilePage() {
     fetchUsuario();
   }, []);
 
-  function formatTelefone(value) {
-    value = value.replace(/\D/g, "");
-    value = value.substring(0, 11);
-
-    if (value.length > 10) {
-      return value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
-    }
-    if (value.length > 6) {
-      return value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
-    }
-    if (value.length > 2) {
-      return value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
-    }
-  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -94,7 +88,7 @@ export default function EditProfilePage() {
   const handleDeletar = async () => {
     const result = await DeletarUsuário();
     setShowDeleteModal(false);
-    if(result) {
+    if (result) {
       navigate('/');
     }
   };
@@ -217,41 +211,48 @@ export default function EditProfilePage() {
                     </section>
                   </div>
 
+
                   <div className="flex flex-col gap-2 w-[90%] md:w-2/5">
-                    {/* Informações Acadêmicas */}
-                    <section className="relative">
-                      <h4 className="text-neutra-preta mb-2 font-bold">Informações Acadêmicas</h4>
-                      <div className="flex flex-col mb-2">
-                        <label htmlFor="curso" className="mb-1 text-neutra-preta">
-                          Curso
-                          <SelectCursos
-                            periodo={periodo}
-                            curso={curso}
-                            onPeriodoChange={setPeriodo}
-                            onCursoChange={setCurso}
-                          />
-                        </label>
-                      </div>
-                    </section>
-                    {/* Modalidades */}
-                    <section className="relative">
-                      <div className="flex flex-col mb-2">
-                        <label htmlFor="modalidades" className="mb-1 text-neutra-preta">
-                          Modalidades
-                        </label>
-                        <select
-                          id="modalidades"
-                          name="modalidades"
-                          required
-                          className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
-                        >
-                          <option value="futebol">Futebol</option>
-                          <option value="volei">Vôlei</option>
-                          <option value="basquete">Basquete</option>
-                          <option value="natacao">Natação</option>
-                        </select>
-                      </div>
-                    </section>
+                    {!isAdmin && (
+                      <>
+                        {/* Informações Acadêmicas */}
+                        <section className="relative">
+                          <h4 className="text-neutra-preta mb-2 font-bold">Informações Acadêmicas</h4>
+                          <div className="flex flex-col mb-2">
+                            <label htmlFor="curso" className="mb-1 text-neutra-preta">
+                              Curso
+                              <SelectCursos
+                                periodo={periodo}
+                                curso={curso}
+                                onPeriodoChange={setPeriodo}
+                                onCursoChange={setCurso}
+                              />
+                            </label>
+                          </div>
+                        </section>
+
+                        {/* Modalidades */}
+                        <section className="relative">
+                          <div className="flex flex-col mb-2">
+                            <label htmlFor="modalidades" className="mb-1 text-neutra-preta">
+                              Modalidades
+                            </label>
+                            <select
+                              id="modalidades"
+                              name="modalidades"
+                              required
+                              className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
+                            >
+                              <option value="futebol">Futebol</option>
+                              <option value="volei">Vôlei</option>
+                              <option value="basquete">Basquete</option>
+                              <option value="natacao">Natação</option>
+                            </select>
+                          </div>
+                        </section>
+                      </>
+                    )}
+
                     {/* Imagem de Perfil */}
                     <section className="relative">
                       <h4 className="text-neutra-preta mb-2">Imagem de Perfil</h4>
@@ -284,7 +285,7 @@ export default function EditProfilePage() {
                   </button>
 
                   <Link
-                      className="px-6 py-3 bg-destaque text-neutra-branca rounded-md font-semibold cursor-pointer
+                    className="px-6 py-3 bg-destaque text-neutra-branca rounded-md font-semibold cursor-pointer
                     transition-all duration-300 hover:bg-neutra-branca hover:text-destaque hover:border
                     hover:border-secundaria"
                     to="/"

@@ -15,7 +15,7 @@ export default function EmailConfirmPage() {
     e.preventDefault();
     const codigo_verificacao = codigoArray.join("");
     const result = await VerificarCodigo(codigo_verificacao, accessToken);
-    if (result) {
+    if (result == true) {
       navigate("/");
     }
   };

@@ -8,7 +8,7 @@ export default function ADMHomePage() {
   const fetchedRef = useRef(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const navigate = useNavigate(false);
+  const navigate = useNavigate();
   const toastSettings = {
     position: "bottom-right",
     autoClose: 5000,

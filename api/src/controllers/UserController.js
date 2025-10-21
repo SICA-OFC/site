@@ -16,11 +16,22 @@ const BASE_URL = process.env.BASE_URL;
 
 module.exports = {
   CriarUsuario: async (req, res) => {
-    const { rm, nome, curso_id, email, data_nascimento, senha, telefone, tipo_usuario, modalidades } = req.body;
+    const { rm, nome, curso_id, email, data_nascimento, senha, telefone, modalidades, codigo } = req.body;
 
     const salt = await bcrypt.genSalt(12);
     const senhaHash = await bcrypt.hash(senha, salt);
     const codigo_verificacao = await gerarCodigo();
+
+    let codigoCerto = false;
+
+    if (codigo && codigo != process.env.ADMIN_COD) {
+      return res.status(400).json({ erro: "Código Inválido" });
+    }
+
+    if (codigo && codigo == process.env.ADMIN_COD) {
+      codigoCerto = true;
+    }
+
 
     const novoUsuario = await prisma.usuarios.create({
       data: {
@@ -33,7 +44,7 @@ module.exports = {
         data_nascimento,
         codigo_verificacao,
         codigo_gerado_em: new Date(),
-        tipo_usuario,
+        tipo_usuario: codigoCerto ? "professor" : "aluno",
         modalidades,
       },
     });
@@ -157,7 +168,7 @@ module.exports = {
     const email = req.headers.email;
 
     if (!email) {
-      return res.status(400).json({ error: "Email não informado no header." });
+      return res.status(400).json({ erro: "Email não informado no header." });
     }
 
     const usuario = await prisma.usuarios.findUnique({
@@ -165,7 +176,7 @@ module.exports = {
     });
 
     if (!usuario) {
-      return res.status(404).json({ error: "Usuário não encontrado." });
+      return res.status(404).json({ erro: "Usuário não encontrado." });
     }
 
     return res.json({ id: usuario.id });
@@ -174,7 +185,7 @@ module.exports = {
   Verificar: async (req, res) => {
     const data = req.user;
     if (!data) {
-      return res.status(404).json({ error: "Usuário não logado." });
+      return res.status(404).json({ erro: "Usuário não logado." });
     }
 
     const { codigo_verificacao } = req.body;
@@ -231,7 +242,7 @@ module.exports = {
   EnviarCodigo: async (req, res) => {
     const data = req.user;
     if (!data) {
-      return res.status(404).json({ error: "Usuário não logado." });
+      return res.status(404).json({ erro: "Usuário não logado." });
     }
 
     const novoCodigo = await gerarCodigo();
@@ -254,7 +265,7 @@ module.exports = {
   EditarUsuario: async (req, res) => {
     const data = req.user;
     if (!data) {
-      return res.status(404).json({ error: "Usuário não logado." });
+      return res.status(404).json({ erro: "Usuário não logado." });
     }
 
     const id = parseInt(req.params.id);
@@ -327,7 +338,7 @@ module.exports = {
   RedefinirSenha: async (req, res) => {
     const data = req.user;
     if (!data) {
-      return res.status(404).json({ error: "Usuário não logado." });
+      return res.status(404).json({ erro: "Usuário não logado." });
     }
 
     const { senha } = req.body;
@@ -350,7 +361,7 @@ module.exports = {
   DeletarUsuario: async (req, res) => {
     const data = req.user;
     if (!data) {
-      return res.status(404).json({ error: "Usuário não logado." });
+      return res.status(404).json({ erro: "Usuário não logado." });
     }
 
     const id = parseInt(req.params.id);
@@ -364,7 +375,7 @@ module.exports = {
         fs.unlinkSync(oldFilePath);
       }
     }
-    
+
     res.clearCookie(process.env.REFRESH_TOKEN).clearCookie(process.env.ACCESS_TOKEN).status(200).json({
       usuario: usuario.id,
     });
@@ -396,15 +407,18 @@ module.exports = {
       return res.status(401).json({ erro: data.erro });
     }
 
-    const usuario = await prisma.usuarios.findUnique({
+    const { tipo_usuario } = await prisma.usuarios.findUnique({
       where: { id: data.id },
+      select: {
+        tipo_usuario: true,
+      },
     });
 
-    if (!usuario) {
+    if (!tipo_usuario) {
       return res.status(404).json({ erro: "Usuário não encontrado" });
     }
 
-    res.json({ usuario });
+    res.json({ tipo_usuario });
   },
 
   VerUsuario: async (req, res) => {
@@ -425,6 +439,7 @@ module.exports = {
         telefone: true,
         foto_perfil: true,
         modalidades: true,
+        tipo_usuario: true,
         cursos: {
           select: {
             periodo: true,
@@ -434,7 +449,7 @@ module.exports = {
     });
 
     if (!usuario) {
-      return res.status(404).json({ error: "Usuário não encontrado." });
+      return res.status(404).json({ erro: "Usuário não encontrado." });
     }
 
     res.json({ usuario });
@@ -467,13 +482,13 @@ module.exports = {
     });
 
     if (!usuarios || usuarios.length === 0) {
-      return res.status(404).json({ error: "Nenhum aluno encontrado." });
+      return res.status(404).json({ erro: "Nenhum aluno encontrado." });
     }
 
     res.json({ usuarios });
   },
 
   Logout: async (req, res) => {
-    return res.clearCookie(process.env.REFRESH_TOKEN).clearCookie(process.env.ACCESS_TOKEN).status(200);
+    return res.clearCookie(process.env.REFRESH_TOKEN).clearCookie(process.env.ACCESS_TOKEN).status(201).json({ success: true });
   },
 };

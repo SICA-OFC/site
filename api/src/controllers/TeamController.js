@@ -14,7 +14,7 @@ module.exports = {
                 .json({ erro: "O time deve ter pelo menos 1 membro." });
         }
 
-        const time = await prisma.time.create({
+        const time = await prisma.times.create({
             data: { nome },
         });
 
@@ -39,49 +39,49 @@ module.exports = {
     EditarTime: async (req, res) => {
         const id = parseInt(req.params.id);
         const { nome, member_ids } = req.body;
-        
+
         if (!id && id !== 0) {
             return res.status(400).json({ erro: "ID do time (id) é obrigatório." });
         }
 
-        let time = await prisma.time.findUnique({ where: { id } });
+        let time = await prisma.times.findUnique({ where: { id } });
         if (!time) {
             return res.status(404).json({ erro: "Time não encontrado." });
         }
-        
+
         if (!Array.isArray(member_ids) || member_ids.length === 0) {
             return res
-            .status(400)
-            .json({ erro: "O time deve ter pelo menos 1 membro." });
+                .status(400)
+                .json({ erro: "O time deve ter pelo menos 1 membro." });
         }
-        
+
         if (nome) {
-            time = await prisma.time.update({
+            time = await prisma.times.update({
                 where: { id },
                 data: { nome },
             });
         }
-        
+
         const rows = member_ids.map((mId) => ({
             time_id: time.id,
             membro_id: mId,
             funcao: "jogador",
         }));
-        
+
         await prisma.membros_time.deleteMany({
             where: { time_id: id },
         });
-        
+
         await prisma.membros_time.createMany({
             data: rows,
             skipDuplicates: true,
         });
-        
+
         res.json({
             mensagem: "Time atualizado com sucesso.",
         });
     },
-    
+
     DeletarTime: async (req, res) => {
         const id = parseInt(req.params.id);
 
@@ -94,7 +94,7 @@ module.exports = {
             return res.status(404).json({ erro: "Time não encontrado." });
         }
 
-        await prisma.membros_time.deleteMany({
+        await prisma.membros_times.deleteMany({
             where: { time_id: id },
         });
 
@@ -113,7 +113,7 @@ module.exports = {
             return res.status(400).json({ erro: "ID do time (id) é obrigatório." });
         }
 
-        const time = await prisma.time.findUnique({
+        const time = await prisma.times.findUnique({
             where: { id },
             include: {
                 membros_time: true,
@@ -131,7 +131,7 @@ module.exports = {
     },
 
     VerTimes: async (req, res) => {
-        const times = await prisma.time.findMany({
+        const times = await prisma.times.findMany({
             orderBy: { id: "asc" },
             include: {
                 membros_time: {
@@ -147,7 +147,9 @@ module.exports = {
             },
         });
 
-
+        if (times.length == 0) {
+            res.json({ total: times.length })
+        }
         res.json({
             mensagem: "Lista de times retornada com sucesso.",
             times,

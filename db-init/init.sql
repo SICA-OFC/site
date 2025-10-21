@@ -70,7 +70,7 @@ CREATE TABLE usuarios (
   codigo_gerado_em         TIMESTAMP WITH TIME ZONE,
   tentativas_login         INTEGER        NOT NULL DEFAULT 0,
   tipo_usuario             tipo_usuario   NOT NULL DEFAULT 'aluno',
-  modalidades              JSONB          NOT NULL
+  modalidades              JSONB          NULL
 );
 
 -- Função e trigger para atualizar atualizado_em em projetos
@@ -87,9 +87,17 @@ BEFORE UPDATE ON usuarios
 FOR EACH ROW
 EXECUTE FUNCTION atualizar_data_modificacao();
 
-CREATE TABLE time (
+CREATE TYPE tipo_modalidade AS ENUM (
+  'Futebol',
+  'Vôlei',
+  'Basquete',
+  'Natação'
+);
+
+CREATE TABLE times (
   id                       INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-  nome			               VARCHAR(100)   NOT NULL UNIQUE
+  nome			               VARCHAR(100)   NOT NULL UNIQUE,
+  modalidades              tipo_modalidade
 );
 
 CREATE TYPE tipo_funcao AS ENUM (
@@ -100,7 +108,7 @@ CREATE TYPE tipo_funcao AS ENUM (
 
 CREATE TABLE membros_time (
     time_id                 INTEGER        NULL
-    REFERENCES time(id)
+    REFERENCES times(id)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
     membro_id                 INTEGER        NULL

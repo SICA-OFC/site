@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/logo.png";
-import { Link } from "react-router-dom";
-import { Bounce, toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { toastSettings } from "../../utils/toastSettings";
+import { BASE_URL } from "../../utils/enviromentSettings";
+import { HandleIsAdmin } from "../../utils/handleIsAdmin";
 
 function ClickableUserEntry({ name, rm, course, modality }) {
   const parts = [name, rm, course, modality].filter(Boolean);
@@ -13,7 +16,22 @@ function ClickableUserEntry({ name, rm, course, modality }) {
 }
 
 export default function TournmentCreatorPage() {
-  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+
+    (async () => {
+      const isAdmin = await HandleIsAdmin(navigate);
+      if (isAdmin) {
+        verUsuario();
+        verTimes();
+        verCampeonatos();
+      }
+    })();
+  }, []);
+
   const fetchedRef = useRef(false);
   const [tournaments, setTournaments] = useState([]);
 
@@ -24,31 +42,17 @@ export default function TournmentCreatorPage() {
 
   const [nome, setNome] = useState("");
   const [tipo, setTipo] = useState("single elimination");
-  const [modalidade, setModalidade] = useState("");
-
-  const modalidades = {
-    futebol: "Futebol",
-    vôlei: "Vôlei",
-    basquete: "Basquete",
-    natação: "Natação",
-  };
+  const [modalidade, setModalidade] = useState({
+    Futebol: false,
+    Vôlei: false,
+    Basquete: false,
+    Natação: false,
+  });
 
   const [editNome, setEditNome] = useState("");
   const [editTipo, setEditTipo] = useState("single elimination");
   const [selectedTournament, setSelectedTournament] = useState("");
   const [selectedTeamIds, setSelectedTeamIds] = useState([]);
-
-  const toastSettings = {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: false,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    transition: Bounce,
-  };
 
   function handleNomeChange(e) {
     setNome(e.target.value);
@@ -142,16 +146,7 @@ export default function TournmentCreatorPage() {
       toast.error("Algo deu errado ao consultar os campeonatos! Tente novamente!", toastSettings);
       console.error("Erro ao verificar autenticação:", error);
     }
-  };
-
-  useEffect(() => {
-    if (fetchedRef.current) return;
-
-    verUsuario();
-    verTimes();
-    verCampeonatos();
-    fetchedRef.current = true;
-  }, [BASE_URL]);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -327,10 +322,10 @@ export default function TournmentCreatorPage() {
               <option value="single elimination">Eliminação</option>
             </select>
 
-            {Object.keys(modalidades).map((mod) => (
+            {Object.keys(modalidade).map((mod) => (
               <label key={mod} className="flex flex-row gap-2 mt-2">
                 <input type="radio" name="modalidades" value={mod} onChange={handleModalidadeChange} />
-                {" " + mod.charAt(0).toUpperCase() + mod.slice(1)}
+                {mod}
               </label>
             ))}
           </div>

@@ -128,17 +128,6 @@ exports.Prisma.CursosScalarFieldEnum = {
   periodo: 'periodo'
 };
 
-exports.Prisma.Membros_timeScalarFieldEnum = {
-  time_id: 'time_id',
-  membro_id: 'membro_id',
-  funcao: 'funcao'
-};
-
-exports.Prisma.TimeScalarFieldEnum = {
-  id: 'id',
-  nome: 'nome'
-};
-
 exports.Prisma.UsuariosScalarFieldEnum = {
   id: 'id',
   rm: 'rm',
@@ -158,6 +147,18 @@ exports.Prisma.UsuariosScalarFieldEnum = {
   modalidades: 'modalidades'
 };
 
+exports.Prisma.TimesScalarFieldEnum = {
+  id: 'id',
+  nome: 'nome',
+  modalidades: 'modalidades'
+};
+
+exports.Prisma.Membros_timeScalarFieldEnum = {
+  time_id: 'time_id',
+  membro_id: 'membro_id',
+  funcao: 'funcao'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -173,22 +174,16 @@ exports.Prisma.QueryMode = {
   insensitive: 'insensitive'
 };
 
-exports.Prisma.NullsOrder = {
-  first: 'first',
-  last: 'last'
-};
-
 exports.Prisma.JsonNullValueFilter = {
   DbNull: Prisma.DbNull,
   JsonNull: Prisma.JsonNull,
   AnyNull: Prisma.AnyNull
 };
-exports.tipo_funcao = exports.$Enums.tipo_funcao = {
-  capitao: 'capitao',
-  jogador: 'jogador',
-  reserva: 'reserva'
-};
 
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
 exports.tipo_usuario = exports.$Enums.tipo_usuario = {
   aluno: 'aluno',
   professor: 'professor',
@@ -197,11 +192,24 @@ exports.tipo_usuario = exports.$Enums.tipo_usuario = {
   visitante: 'visitante'
 };
 
+exports.tipo_modalidade = exports.$Enums.tipo_modalidade = {
+  Futebol: 'Futebol',
+  V_lei: 'V_lei',
+  Basquete: 'Basquete',
+  Nata__o: 'Nata__o'
+};
+
+exports.tipo_funcao = exports.$Enums.tipo_funcao = {
+  capitao: 'capitao',
+  jogador: 'jogador',
+  reserva: 'reserva'
+};
+
 exports.Prisma.ModelName = {
   cursos: 'cursos',
-  membros_time: 'membros_time',
-  time: 'time',
-  usuarios: 'usuarios'
+  usuarios: 'usuarios',
+  times: 'times',
+  membros_time: 'membros_time'
 };
 
 /**

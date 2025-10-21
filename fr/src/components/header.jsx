@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useEffect, useRef, useState } from "react";
-import { DeslogarUsuario } from "../hooks/api";
+import { DeslogarUsuário, VerificarUsuário } from "../hooks/api";
 
 const Header = () => {
   const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [hover, setHover] = useState(false);
 
   const menuRef = useRef(null);
   const burgerRef = useRef(null);
@@ -30,19 +29,12 @@ const Header = () => {
   useEffect(() => {
     if (fetchedRef.current) return;
 
-    const verificarSessao = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/usuario/verificarSessao`, {
-          method: "POST",
-          credentials: "include",
-        });
+    const handleLoggedIn = async () => {
+        const result = await VerificarUsuário();
 
-        const result = await response.json();
-        console.log(result);
-        if (response.ok) {
+        if (result) {
           setIsLoggedIn(true);
-          if (result.usuario.tipo_usuario == "professor") {
-            console.log("admin");
+          if (result.tipo_usuario == "professor") {
             setIsAdmin(true);
           } else {
             setIsAdmin(false);
@@ -50,22 +42,19 @@ const Header = () => {
         } else {
           setIsLoggedIn(false);
         }
-      } catch (error) {
-        console.error("Erro ao verificar a sessão:", error);
-        setIsLoggedIn(false);
-      }
     };
 
-    verificarSessao();
+    handleLoggedIn();
     fetchedRef.current = true;
   }, [BASE_URL]);
 
   const handleLogout = async (e) => {
     e.preventDefault();
 
-    const result = await DeslogarUsuario();
+    const result = await DeslogarUsuário();
     if (result) {
       setIsLoggedIn(false);
+      setIsAdmin(false);
     }
   };
 
@@ -124,6 +113,14 @@ const Header = () => {
                 >
                   Perfil
                 </Link>
+                {isAdmin && (
+                  <Link
+                    to="/adm"
+                    className="h-[50%] flex justify-center items-center text-destaque font-semibold"
+                  >
+                    Admin
+                  </Link>
+                )}
                 <button
                   className="block bg-black text-white w-15 h-[50%] font-semibold text-sl rounded-lg shadow hover:cursor-pointer hover:outline-blue-700 hover:outline-1 hover:bg-neutra-preta transition"
                   onClick={handleLogout}
@@ -190,6 +187,14 @@ const Header = () => {
                   Perfil
                 </button>
               </Link>
+              {isAdmin && (
+                <Link
+                  to="/adm"
+                  className="h-[50%] flex justify-center items-center text-destaque font-semibold"
+                >
+                  Admin
+                </Link>
+              )}
               <button
                 className="block bg-black text-white w-24 h-12 font-semibold text-xl rounded-lg shadow hover:cursor-pointer hover:outline-blue-700 hover:outline-1 hover:bg-neutra-preta transition"
                 onClick={handleLogout}

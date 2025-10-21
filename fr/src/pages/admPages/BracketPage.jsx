@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/logo.png";
 import { Bounce, toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toastSettings } from "../../utils/toastSettings";
+import { BASE_URL } from "../../utils/enviromentSettings";
+import { HandleIsAdmin } from "../../utils/handleIsAdmin";
 
 function ClickableUserEntry({ name }) {
   return (
@@ -12,8 +15,19 @@ function ClickableUserEntry({ name }) {
 }
 
 export default function BracketEditorPage() {
-  const BASE_URL = import.meta.env.VITE_APP_BASE_URL;
+  const navigate = useNavigate();
+
   const fetchedRef = useRef(false);
+  useEffect(() => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+
+    (async () => {
+      const isAdmin = await HandleIsAdmin(navigate);
+      if (isAdmin) await verCampeonatos();
+    })();
+  }, []);
+
 
   const [tournaments, setTournaments] = useState([]);
   const [selectedTournament, setSelectedTournament] = useState(null);
@@ -28,19 +42,7 @@ export default function BracketEditorPage() {
   const [chaveamento, setChaveamento] = useState("");
   const [chaveamentoTs, setChaveamentoTs] = useState(Date.now());
 
-  const toastSettings = {
-    position: "bottom-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: false,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-    transition: Bounce,
-  };
 
-  // wrapper para seu endpoint /chaveamento
   async function callChaveamento(route, method = "GET", body = null) {
     const payload = { route, method };
     if (body !== null) payload.body = body;
@@ -207,13 +209,6 @@ export default function BracketEditorPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTournament]);
-
-  useEffect(() => {
-    if (fetchedRef.current) return;
-    verCampeonatos();
-    fetchedRef.current = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [BASE_URL]);
 
   // cache-busting builder
   function buildChaveamentoUrl(url) {

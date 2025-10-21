@@ -10,12 +10,12 @@ const path = require("path");
 
 const app = express();
 
-app.use(express.json());
-app.use(cookieParser());
 app.use(cors({
-  origin: process.env.FRONTEND_URL, 
+  origin: process.env.FRONTEND_URL,
   credentials: true
 }));
+app.use(express.json());
+app.use(cookieParser());
 app.set('trust proxy', 1);
 app.use(limiter);
 
@@ -27,5 +27,5 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(errorHandler);
 
 app.listen(process.env.PORT, () => {
-  console.log(`Servidor rodando na porta ${ process.env.PORT}`);
+  console.log(`Servidor rodando na porta ${process.env.PORT}`);
 });

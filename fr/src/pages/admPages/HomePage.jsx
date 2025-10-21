@@ -1,62 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png";
-import { toastSettings } from "../../utils/toastSettings";
-import { BASE_URL } from "../../utils/enviromentSettings";
+import { DeslogarUsuário } from "../../hooks/api";
+import { HandleIsAdmin } from "../../utils/handleIsAdmin";
 
 export default function ADMHomePage() {
-  const fetchedRef = useRef(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const navigate = useNavigate(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (fetchedRef.current) return;
-
-    const verificarSessao = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/usuario/verificarSessao`, {
-          method: "POST",
-          credentials: "include",
-        });
-
-        const result = await response.json();
-        console.log(result)
-        if (response.ok && result.usuario.tipo_usuario === "professor") {
-          setIsLoggedIn(true);
-          setIsAdmin(true);
-        } else {
-          toast.warn("Você não é um administrador ou não está logado", toastSettings);
-          setIsAdmin(false);
-          navigate("/");
-        }
-      } catch (error) {
-        console.error("Erro ao verificar a sessão:", error);
-        setIsLoggedIn(false);
-      }
-    };
-
-    verificarSessao();
     fetchedRef.current = true;
+
+    (async () => {
+      await HandleIsAdmin(navigate);
+    })();
   }, []);
+
+  const fetchedRef = useRef(false);
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    try {
-      const res = await fetch(`${BASE_URL}/usuario/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
 
-      if (res.ok) {
-        toast.success("Você deslogou com sucesso!", toastSettings);
-        navigate("/");
-      } else {
-        toast.error("Algo deu errado ao sair! Tente novamente!", toastSettings);
-      }
-    } catch (err) {
-      toast.error("Algo deu errado ao sair! Tente novamente!", toastSettings);
-      console.error("Erro no logout:", err);
+    const result = await DeslogarUsuário();
+    console.log(result)
+    if (result) {
+      setIsAdmin(false);
+      navigate("/");
     }
   };
 
