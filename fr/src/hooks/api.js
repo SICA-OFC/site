@@ -15,7 +15,9 @@ export const Cadastrar = async (data) => {
     return response.data;
   } catch (err) {
     toast.error(
-      err.response?.data?.erro?.[0]?.msg || err.response?.data?.erro || "Algo deu errado ao cadastrar! Tente novamente!",
+      err.response?.data?.erro?.[0]?.msg ||
+        err.response?.data?.erro ||
+        "Algo deu errado ao cadastrar! Tente novamente!",
       toastSettings
     );
 
@@ -57,7 +59,7 @@ export const VerificarCodigo = async (codigo_verificacao, accessToken) => {
 
 export const EditarUsuário = async (data, id) => {
   try {
-    const url = id ? `${BASE_URL}/usuario/${id}` : `${BASE_URL}/usuario/me`;
+    const url = id ? `${BASE_URL}/usuario/${id}` : `${BASE_URL}/usuario/`;
     const response = await api.patch(url, data);
     toast.success("Usuário atualizado com sucesso!", toastSettings);
     return response.data;

@@ -1,4 +1,3 @@
-import { BASE_URL } from "../utils/enviromentSettings.js";
 import { useState } from "react";
 import logo from "../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
@@ -53,7 +52,7 @@ export default function CadastroPage() {
       nome,
       curso_id: parseInt(curso),
       email,
-      data_nascimento: new Date(data_nascimento),
+      data_nascimento,
       senha,
       telefone,
       modalidades: JSON.stringify(modalidades),

@@ -70,7 +70,7 @@ export default function EditProfilePage() {
     const data = new FormData();
     data.append("nome", nome);
     data.append("email", email);
-    data.append("data_nascimento", new Date(data_nascimento).toISOString());
+    data.append("data_nascimento", data_nascimento);
     data.append("telefone", telefone);
     data.append("curso_id", parseInt(curso));
 

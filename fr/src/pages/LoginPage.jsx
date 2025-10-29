@@ -1,62 +1,14 @@
 import logo from "../assets/logo.png";
 import sideImage from "../assets/sideImage1.png";
-import { useEffect, useRef, useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Logar } from "../hooks/api";
-import { BASE_URL } from "../utils/enviromentSettings";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const [hover, setHover] = useState(false);
 
   const navigate = useNavigate();
-
-  const evtSourceRef = useRef(null);
-  const location = useLocation();
-
-  useEffect(() => {
-    const isLoginPage = location.pathname === "/login";
-    if (!isLoginPage || !email) return;
-
-    const setupSSE = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/usuario/ver`, {
-          method: "GET",
-          headers: {
-            email,
-          },
-        });
-        if (!response.ok) throw new Error("Erro ao buscar usuário");
-        const data = await response.json();
-        const userId = data.id;
-
-        const evtSource = new EventSource(`${BASE_URL}/usuario/events/${userId}`);
-        evtSourceRef.current = evtSource;
-
-        evtSource.addEventListener("account_unlock", () => {
-          toast.info("Usuário desbloqueado!", toastSettings);
-          evtSource.close();
-        });
-
-        evtSource.addEventListener("account_close_connection", () => {
-          evtSource.close();
-        });
-      } catch (err) {
-        console.error("Erro ao configurar SSE:", err);
-      }
-    };
-
-    setupSSE();
-
-    return () => {
-      if (evtSourceRef.current) {
-        evtSourceRef.current.close();
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location, email]);
-
   function handleChange(e) {
     const { name, value } = e.target;
     const setters = {

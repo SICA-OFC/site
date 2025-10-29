@@ -7,19 +7,17 @@ const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
 
-const { check, validationResult } = require('express-validator');
 const { loadTemplate, enviarEmail } = require("../services/enviarEmail.js");
 const { verificarAccessToken } = require("../services/verificarToken.js");
-const { sendEvent } = require("../services/sseService.js");
 const gerarCodigo = require("../services/gerarCodigo.js");
 const { gerarAccessToken, gerarRefreshToken, regerarAccessToken } = require("../services/gerarToken.js");
-const BASE_URL = process.env.BASE_URL;
+const { userSchema, loginSchema, editUserSchema, verifySchema } = require("../schemas/userSchema.js");
 
 module.exports = {
   CriarUsuario: async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ erro: errors.array() });
+    const { error } = userSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ erro: error.details[0].message });
     }
 
     const { rm, nome, curso_id, email, data_nascimento, senha, telefone, modalidades, codigo } = req.body;
@@ -30,7 +28,7 @@ module.exports = {
 
     let codigoCerto = false;
 
-    if (codigo && codigo != process.env.ADMIN_COD) {
+    if (codigo && codigo != process.env.mnjhuiy678) {
       return res.status(400).json({ erro: "Código Inválido" });
     }
 
@@ -38,6 +36,20 @@ module.exports = {
       codigoCerto = true;
     }
 
+    let imageUrl = null;
+    if (req.file) {
+      const randomName = `${Date.now()}-${Math.floor(Math.random() * 10000)}.webp`;
+      const uploadDir = path.join(process.cwd(), "uploads");
+      const uploadPath = path.join(uploadDir, randomName);
+
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+
+      await sharp(req.file.buffer).webp({ quality: 50 }).toFile(uploadPath);
+
+      imageUrl = `http://localhost:3000/uploads/${randomName}`;
+    }
 
     const novoUsuario = await prisma.usuarios.create({
       data: {
@@ -47,10 +59,11 @@ module.exports = {
         email,
         senha: senhaHash,
         telefone,
-        data_nascimento,
+        data_nascimento: new Date(data_nascimento),
         codigo_verificacao,
         codigo_gerado_em: new Date(),
         tipo_usuario: codigoCerto ? "professor" : "aluno",
+        foto_perfil: imageUrl ?? undefined,
         modalidades,
       },
     });
@@ -66,11 +79,11 @@ module.exports = {
   },
 
   LogarUsuario: async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ erro: errors.array() });
+    const { error } = loginSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ erro: error.details[0].message });
     }
-    
+
     const { email, senha } = req.body;
 
     let usuario = await prisma.usuarios.findUnique({
@@ -100,10 +113,9 @@ module.exports = {
       });
 
       if (tentativas_login % 5 != 0) {
-        return res.status(423).json({ erro: "Sua conta foi bloqueada" });
+        return res.status(423).json({ erro: "Sua conta foi bloqueada. Redefina a senha ou tente novamente amanhã" });
       } else {
         const codigo_verificacao = await gerarCodigo();
-        const action = "unlock";
         await prisma.usuarios.update({
           where: { email: email },
           data: {
@@ -111,18 +123,17 @@ module.exports = {
             codigo_gerado_em: new Date(),
           },
         });
-        const urlUnlock = `${BASE_URL}/usuario/approve/${usuario.id}/${action}?token=${novoCodigo}`;
-        const urlLock = `${BASE_URL}/usuario/approve/${usuario.id}/lock?token=0`;
-        const titulo = "alerta de segurança";
-        const texto = ``;
+        // const urlLock = `${BASE_URL}/usuario/approve/${usuario.id}/lock?token=0`;
+        // const titulo = "alerta de segurança";
+        // const texto = ``;
 
-        const html = loadTemplate("blockedAccount.html", {
-          nome: usuario.nome,
-          urlUnlock,
-          urlLock,
-        });
+        // const html = loadTemplate("blockedAccount.html", {
+        //   nome: usuario.nome,
+        //   urlUnlock,
+        //   urlLock,
+        // });
+        // enviarEmail(email, titulo, texto, html);
 
-        enviarEmail(email, titulo, texto, html);
         return res.status(423).json({ erro: "Sua conta foi bloqueada. Um e-mail com instruções foi enviado." });
       }
     }
@@ -144,37 +155,6 @@ module.exports = {
     });
   },
 
-  LiberarUsuario: async (req, res) => {
-    const { user_id, action } = req.params;
-    const { token } = req.query;
-
-    const usuario = await prisma.usuarios.findUnique({
-      where: { id: Number(user_id) },
-    });
-
-    if (!usuario) {
-      return res.status(404).send("Usuário não encontrado.");
-    }
-
-    if (usuario.codigo_verificacao !== Number(token) && action == "unlock") {
-      return res.status(400).send("Token inválido.");
-    }
-
-    if (action == "unlock") {
-      await prisma.usuarios.update({
-        where: { id: Number(user_id), codigo_verificacao: Number(token) },
-        data: { tentativas_login: 0 },
-      });
-    }
-
-    sendEvent(user_id, `account_${action}`, { user_id, status: action });
-
-    return res.status(200).send(`
-      <h2>Conta ${action === "unlock" ? "✅ Liberada" : "⛔ Mantida bloqueada"}!</h2>
-      <p>Você pode fechar esta aba.</p>
-      `);
-  },
-
   VerID: async (req, res) => {
     const email = req.headers.email;
 
@@ -194,6 +174,11 @@ module.exports = {
   },
 
   Verificar: async (req, res) => {
+    const { error } = verifySchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ erro: error.details[0].message });
+    }
+
     const data = req.user;
     if (!data) {
       return res.status(404).json({ erro: "Usuário não logado." });
@@ -274,9 +259,20 @@ module.exports = {
   },
 
   EditarUsuario: async (req, res) => {
+    const { error } = editUserSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ erro: error.details[0].message });
+    }
+
     const data = req.user;
     if (!data) {
       return res.status(404).json({ erro: "Usuário não logado." });
+    }
+
+    if (!parseInt(req.params.id) && data.tipo_usuario == "aluno") {
+      return res
+        .status(404)
+        .json({ erro: "Usuário não possui permissão de administrador para manipular outro usuário." });
     }
 
     const id = parseInt(req.params.id);
@@ -313,7 +309,7 @@ module.exports = {
       data: {
         nome: nome ?? undefined,
         email: email ?? undefined,
-        data_nascimento: data_nascimento ?? undefined,
+        data_nascimento: new Date(data_nascimento) ?? undefined,
         telefone: telefone ?? undefined,
         foto_perfil: imageUrl ?? undefined,
         cursos: { connect: { id: parseInt(curso_id) ?? undefined } },
@@ -375,6 +371,11 @@ module.exports = {
       return res.status(404).json({ erro: "Usuário não logado." });
     }
 
+    if (!parseInt(req.params.id) && data.tipo_usuario == "aluno") {
+      return res
+        .status(404)
+        .json({ erro: "Usuário não possui permissão de administrador para manipular outro usuário." });
+    }
     const id = parseInt(req.params.id);
     const usuario = await prisma.usuarios.delete({
       where: { id: id || data.id },
@@ -500,6 +501,10 @@ module.exports = {
   },
 
   Logout: async (req, res) => {
-    return res.clearCookie(process.env.REFRESH_TOKEN).clearCookie(process.env.ACCESS_TOKEN).status(201).json({ success: true });
+    return res
+      .clearCookie(process.env.REFRESH_TOKEN)
+      .clearCookie(process.env.ACCESS_TOKEN)
+      .status(201)
+      .json({ success: true });
   },
 };

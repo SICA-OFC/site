@@ -4,8 +4,6 @@ import { formatTelefone } from "../../utils/sanitization.js";
 import Logo from "../../assets/logo.png";
 import ProfileUploader from "../../components/ProfileUploader.jsx";
 import SelectCursos from "../../components/selectCursos.jsx";
-import { toast } from "react-toastify";
-import { toastSettings } from "../../utils/toastSettings.js";
 import { BASE_URL } from "../../utils/enviromentSettings.js";
 import { HandleIsAdmin } from "../../utils/handleIsAdmin.js";
 import { EditarUsuário, verUsuários } from "../../hooks/api.js";
@@ -132,7 +130,7 @@ export default function ManagementUsersPage() {
     data.append("rm", rm);
     data.append("nome", nome);
     data.append("email", email);
-    data.append("data_nascimento", new Date(data_nascimento).toISOString());
+    data.append("data_nascimento", data_nascimento);
     data.append("telefone", telefone);
     data.append("curso_id", parseInt(curso));
     data.append("modalidades", JSON.stringify(modalidades));

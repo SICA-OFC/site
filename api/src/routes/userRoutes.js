@@ -5,13 +5,12 @@ const authToken = require("../middlewares/authToken.js");
 const catchAsync = require("../middlewares/catchAsync.js");
 const { registerClient } = require("../services/sseService");
 const multer = require("multer");
-const { signInValidation, LoginValidation } = require("../services/validation.js");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Rotas públicas
-router.post("/", signInValidation, catchAsync(userController.CriarUsuario));
-router.post("/login", LoginValidation, catchAsync(userController.LogarUsuario));
+router.post("/", catchAsync(userController.CriarUsuario));
+router.post("/login", catchAsync(userController.LogarUsuario));
 
 router.get("/approve/:user_id/:action", catchAsync(userController.LiberarUsuario));
 router.get("/events/:user_id", (req, res) => {
@@ -29,7 +28,9 @@ router.get("/logout", catchAsync(userController.Logout));
 router.get("/", catchAsync(userController.VerUsuarios));
 router.get("/:id", catchAsync(userController.VerUsuario));
 
+router.patch("/", upload.single("photo"), catchAsync(userController.EditarUsuario));
 router.patch("/:id", upload.single("photo"), catchAsync(userController.EditarUsuario));
+
 router.delete("/", catchAsync(userController.DeletarUsuario));
 router.delete("/:id", catchAsync(userController.DeletarUsuario));
 

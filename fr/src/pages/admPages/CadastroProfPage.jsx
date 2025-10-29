@@ -36,7 +36,7 @@ export default function CadastroPage() {
       rm,
       nome,
       email,
-      data_nascimento: new Date(data_nascimento),
+      data_nascimento,
       senha,
       telefone,
       codigo,
