@@ -20,7 +20,7 @@ module.exports = {
       return res.status(400).json({ erro: error.details[0].message });
     }
 
-    const { rm, nome, curso_id, email, data_nascimento, senha, telefone, modalidades, codigo } = req.body;
+    const { rm, nome, curso_id, email, data_nascimento, senha, telefone, codigo } = req.body;
 
     const salt = await bcrypt.genSalt(12);
     const senhaHash = await bcrypt.hash(senha, salt);
@@ -28,7 +28,7 @@ module.exports = {
 
     let codigoCerto = false;
 
-    if (codigo && codigo != process.env.mnjhuiy678) {
+    if (codigo && codigo != process.env.ADMIN_COD) {
       return res.status(400).json({ erro: "Código Inválido" });
     }
 
@@ -64,7 +64,6 @@ module.exports = {
         codigo_gerado_em: new Date(),
         tipo_usuario: codigoCerto ? "professor" : "aluno",
         foto_perfil: imageUrl ?? undefined,
-        modalidades,
       },
     });
 
@@ -269,7 +268,7 @@ module.exports = {
       return res.status(404).json({ erro: "Usuário não logado." });
     }
 
-    if (!parseInt(req.params.id) && data.tipo_usuario == "aluno") {
+    if (parseInt(req.params.id) && data.tipo_usuario == "aluno") {
       return res
         .status(404)
         .json({ erro: "Usuário não possui permissão de administrador para manipular outro usuário." });
@@ -313,9 +312,24 @@ module.exports = {
         telefone: telefone ?? undefined,
         foto_perfil: imageUrl ?? undefined,
         cursos: { connect: { id: parseInt(curso_id) ?? undefined } },
-        modalidades: modalidades ?? undefined,
       },
     });
+
+    if (modalidades.length > 0) {
+      await prisma.usuario_modalidades.deleteMany({
+        where: { usuario_id: id || data.id },
+      });
+
+      const modalidadesRows = modalidades.map((mId) => ({
+        usuario_id: id || data.id,
+        modalidade_id: parseInt(mId),
+      }));
+
+      await prisma.usuario_modalidades.createMany({
+        data: modalidadesRows,
+        skipDuplicates: true,
+      });
+    }
 
     if (!id && data.email != email) {
       const accessToken = await gerarAccessToken(usuario);
@@ -371,7 +385,7 @@ module.exports = {
       return res.status(404).json({ erro: "Usuário não logado." });
     }
 
-    if (!parseInt(req.params.id) && data.tipo_usuario == "aluno") {
+    if (parseInt(req.params.id) && data.tipo_usuario == "aluno") {
       return res
         .status(404)
         .json({ erro: "Usuário não possui permissão de administrador para manipular outro usuário." });
@@ -450,11 +464,15 @@ module.exports = {
         email: true,
         telefone: true,
         foto_perfil: true,
-        modalidades: true,
         tipo_usuario: true,
         cursos: {
           select: {
             periodo: true,
+          },
+        },
+        usuario_modalidades: {
+          select: {
+            modalidade_id: true,
           },
         },
       },
@@ -489,7 +507,11 @@ module.exports = {
         curso_id: true,
         foto_perfil: true,
         cursos: true,
-        modalidades: true,
+        usuario_modalidades: {
+          select: {
+            modalidade_id: true,
+          },
+        },
       },
     });
 

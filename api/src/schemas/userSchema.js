@@ -22,8 +22,7 @@ const userSchema = Joi.object({
       "string.max": "O nome deve ter no máximo 100 caracteres.",
     }),
 
-  curso_id: Joi.number().integer().required().messages({
-    "any.required": "O curso é obrigatório.",
+  curso_id: Joi.number().integer().messages({
     "number.base": "O curso deve ser um ID de curso válido.",
   }),
 
@@ -69,11 +68,6 @@ const userSchema = Joi.object({
       "string.pattern.base": "O telefone deve estar no formato (yy) 9xxxx-xxxx ou (yy) xxxx-xxxx.",
     }),
 
-  modalidades: Joi.object().required().messages({
-    "any.required": "As modalidades são obrigatórias.",
-    "object.base": "As modalidades devem ser um objeto válido.",
-  }),
-
   codigo: Joi.string().valid("79e1e974d00b9620e59aedf0ce8a5f73ea5ef8e740987f58df20a9917e7dd233").messages({
     "any.only": "O código fornecido é inválido.",
     "string.base": "O código deve ser válido.",
@@ -93,7 +87,6 @@ const loginSchema = Joi.object({
     }),
 
   senha: Joi.string()
-    .pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+=\[\]{};:'",.<>?/\\|`~]).{6,}$/)
     .required()
     .messages({
       "any.required": "A senha é obrigatória.",
@@ -151,10 +144,10 @@ const editUserSchema = Joi.object({
       "string.pattern.base": "O telefone deve estar no formato (yy) 9xxxx-xxxx ou (yy) xxxx-xxxx.",
     }),
 
-  modalidades: Joi.object().required().messages({
-    "any.required": "As modalidades são obrigatórias.",
-    "object.base": "As modalidades devem ser um objeto válido.",
-  }),
+  modalidades: Joi.array()
+    .items(Joi.number().integer().positive())
+    .unique() 
+    .default([]),
 });
 
 const verifySchema = Joi.object({

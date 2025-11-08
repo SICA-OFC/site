@@ -16,12 +16,6 @@ export default function CadastroPage() {
   const [data_nascimento, setData] = useState("");
   const [senha, setSenha] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [modalidades, setModalidades] = useState({
-    Futebol: false,
-    Vôlei: false,
-    Basquete: false,
-    Natação: false,
-  });
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -36,14 +30,6 @@ export default function CadastroPage() {
     setters[name]?.(value);
   }
 
-  function handleModalidadeChange(e) {
-    const { name, checked } = e.target;
-    setModalidades((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,7 +41,6 @@ export default function CadastroPage() {
       data_nascimento,
       senha,
       telefone,
-      modalidades: JSON.stringify(modalidades),
     };
 
     const result = await Cadastrar(data);
@@ -171,16 +156,6 @@ export default function CadastroPage() {
                   name="telefone"
                   required
                 />
-
-                <span className="text-sm">Modalidades</span>
-                <div className="grid grid-cols-2 gap-2">
-                  {Object.keys(modalidades).map((mod) => (
-                    <label key={mod} className="text-sm flex items-center gap-1 cursor-pointer">
-                      <input type="checkbox" name={mod} checked={modalidades[mod]} onChange={handleModalidadeChange} />
-                      {mod}
-                    </label>
-                  ))}
-                </div>
               </div>
             </div>
             <div className="flex flex-col justify-center items-center gap-[5%] w-full">

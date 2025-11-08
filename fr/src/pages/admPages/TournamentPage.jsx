@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { toastSettings } from "../../utils/toastSettings";
 import { BASE_URL } from "../../utils/enviromentSettings";
 import { HandleIsAdmin } from "../../utils/handleIsAdmin";
-import { verTimes, verUsuários } from "../../hooks/api";
+import { verModalidades, verTimes, verUsuários } from "../../hooks/api";
 
 function ClickableUserEntry({ name, rm, course, modality }) {
   const parts = [name, rm, course, modality].filter(Boolean);
@@ -16,7 +16,7 @@ function ClickableUserEntry({ name, rm, course, modality }) {
   );
 }
 
-export default function TournmentCreatorPage() {
+export default function TournamentCreatorPage() {
   const navigate = useNavigate();
 
   const fetchedRef = useRef(false);
@@ -24,42 +24,22 @@ export default function TournmentCreatorPage() {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
 
-    (async () => {
-      const isAdmin = await HandleIsAdmin(navigate);
-      if (isAdmin) {
-        HandleUsers();
-        HandleTeams();
-        verCampeonatos();
-      }
-    })();
+    HandleLoading();
+    verCampeonatos();
   }, []);
 
-  const [tournaments, setTournaments] = useState([]);
-
-  const [users, setUsers] = useState([]);
   const [teams, setTeams] = useState([]);
-
-  const [chaveamento, setChaveamento] = useState("");
+  const [tournaments, setTournaments] = useState([]);
+  const [availableModalidades, setAvailableModalidades] = useState([]);
 
   const [nome, setNome] = useState("");
   const [tipo, setTipo] = useState("single elimination");
-  const [modalidade, setModalidade] = useState({
-    Futebol: false,
-    Vôlei: false,
-    Basquete: false,
-    Natação: false,
-  });
+  const [modalidade, setModalidade] = useState("");
 
-  const modalidades = {
-    Futebol: false,
-    Vôlei: false,
-    Basquete: false,
-    Natação: false,
-  }
-
+  const [selectedTournament, setSelectedTournament] = useState("");
   const [editNome, setEditNome] = useState("");
   const [editTipo, setEditTipo] = useState("single elimination");
-  const [selectedTournament, setSelectedTournament] = useState("");
+  const [chaveamento, setChaveamento] = useState("");
   const [selectedTeamIds, setSelectedTeamIds] = useState([]);
 
   function handleChange(e) {
@@ -67,9 +47,9 @@ export default function TournmentCreatorPage() {
     const setters = {
       nome: setNome,
       tipo: setTipo,
+      modalidade: setModalidade,
       editNome: setEditNome,
       editTipo: setEditTipo,
-      modalidade: setModalidade,
     };
     setters[name]?.(value);
   }
@@ -78,23 +58,21 @@ export default function TournmentCreatorPage() {
     setSelectedTeamIds((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]));
   }
 
-  const HandleUsers = async () => {
-    const result = await verUsuários();
+  const HandleLoading = async () => {
+    const isAdmin = await HandleIsAdmin(navigate);
+    if (!isAdmin) return;
 
-    if (result && result.usuarios && result.usuarios.length > 0) {
-      const usuarios = result.usuarios;
-      setUsers(usuarios);
-    } else {
-      setUsers([]);
-    }
-  };
-
-  const HandleTeams = async () => {
     const result = await verTimes();
+    const { modalidades } = await verModalidades();
 
-    if (result) {
-      const teams = result.times;
-      setTeams(teams);
+    if (modalidades) {
+      setAvailableModalidades(modalidades);
+    }
+
+    if ((result.total = 0)) {
+      setTeams(null);
+    } else {
+      setTeams(result.times);
     }
   };
 
@@ -123,7 +101,7 @@ export default function TournmentCreatorPage() {
       toast.error("Algo deu errado ao consultar os campeonatos! Tente novamente!", toastSettings);
       console.error("Erro ao verificar autenticação:", error);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -300,12 +278,23 @@ export default function TournmentCreatorPage() {
               <option value="single elimination">Eliminação</option>
             </select>
 
-            {Object.keys(modalidades).map((mod) => (
-              <label key={mod} className="flex flex-row gap-2 mt-2">
-                <input type="radio" name="modalidade" value={mod} onChange={handleChange} />
-                {mod}
-              </label>
-            ))}
+            <label className="text-sm text-center w-full" htmlFor="tipo">
+              Modalidade
+            </label>
+            <select
+              id="modalidade"
+              name="modalidade"
+              value={modalidade}
+              onChange={handleChange}
+              className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
+            >
+              <option value="">Selecione uma modalidade</option>
+              {availableModalidades.map((mod) => (
+                <option key={mod.id} value={mod.id}>
+                  {mod.nome}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Botões */}
@@ -347,7 +336,9 @@ export default function TournmentCreatorPage() {
                       setEditNome(t.tournament.name || "");
                       setChaveamento(t.tournament.participants_count !== 0 ? t.tournament.live_image_url : "");
                     }}
-                    className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between"
+                    className={`cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between ${
+                      selectedTournament?.id === t.tournament.id ? "bg-gray-100" : ""
+                    }`}
                   >
                     <div className="flex items-center gap-3">
                       <ClickableUserEntry name={t.tournament.name || ""} />
@@ -356,99 +347,110 @@ export default function TournmentCreatorPage() {
                 ))}
               </div>
 
-              {chaveamento && (
-                <img
-                  src={chaveamento}
-                  className="w-full max-h-[200px] object-cover object-center rounded mt-3"
-                  alt="Chaveamento"
-                />
-              )}
+              {/* Só mostra os campos de edição se tiver um torneio selecionado */}
+              {selectedTournament && (
+                <>
+                  {chaveamento && (
+                    <img
+                      src={chaveamento}
+                      className="w-full max-h-[200px] object-cover object-center rounded mt-3"
+                      alt="Chaveamento"
+                    />
+                  )}
 
-              <label className="text-sm text-center w-full mt-3" htmlFor="editNome">
-                Nome do Campeonato
-              </label>
-              <input
-                className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
-                value={editNome}
-                onChange={handleChange}
-                type="text"
-                id="editNome"
-                name="editNome"
-                required
-              />
+                  <label className="text-sm text-center w-full mt-3" htmlFor="editNome">
+                    Nome do Campeonato
+                  </label>
+                  <input
+                    className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
+                    value={editNome}
+                    onChange={handleChange}
+                    type="text"
+                    id="editNome"
+                    name="editNome"
+                    required
+                  />
 
-              <label className="text-sm text-center w-full mt-2" htmlFor="tipo">
-                Tipo de torneio
-              </label>
-              <select
-                className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
-                value={editTipo}
-                id="tipo"
-                name="editTipo"
-                onChange={handleChange}
-                required
-              >
-                <option value="single elimination">Eliminação</option>
-              </select>
+                  <label className="text-sm text-center w-full mt-2" htmlFor="tipo">
+                    Tipo de torneio
+                  </label>
+                  <select
+                    className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
+                    value={editTipo}
+                    id="tipo"
+                    name="editTipo"
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="single elimination">Eliminação</option>
+                  </select>
 
-              <label className="text-sm text-center w-full mt-2" htmlFor="modalidade">
-                Modalidade
-              </label>
-              <input
-                type="text"
-                className="bg-neutra-branca text-[#aaa] border border-[#ddd] rounded-lg p-3 w-full"
-                value={
-                  typeof selectedTournament?.description === "string"
-                    ? selectedTournament.description.charAt(0).toUpperCase() + selectedTournament.description.slice(1)
-                    : ""
-                }
-                id="modalidade"
-                disabled
-              />
+                  <label className="text-sm text-center w-full mt-2" htmlFor="modalidade">
+                    Modalidade
+                  </label>
+                  <input
+                    type="text"
+                    className="bg-neutra-branca text-[#aaa] border border-[#ddd] rounded-lg p-3 w-full"
+                    value={
+                      parseInt(selectedTournament?.description)
+                        ? availableModalidades[parseInt(selectedTournament.description)]?.nome || ""
+                        : ""
+                    }
+                    id="modalidade"
+                    disabled
+                  />
 
-              <label className="text-sm text-center w-full mt-2" htmlFor="tipo">
-                Times
-              </label>
-
-              <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
-                {teams.map((t) => (
-                  <div key={t.id} className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        name="checkbox"
-                        checked={selectedTeamIds.includes(t.id)}
-                        onChange={(ev) => {
-                          ev.stopPropagation();
-                          toggleTeamId(t.id);
-                        }}
-                        className="w-4 h-4 accent-neutra-preta"
-                      />
-                      <ClickableUserEntry name={t.nome} />
-                    </div>
+                  <label className="text-sm text-center w-full mt-2" htmlFor="tipo">
+                    Times
+                  </label>
+                  <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
+                    {teams && teams.length > 0 ? (
+                      teams.map((t) => (
+                        <div
+                          key={t.id}
+                          className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between"
+                        >
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="checkbox"
+                              name="checkbox"
+                              checked={selectedTeamIds.includes(t.id)}
+                              onChange={(ev) => {
+                                ev.stopPropagation();
+                                toggleTeamId(t.id);
+                              }}
+                              className="w-4 h-4 accent-neutra-preta"
+                            />
+                            <ClickableUserEntry name={t.nome} />
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-center text-sm text-gray-500 mt-2">Sem times</p>
+                    )}
                   </div>
-                ))}
-              </div>
 
-              <p className="text-xs mt-2">Selecionados: {selectedTeamIds.length}</p>
-            </div>
+                  <p className="text-xs mt-2">Selecionados: {selectedTeamIds.length}</p>
 
-            {/* Botões */}
-            <div className="flex justify-center gap-5 mt-8">
-              <button
-                type="submit"
-                className="bg-neutra-preta text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
-              >
-                Atualizar Campeonato
-              </button>
+                  {/* Botões de ação */}
+                  <div className="flex justify-center gap-5 mt-8">
+                    <button
+                      type="submit"
+                      className="bg-neutra-preta text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
+                    >
+                      Atualizar Campeonato
+                    </button>
 
-              <button
-                onClick={handleDelete}
-                type="button"
-                className="bg-red-600 text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-red-600 hover:border-red-600"
-              >
-                Deletar Campeonato
-              </button>
+                    <button
+                      onClick={handleDelete}
+                      type="button"
+                      className="bg-red-600 text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-red-600 hover:border-red-600"
+                    >
+                      Deletar Campeonato
+                    </button>
+                  </div>
+                </>
+              )}
             </div>
           </form>
         ) : (

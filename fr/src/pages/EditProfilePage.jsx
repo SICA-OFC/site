@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import Logo from "../assets/logo.png";
 import ProfileUploader from "../components/ProfileUploader.jsx";
 import SelectCursos from "../components/selectCursos.jsx";
-import { DeletarUsuário, EditarUsuário, verUsuário } from "../hooks/api.js";
+import { DeletarUsuário, EditarUsuário, verModalidades, verUsuário } from "../hooks/api.js";
 import { Link, useNavigate } from "react-router-dom";
 import { formatTelefone } from "../utils/sanitization.js";
 
@@ -17,45 +17,62 @@ export default function EditProfilePage() {
   const [email, setEmail] = useState("");
   const [data_nascimento, setDataNascimento] = useState("");
   const [telefone, setTelefone] = useState("");
+  const [selectedModalidades, setSelectedModalidades] = useState([]);
   const [file, setFile] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchedRef = useRef(false);
+
+  const [availableModalidades, setAvailableModalidades] = useState([]);
+  async function handleUser() {
+    const result = await verUsuário();
+    const { modalidades } = await verModalidades();
+
+    if (result && modalidades) {
+      const usuario = result.usuario;
+      changeForm(usuario);
+      setAvailableModalidades(modalidades);
+
+      const userModalidades = usuario.usuario_modalidades?.map((m) => m.modalidade_id) || [];
+      setSelectedModalidades(userModalidades);
+    } else {
+      navigate("/");
+    }
+  }
+
   useEffect(() => {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
 
-    const fetchUsuario = async () => {
-      const result = await verUsuário();
-      if (result) {
-        const usuario = result.usuario;
-        setNomeExib(usuario.nome);
-        setRm(usuario.rm);
-        setNome(usuario.nome);
-        setEmail(usuario.email);
-        setDataNascimento(new Date(usuario.data_nascimento).toISOString().split("T")[0]);
-        setTelefone(usuario.telefone);
-        setFile(usuario.foto_perfil || null);
-
-        const isUserAdmin = usuario.tipo_usuario === "professor";
-        setIsAdmin(isUserAdmin);
-        if (!isUserAdmin) {
-          setPeriodo(`${usuario.cursos.periodo}`);
-          setCurso(usuario.curso_id);
-        }
-
-      } else {
-        navigate("/");
-      }
-    };
-
-    fetchUsuario();
+    handleUser();
   }, []);
 
+  function changeForm(usuario) {
+    setNomeExib(usuario.nome);
+    setRm(usuario.rm);
+    setNome(usuario.nome);
+    setEmail(usuario.email);
+    setDataNascimento(new Date(usuario.data_nascimento).toISOString().split("T")[0]);
+    setTelefone(usuario.telefone);
+    setFile(usuario.foto_perfil || null);
+
+    const isUserAdmin = usuario.tipo_usuario === "professor";
+    setIsAdmin(isUserAdmin);
+    if (!isUserAdmin) {
+      setPeriodo(`${usuario.cursos.periodo}`);
+      setCurso(usuario.curso_id);
+    }
+  }
 
   function handleChange(e) {
-    const { name, value } = e.target;
+    const { name, value, checked } = e.target;
+    if (name === "modalidade") {
+      setSelectedModalidades((prev) =>
+        checked ? [...prev, parseInt(value)] : prev.filter((id) => id !== parseInt(value))
+      );
+    }
+
     const setters = {
       nome: setNome,
       email: setEmail,
@@ -74,12 +91,20 @@ export default function EditProfilePage() {
     data.append("telefone", telefone);
     data.append("curso_id", parseInt(curso));
 
-    if (file) {
+    const modalidades = Array.isArray(selectedModalidades)
+      ? selectedModalidades.map((id) => Number(id)).filter((id) => !isNaN(id))
+      : [];
+
+    modalidades.forEach((id) => {
+      data.append("modalidades[]", parseInt(id));
+    });
+
+    if (file && file instanceof File) {
       data.append("photo", file);
     }
 
     const result = await EditarUsuário(data);
-
+    console.log(data);
     if (result) {
       setNomeExib(result.nome);
     }
@@ -89,7 +114,7 @@ export default function EditProfilePage() {
     const result = await DeletarUsuário();
     setShowDeleteModal(false);
     if (result) {
-      navigate('/');
+      navigate("/");
     }
   };
 
@@ -211,7 +236,6 @@ export default function EditProfilePage() {
                     </section>
                   </div>
 
-
                   <div className="flex flex-col gap-2 w-[90%] md:w-2/5">
                     {!isAdmin && (
                       <>
@@ -233,21 +257,22 @@ export default function EditProfilePage() {
 
                         {/* Modalidades */}
                         <section className="relative">
-                          <div className="flex flex-col mb-2">
-                            <label htmlFor="modalidades" className="mb-1 text-neutra-preta">
-                              Modalidades
-                            </label>
-                            <select
-                              id="modalidades"
-                              name="modalidades"
-                              required
-                              className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
-                            >
-                              <option value="futebol">Futebol</option>
-                              <option value="volei">Vôlei</option>
-                              <option value="basquete">Basquete</option>
-                              <option value="natacao">Natação</option>
-                            </select>
+                          <h4 className="text-neutra-preta mb-2 font-bold">Modalidades</h4>
+                          <div className="grid grid-cols-2 gap-2">
+                            {availableModalidades &&
+                              availableModalidades.map((mod) => (
+                                <label key={mod.id} className="flex items-center gap-2 text-neutra-preta">
+                                  <input
+                                    type="checkbox"
+                                    name="modalidade"
+                                    value={mod.id}
+                                    checked={selectedModalidades.includes(mod.id)}
+                                    onChange={handleChange}
+                                    className="w-4 h-4"
+                                  />
+                                  {mod.nome}
+                                </label>
+                              ))}
                           </div>
                         </section>
                       </>

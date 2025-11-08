@@ -143,14 +143,13 @@ exports.Prisma.UsuariosScalarFieldEnum = {
   codigo_verificacao: 'codigo_verificacao',
   codigo_gerado_em: 'codigo_gerado_em',
   tentativas_login: 'tentativas_login',
-  tipo_usuario: 'tipo_usuario',
-  modalidades: 'modalidades'
+  tipo_usuario: 'tipo_usuario'
 };
 
 exports.Prisma.TimesScalarFieldEnum = {
   id: 'id',
   nome: 'nome',
-  modalidades: 'modalidades'
+  modalidade_id: 'modalidade_id'
 };
 
 exports.Prisma.Membros_timeScalarFieldEnum = {
@@ -159,25 +158,24 @@ exports.Prisma.Membros_timeScalarFieldEnum = {
   funcao: 'funcao'
 };
 
+exports.Prisma.ModalidadesScalarFieldEnum = {
+  id: 'id',
+  nome: 'nome'
+};
+
+exports.Prisma.Usuario_modalidadesScalarFieldEnum = {
+  usuario_id: 'usuario_id',
+  modalidade_id: 'modalidade_id'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
 };
 
-exports.Prisma.NullableJsonNullValueInput = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull
-};
-
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
-};
-
-exports.Prisma.JsonNullValueFilter = {
-  DbNull: Prisma.DbNull,
-  JsonNull: Prisma.JsonNull,
-  AnyNull: Prisma.AnyNull
 };
 
 exports.Prisma.NullsOrder = {
@@ -192,13 +190,6 @@ exports.tipo_usuario = exports.$Enums.tipo_usuario = {
   visitante: 'visitante'
 };
 
-exports.tipo_modalidade = exports.$Enums.tipo_modalidade = {
-  Futebol: 'Futebol',
-  V_lei: 'V_lei',
-  Basquete: 'Basquete',
-  Nata__o: 'Nata__o'
-};
-
 exports.tipo_funcao = exports.$Enums.tipo_funcao = {
   capitao: 'capitao',
   jogador: 'jogador',
@@ -209,7 +200,9 @@ exports.Prisma.ModelName = {
   cursos: 'cursos',
   usuarios: 'usuarios',
   times: 'times',
-  membros_time: 'membros_time'
+  membros_time: 'membros_time',
+  modalidades: 'modalidades',
+  usuario_modalidades: 'usuario_modalidades'
 };
 
 /**

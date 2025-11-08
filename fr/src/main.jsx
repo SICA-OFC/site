@@ -12,10 +12,10 @@ import EmailConfirmPage from "./pages/EmailConfirmPage.jsx";
 import BracketPage from "./pages/BracketPage.jsx";
 
 import AdmHomePage from "./pages/admPages/HomePage.jsx";
-import ManagmentUsersPage from "./pages/admPages/UsersPage.jsx";
+import ManagementUsersPage from "./pages/admPages/UsersPage.jsx";
 import BracketEditor from "./pages/admPages/BracketPage.jsx";
-import TeamManagement from "./pages/admPages/TeamPage.jsx";
-import TournmentCreator from "./pages/admPages/TournamentPage.jsx";
+import TeamCreatorPage from "./pages/admPages/TeamPage.jsx";
+import TournamentCreator from "./pages/admPages/TournamentPage.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -48,14 +48,13 @@ const router = createBrowserRouter([
     path: "/editar-perfil",
     element: <EditProfilePage />,
   },
-
   {
     path: "/adm",
     element: <AdmHomePage />,
   },
   {
     path: "/adm/modalidade/gerenciar-usuarios",
-    element: <ManagmentUsersPage />,
+    element: <ManagementUsersPage />,
   },
   {
     path: "/adm/modalidade/gerenciar-chaves",
@@ -63,11 +62,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/adm/modalidade/gerenciar-times",
-    element: <TeamManagement />,
+    element: <TeamCreatorPage />,
   },
   {
     path: "/adm/modalidade/criar-torneio",
-    element: <TournmentCreator />,
+    element: <TournamentCreator />,
   },
 ]);
 

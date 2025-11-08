@@ -33,6 +33,16 @@ export type times = $Result.DefaultSelection<Prisma.$timesPayload>
  * 
  */
 export type membros_time = $Result.DefaultSelection<Prisma.$membros_timePayload>
+/**
+ * Model modalidades
+ * 
+ */
+export type modalidades = $Result.DefaultSelection<Prisma.$modalidadesPayload>
+/**
+ * Model usuario_modalidades
+ * 
+ */
+export type usuario_modalidades = $Result.DefaultSelection<Prisma.$usuario_modalidadesPayload>
 
 /**
  * Enums
@@ -57,16 +67,6 @@ export const tipo_usuario: {
 
 export type tipo_usuario = (typeof tipo_usuario)[keyof typeof tipo_usuario]
 
-
-export const tipo_modalidade: {
-  Futebol: 'Futebol',
-  V_lei: 'V_lei',
-  Basquete: 'Basquete',
-  Nata__o: 'Nata__o'
-};
-
-export type tipo_modalidade = (typeof tipo_modalidade)[keyof typeof tipo_modalidade]
-
 }
 
 export type tipo_funcao = $Enums.tipo_funcao
@@ -76,10 +76,6 @@ export const tipo_funcao: typeof $Enums.tipo_funcao
 export type tipo_usuario = $Enums.tipo_usuario
 
 export const tipo_usuario: typeof $Enums.tipo_usuario
-
-export type tipo_modalidade = $Enums.tipo_modalidade
-
-export const tipo_modalidade: typeof $Enums.tipo_modalidade
 
 /**
  * ##  Prisma Client ʲˢ
@@ -238,6 +234,26 @@ export class PrismaClient<
     * ```
     */
   get membros_time(): Prisma.membros_timeDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.modalidades`: Exposes CRUD operations for the **modalidades** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Modalidades
+    * const modalidades = await prisma.modalidades.findMany()
+    * ```
+    */
+  get modalidades(): Prisma.modalidadesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.usuario_modalidades`: Exposes CRUD operations for the **usuario_modalidades** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Usuario_modalidades
+    * const usuario_modalidades = await prisma.usuario_modalidades.findMany()
+    * ```
+    */
+  get usuario_modalidades(): Prisma.usuario_modalidadesDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -681,7 +697,9 @@ export namespace Prisma {
     cursos: 'cursos',
     usuarios: 'usuarios',
     times: 'times',
-    membros_time: 'membros_time'
+    membros_time: 'membros_time',
+    modalidades: 'modalidades',
+    usuario_modalidades: 'usuario_modalidades'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -700,7 +718,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cursos" | "usuarios" | "times" | "membros_time"
+      modelProps: "cursos" | "usuarios" | "times" | "membros_time" | "modalidades" | "usuario_modalidades"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1000,6 +1018,154 @@ export namespace Prisma {
           }
         }
       }
+      modalidades: {
+        payload: Prisma.$modalidadesPayload<ExtArgs>
+        fields: Prisma.modalidadesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.modalidadesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.modalidadesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload>
+          }
+          findFirst: {
+            args: Prisma.modalidadesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.modalidadesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload>
+          }
+          findMany: {
+            args: Prisma.modalidadesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload>[]
+          }
+          create: {
+            args: Prisma.modalidadesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload>
+          }
+          createMany: {
+            args: Prisma.modalidadesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.modalidadesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload>[]
+          }
+          delete: {
+            args: Prisma.modalidadesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload>
+          }
+          update: {
+            args: Prisma.modalidadesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload>
+          }
+          deleteMany: {
+            args: Prisma.modalidadesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.modalidadesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.modalidadesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload>[]
+          }
+          upsert: {
+            args: Prisma.modalidadesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$modalidadesPayload>
+          }
+          aggregate: {
+            args: Prisma.ModalidadesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateModalidades>
+          }
+          groupBy: {
+            args: Prisma.modalidadesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ModalidadesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.modalidadesCountArgs<ExtArgs>
+            result: $Utils.Optional<ModalidadesCountAggregateOutputType> | number
+          }
+        }
+      }
+      usuario_modalidades: {
+        payload: Prisma.$usuario_modalidadesPayload<ExtArgs>
+        fields: Prisma.usuario_modalidadesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.usuario_modalidadesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.usuario_modalidadesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload>
+          }
+          findFirst: {
+            args: Prisma.usuario_modalidadesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.usuario_modalidadesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload>
+          }
+          findMany: {
+            args: Prisma.usuario_modalidadesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload>[]
+          }
+          create: {
+            args: Prisma.usuario_modalidadesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload>
+          }
+          createMany: {
+            args: Prisma.usuario_modalidadesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.usuario_modalidadesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload>[]
+          }
+          delete: {
+            args: Prisma.usuario_modalidadesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload>
+          }
+          update: {
+            args: Prisma.usuario_modalidadesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload>
+          }
+          deleteMany: {
+            args: Prisma.usuario_modalidadesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.usuario_modalidadesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.usuario_modalidadesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload>[]
+          }
+          upsert: {
+            args: Prisma.usuario_modalidadesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$usuario_modalidadesPayload>
+          }
+          aggregate: {
+            args: Prisma.Usuario_modalidadesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUsuario_modalidades>
+          }
+          groupBy: {
+            args: Prisma.usuario_modalidadesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Usuario_modalidadesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.usuario_modalidadesCountArgs<ExtArgs>
+            result: $Utils.Optional<Usuario_modalidadesCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1096,6 +1262,8 @@ export namespace Prisma {
     usuarios?: usuariosOmit
     times?: timesOmit
     membros_time?: membros_timeOmit
+    modalidades?: modalidadesOmit
+    usuario_modalidades?: usuario_modalidadesOmit
   }
 
   /* Types for Logging */
@@ -1208,10 +1376,12 @@ export namespace Prisma {
 
   export type UsuariosCountOutputType = {
     membros_time: number
+    usuario_modalidades: number
   }
 
   export type UsuariosCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     membros_time?: boolean | UsuariosCountOutputTypeCountMembros_timeArgs
+    usuario_modalidades?: boolean | UsuariosCountOutputTypeCountUsuario_modalidadesArgs
   }
 
   // Custom InputTypes
@@ -1230,6 +1400,13 @@ export namespace Prisma {
    */
   export type UsuariosCountOutputTypeCountMembros_timeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: membros_timeWhereInput
+  }
+
+  /**
+   * UsuariosCountOutputType without action
+   */
+  export type UsuariosCountOutputTypeCountUsuario_modalidadesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: usuario_modalidadesWhereInput
   }
 
 
@@ -1261,6 +1438,46 @@ export namespace Prisma {
    */
   export type TimesCountOutputTypeCountMembros_timeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: membros_timeWhereInput
+  }
+
+
+  /**
+   * Count Type ModalidadesCountOutputType
+   */
+
+  export type ModalidadesCountOutputType = {
+    times: number
+    usuario_modalidades: number
+  }
+
+  export type ModalidadesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    times?: boolean | ModalidadesCountOutputTypeCountTimesArgs
+    usuario_modalidades?: boolean | ModalidadesCountOutputTypeCountUsuario_modalidadesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ModalidadesCountOutputType without action
+   */
+  export type ModalidadesCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ModalidadesCountOutputType
+     */
+    select?: ModalidadesCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ModalidadesCountOutputType without action
+   */
+  export type ModalidadesCountOutputTypeCountTimesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: timesWhereInput
+  }
+
+  /**
+   * ModalidadesCountOutputType without action
+   */
+  export type ModalidadesCountOutputTypeCountUsuario_modalidadesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: usuario_modalidadesWhereInput
   }
 
 
@@ -2458,7 +2675,6 @@ export namespace Prisma {
     codigo_gerado_em: number
     tentativas_login: number
     tipo_usuario: number
-    modalidades: number
     _all: number
   }
 
@@ -2529,7 +2745,6 @@ export namespace Prisma {
     codigo_gerado_em?: true
     tentativas_login?: true
     tipo_usuario?: true
-    modalidades?: true
     _all?: true
   }
 
@@ -2635,7 +2850,6 @@ export namespace Prisma {
     codigo_gerado_em: Date | null
     tentativas_login: number
     tipo_usuario: $Enums.tipo_usuario
-    modalidades: JsonValue | null
     _count: UsuariosCountAggregateOutputType | null
     _avg: UsuariosAvgAggregateOutputType | null
     _sum: UsuariosSumAggregateOutputType | null
@@ -2673,8 +2887,8 @@ export namespace Prisma {
     codigo_gerado_em?: boolean
     tentativas_login?: boolean
     tipo_usuario?: boolean
-    modalidades?: boolean
     membros_time?: boolean | usuarios$membros_timeArgs<ExtArgs>
+    usuario_modalidades?: boolean | usuarios$usuario_modalidadesArgs<ExtArgs>
     cursos?: boolean | usuarios$cursosArgs<ExtArgs>
     _count?: boolean | UsuariosCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["usuarios"]>
@@ -2695,7 +2909,6 @@ export namespace Prisma {
     codigo_gerado_em?: boolean
     tentativas_login?: boolean
     tipo_usuario?: boolean
-    modalidades?: boolean
     cursos?: boolean | usuarios$cursosArgs<ExtArgs>
   }, ExtArgs["result"]["usuarios"]>
 
@@ -2715,7 +2928,6 @@ export namespace Prisma {
     codigo_gerado_em?: boolean
     tentativas_login?: boolean
     tipo_usuario?: boolean
-    modalidades?: boolean
     cursos?: boolean | usuarios$cursosArgs<ExtArgs>
   }, ExtArgs["result"]["usuarios"]>
 
@@ -2735,12 +2947,12 @@ export namespace Prisma {
     codigo_gerado_em?: boolean
     tentativas_login?: boolean
     tipo_usuario?: boolean
-    modalidades?: boolean
   }
 
-  export type usuariosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rm" | "nome" | "data_nascimento" | "curso_id" | "email" | "senha" | "telefone" | "foto_perfil" | "criado_em" | "atualizado_em" | "codigo_verificacao" | "codigo_gerado_em" | "tentativas_login" | "tipo_usuario" | "modalidades", ExtArgs["result"]["usuarios"]>
+  export type usuariosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "rm" | "nome" | "data_nascimento" | "curso_id" | "email" | "senha" | "telefone" | "foto_perfil" | "criado_em" | "atualizado_em" | "codigo_verificacao" | "codigo_gerado_em" | "tentativas_login" | "tipo_usuario", ExtArgs["result"]["usuarios"]>
   export type usuariosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     membros_time?: boolean | usuarios$membros_timeArgs<ExtArgs>
+    usuario_modalidades?: boolean | usuarios$usuario_modalidadesArgs<ExtArgs>
     cursos?: boolean | usuarios$cursosArgs<ExtArgs>
     _count?: boolean | UsuariosCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -2755,6 +2967,7 @@ export namespace Prisma {
     name: "usuarios"
     objects: {
       membros_time: Prisma.$membros_timePayload<ExtArgs>[]
+      usuario_modalidades: Prisma.$usuario_modalidadesPayload<ExtArgs>[]
       cursos: Prisma.$cursosPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -2773,7 +2986,6 @@ export namespace Prisma {
       codigo_gerado_em: Date | null
       tentativas_login: number
       tipo_usuario: $Enums.tipo_usuario
-      modalidades: Prisma.JsonValue | null
     }, ExtArgs["result"]["usuarios"]>
     composites: {}
   }
@@ -3169,6 +3381,7 @@ export namespace Prisma {
   export interface Prisma__usuariosClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     membros_time<T extends usuarios$membros_timeArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$membros_timeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$membros_timePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    usuario_modalidades<T extends usuarios$usuario_modalidadesArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$usuario_modalidadesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     cursos<T extends usuarios$cursosArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$cursosArgs<ExtArgs>>): Prisma__cursosClient<$Result.GetResult<Prisma.$cursosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3214,7 +3427,6 @@ export namespace Prisma {
     readonly codigo_gerado_em: FieldRef<"usuarios", 'DateTime'>
     readonly tentativas_login: FieldRef<"usuarios", 'Int'>
     readonly tipo_usuario: FieldRef<"usuarios", 'tipo_usuario'>
-    readonly modalidades: FieldRef<"usuarios", 'Json'>
   }
     
 
@@ -3635,6 +3847,30 @@ export namespace Prisma {
   }
 
   /**
+   * usuarios.usuario_modalidades
+   */
+  export type usuarios$usuario_modalidadesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    where?: usuario_modalidadesWhereInput
+    orderBy?: usuario_modalidadesOrderByWithRelationInput | usuario_modalidadesOrderByWithRelationInput[]
+    cursor?: usuario_modalidadesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Usuario_modalidadesScalarFieldEnum | Usuario_modalidadesScalarFieldEnum[]
+  }
+
+  /**
    * usuarios.cursos
    */
   export type usuarios$cursosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3686,56 +3922,60 @@ export namespace Prisma {
 
   export type TimesAvgAggregateOutputType = {
     id: number | null
+    modalidade_id: number | null
   }
 
   export type TimesSumAggregateOutputType = {
     id: number | null
+    modalidade_id: number | null
   }
 
   export type TimesMinAggregateOutputType = {
     id: number | null
     nome: string | null
-    modalidades: $Enums.tipo_modalidade | null
+    modalidade_id: number | null
   }
 
   export type TimesMaxAggregateOutputType = {
     id: number | null
     nome: string | null
-    modalidades: $Enums.tipo_modalidade | null
+    modalidade_id: number | null
   }
 
   export type TimesCountAggregateOutputType = {
     id: number
     nome: number
-    modalidades: number
+    modalidade_id: number
     _all: number
   }
 
 
   export type TimesAvgAggregateInputType = {
     id?: true
+    modalidade_id?: true
   }
 
   export type TimesSumAggregateInputType = {
     id?: true
+    modalidade_id?: true
   }
 
   export type TimesMinAggregateInputType = {
     id?: true
     nome?: true
-    modalidades?: true
+    modalidade_id?: true
   }
 
   export type TimesMaxAggregateInputType = {
     id?: true
     nome?: true
-    modalidades?: true
+    modalidade_id?: true
   }
 
   export type TimesCountAggregateInputType = {
     id?: true
     nome?: true
-    modalidades?: true
+    modalidade_id?: true
     _all?: true
   }
 
@@ -3828,7 +4068,7 @@ export namespace Prisma {
   export type TimesGroupByOutputType = {
     id: number
     nome: string
-    modalidades: $Enums.tipo_modalidade | null
+    modalidade_id: number | null
     _count: TimesCountAggregateOutputType | null
     _avg: TimesAvgAggregateOutputType | null
     _sum: TimesSumAggregateOutputType | null
@@ -3853,46 +4093,55 @@ export namespace Prisma {
   export type timesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nome?: boolean
-    modalidades?: boolean
+    modalidade_id?: boolean
     membros_time?: boolean | times$membros_timeArgs<ExtArgs>
+    modalidades?: boolean | times$modalidadesArgs<ExtArgs>
     _count?: boolean | TimesCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["times"]>
 
   export type timesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nome?: boolean
-    modalidades?: boolean
+    modalidade_id?: boolean
+    modalidades?: boolean | times$modalidadesArgs<ExtArgs>
   }, ExtArgs["result"]["times"]>
 
   export type timesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     nome?: boolean
-    modalidades?: boolean
+    modalidade_id?: boolean
+    modalidades?: boolean | times$modalidadesArgs<ExtArgs>
   }, ExtArgs["result"]["times"]>
 
   export type timesSelectScalar = {
     id?: boolean
     nome?: boolean
-    modalidades?: boolean
+    modalidade_id?: boolean
   }
 
-  export type timesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "modalidades", ExtArgs["result"]["times"]>
+  export type timesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "modalidade_id", ExtArgs["result"]["times"]>
   export type timesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     membros_time?: boolean | times$membros_timeArgs<ExtArgs>
+    modalidades?: boolean | times$modalidadesArgs<ExtArgs>
     _count?: boolean | TimesCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type timesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type timesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type timesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modalidades?: boolean | times$modalidadesArgs<ExtArgs>
+  }
+  export type timesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modalidades?: boolean | times$modalidadesArgs<ExtArgs>
+  }
 
   export type $timesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "times"
     objects: {
       membros_time: Prisma.$membros_timePayload<ExtArgs>[]
+      modalidades: Prisma.$modalidadesPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       nome: string
-      modalidades: $Enums.tipo_modalidade | null
+      modalidade_id: number | null
     }, ExtArgs["result"]["times"]>
     composites: {}
   }
@@ -4288,6 +4537,7 @@ export namespace Prisma {
   export interface Prisma__timesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     membros_time<T extends times$membros_timeArgs<ExtArgs> = {}>(args?: Subset<T, times$membros_timeArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$membros_timePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    modalidades<T extends times$modalidadesArgs<ExtArgs> = {}>(args?: Subset<T, times$modalidadesArgs<ExtArgs>>): Prisma__modalidadesClient<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4319,7 +4569,7 @@ export namespace Prisma {
   interface timesFieldRefs {
     readonly id: FieldRef<"times", 'Int'>
     readonly nome: FieldRef<"times", 'String'>
-    readonly modalidades: FieldRef<"times", 'tipo_modalidade'>
+    readonly modalidade_id: FieldRef<"times", 'Int'>
   }
     
 
@@ -4569,6 +4819,10 @@ export namespace Prisma {
      */
     data: timesCreateManyInput | timesCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: timesIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4639,6 +4893,10 @@ export namespace Prisma {
      * Limit how many times to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: timesIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4729,6 +4987,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Membros_timeScalarFieldEnum | Membros_timeScalarFieldEnum[]
+  }
+
+  /**
+   * times.modalidades
+   */
+  export type times$modalidadesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+    where?: modalidadesWhereInput
   }
 
   /**
@@ -4936,24 +5213,24 @@ export namespace Prisma {
     time_id?: boolean
     membro_id?: boolean
     funcao?: boolean
-    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
     times?: boolean | timesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["membros_time"]>
 
   export type membros_timeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     time_id?: boolean
     membro_id?: boolean
     funcao?: boolean
-    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
     times?: boolean | timesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["membros_time"]>
 
   export type membros_timeSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     time_id?: boolean
     membro_id?: boolean
     funcao?: boolean
-    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
     times?: boolean | timesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["membros_time"]>
 
   export type membros_timeSelectScalar = {
@@ -4964,23 +5241,23 @@ export namespace Prisma {
 
   export type membros_timeOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"time_id" | "membro_id" | "funcao", ExtArgs["result"]["membros_time"]>
   export type membros_timeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
     times?: boolean | timesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
   }
   export type membros_timeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
     times?: boolean | timesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
   }
   export type membros_timeIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
     times?: boolean | timesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
   }
 
   export type $membros_timePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "membros_time"
     objects: {
-      usuarios: Prisma.$usuariosPayload<ExtArgs>
       times: Prisma.$timesPayload<ExtArgs>
+      usuarios: Prisma.$usuariosPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       time_id: number
@@ -5380,8 +5657,8 @@ export namespace Prisma {
    */
   export interface Prisma__membros_timeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    usuarios<T extends usuariosDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usuariosDefaultArgs<ExtArgs>>): Prisma__usuariosClient<$Result.GetResult<Prisma.$usuariosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     times<T extends timesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, timesDefaultArgs<ExtArgs>>): Prisma__timesClient<$Result.GetResult<Prisma.$timesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    usuarios<T extends usuariosDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usuariosDefaultArgs<ExtArgs>>): Prisma__usuariosClient<$Result.GetResult<Prisma.$usuariosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5829,6 +6106,2164 @@ export namespace Prisma {
 
 
   /**
+   * Model modalidades
+   */
+
+  export type AggregateModalidades = {
+    _count: ModalidadesCountAggregateOutputType | null
+    _avg: ModalidadesAvgAggregateOutputType | null
+    _sum: ModalidadesSumAggregateOutputType | null
+    _min: ModalidadesMinAggregateOutputType | null
+    _max: ModalidadesMaxAggregateOutputType | null
+  }
+
+  export type ModalidadesAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ModalidadesSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ModalidadesMinAggregateOutputType = {
+    id: number | null
+    nome: string | null
+  }
+
+  export type ModalidadesMaxAggregateOutputType = {
+    id: number | null
+    nome: string | null
+  }
+
+  export type ModalidadesCountAggregateOutputType = {
+    id: number
+    nome: number
+    _all: number
+  }
+
+
+  export type ModalidadesAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type ModalidadesSumAggregateInputType = {
+    id?: true
+  }
+
+  export type ModalidadesMinAggregateInputType = {
+    id?: true
+    nome?: true
+  }
+
+  export type ModalidadesMaxAggregateInputType = {
+    id?: true
+    nome?: true
+  }
+
+  export type ModalidadesCountAggregateInputType = {
+    id?: true
+    nome?: true
+    _all?: true
+  }
+
+  export type ModalidadesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which modalidades to aggregate.
+     */
+    where?: modalidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of modalidades to fetch.
+     */
+    orderBy?: modalidadesOrderByWithRelationInput | modalidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: modalidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` modalidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` modalidades.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned modalidades
+    **/
+    _count?: true | ModalidadesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ModalidadesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ModalidadesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ModalidadesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ModalidadesMaxAggregateInputType
+  }
+
+  export type GetModalidadesAggregateType<T extends ModalidadesAggregateArgs> = {
+        [P in keyof T & keyof AggregateModalidades]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateModalidades[P]>
+      : GetScalarType<T[P], AggregateModalidades[P]>
+  }
+
+
+
+
+  export type modalidadesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: modalidadesWhereInput
+    orderBy?: modalidadesOrderByWithAggregationInput | modalidadesOrderByWithAggregationInput[]
+    by: ModalidadesScalarFieldEnum[] | ModalidadesScalarFieldEnum
+    having?: modalidadesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ModalidadesCountAggregateInputType | true
+    _avg?: ModalidadesAvgAggregateInputType
+    _sum?: ModalidadesSumAggregateInputType
+    _min?: ModalidadesMinAggregateInputType
+    _max?: ModalidadesMaxAggregateInputType
+  }
+
+  export type ModalidadesGroupByOutputType = {
+    id: number
+    nome: string
+    _count: ModalidadesCountAggregateOutputType | null
+    _avg: ModalidadesAvgAggregateOutputType | null
+    _sum: ModalidadesSumAggregateOutputType | null
+    _min: ModalidadesMinAggregateOutputType | null
+    _max: ModalidadesMaxAggregateOutputType | null
+  }
+
+  type GetModalidadesGroupByPayload<T extends modalidadesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ModalidadesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ModalidadesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ModalidadesGroupByOutputType[P]>
+            : GetScalarType<T[P], ModalidadesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type modalidadesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nome?: boolean
+    times?: boolean | modalidades$timesArgs<ExtArgs>
+    usuario_modalidades?: boolean | modalidades$usuario_modalidadesArgs<ExtArgs>
+    _count?: boolean | ModalidadesCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["modalidades"]>
+
+  export type modalidadesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nome?: boolean
+  }, ExtArgs["result"]["modalidades"]>
+
+  export type modalidadesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nome?: boolean
+  }, ExtArgs["result"]["modalidades"]>
+
+  export type modalidadesSelectScalar = {
+    id?: boolean
+    nome?: boolean
+  }
+
+  export type modalidadesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome", ExtArgs["result"]["modalidades"]>
+  export type modalidadesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    times?: boolean | modalidades$timesArgs<ExtArgs>
+    usuario_modalidades?: boolean | modalidades$usuario_modalidadesArgs<ExtArgs>
+    _count?: boolean | ModalidadesCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type modalidadesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type modalidadesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $modalidadesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "modalidades"
+    objects: {
+      times: Prisma.$timesPayload<ExtArgs>[]
+      usuario_modalidades: Prisma.$usuario_modalidadesPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      nome: string
+    }, ExtArgs["result"]["modalidades"]>
+    composites: {}
+  }
+
+  type modalidadesGetPayload<S extends boolean | null | undefined | modalidadesDefaultArgs> = $Result.GetResult<Prisma.$modalidadesPayload, S>
+
+  type modalidadesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<modalidadesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ModalidadesCountAggregateInputType | true
+    }
+
+  export interface modalidadesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['modalidades'], meta: { name: 'modalidades' } }
+    /**
+     * Find zero or one Modalidades that matches the filter.
+     * @param {modalidadesFindUniqueArgs} args - Arguments to find a Modalidades
+     * @example
+     * // Get one Modalidades
+     * const modalidades = await prisma.modalidades.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends modalidadesFindUniqueArgs>(args: SelectSubset<T, modalidadesFindUniqueArgs<ExtArgs>>): Prisma__modalidadesClient<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Modalidades that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {modalidadesFindUniqueOrThrowArgs} args - Arguments to find a Modalidades
+     * @example
+     * // Get one Modalidades
+     * const modalidades = await prisma.modalidades.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends modalidadesFindUniqueOrThrowArgs>(args: SelectSubset<T, modalidadesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__modalidadesClient<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Modalidades that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {modalidadesFindFirstArgs} args - Arguments to find a Modalidades
+     * @example
+     * // Get one Modalidades
+     * const modalidades = await prisma.modalidades.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends modalidadesFindFirstArgs>(args?: SelectSubset<T, modalidadesFindFirstArgs<ExtArgs>>): Prisma__modalidadesClient<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Modalidades that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {modalidadesFindFirstOrThrowArgs} args - Arguments to find a Modalidades
+     * @example
+     * // Get one Modalidades
+     * const modalidades = await prisma.modalidades.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends modalidadesFindFirstOrThrowArgs>(args?: SelectSubset<T, modalidadesFindFirstOrThrowArgs<ExtArgs>>): Prisma__modalidadesClient<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Modalidades that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {modalidadesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Modalidades
+     * const modalidades = await prisma.modalidades.findMany()
+     * 
+     * // Get first 10 Modalidades
+     * const modalidades = await prisma.modalidades.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const modalidadesWithIdOnly = await prisma.modalidades.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends modalidadesFindManyArgs>(args?: SelectSubset<T, modalidadesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Modalidades.
+     * @param {modalidadesCreateArgs} args - Arguments to create a Modalidades.
+     * @example
+     * // Create one Modalidades
+     * const Modalidades = await prisma.modalidades.create({
+     *   data: {
+     *     // ... data to create a Modalidades
+     *   }
+     * })
+     * 
+     */
+    create<T extends modalidadesCreateArgs>(args: SelectSubset<T, modalidadesCreateArgs<ExtArgs>>): Prisma__modalidadesClient<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Modalidades.
+     * @param {modalidadesCreateManyArgs} args - Arguments to create many Modalidades.
+     * @example
+     * // Create many Modalidades
+     * const modalidades = await prisma.modalidades.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends modalidadesCreateManyArgs>(args?: SelectSubset<T, modalidadesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Modalidades and returns the data saved in the database.
+     * @param {modalidadesCreateManyAndReturnArgs} args - Arguments to create many Modalidades.
+     * @example
+     * // Create many Modalidades
+     * const modalidades = await prisma.modalidades.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Modalidades and only return the `id`
+     * const modalidadesWithIdOnly = await prisma.modalidades.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends modalidadesCreateManyAndReturnArgs>(args?: SelectSubset<T, modalidadesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Modalidades.
+     * @param {modalidadesDeleteArgs} args - Arguments to delete one Modalidades.
+     * @example
+     * // Delete one Modalidades
+     * const Modalidades = await prisma.modalidades.delete({
+     *   where: {
+     *     // ... filter to delete one Modalidades
+     *   }
+     * })
+     * 
+     */
+    delete<T extends modalidadesDeleteArgs>(args: SelectSubset<T, modalidadesDeleteArgs<ExtArgs>>): Prisma__modalidadesClient<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Modalidades.
+     * @param {modalidadesUpdateArgs} args - Arguments to update one Modalidades.
+     * @example
+     * // Update one Modalidades
+     * const modalidades = await prisma.modalidades.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends modalidadesUpdateArgs>(args: SelectSubset<T, modalidadesUpdateArgs<ExtArgs>>): Prisma__modalidadesClient<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Modalidades.
+     * @param {modalidadesDeleteManyArgs} args - Arguments to filter Modalidades to delete.
+     * @example
+     * // Delete a few Modalidades
+     * const { count } = await prisma.modalidades.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends modalidadesDeleteManyArgs>(args?: SelectSubset<T, modalidadesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Modalidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {modalidadesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Modalidades
+     * const modalidades = await prisma.modalidades.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends modalidadesUpdateManyArgs>(args: SelectSubset<T, modalidadesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Modalidades and returns the data updated in the database.
+     * @param {modalidadesUpdateManyAndReturnArgs} args - Arguments to update many Modalidades.
+     * @example
+     * // Update many Modalidades
+     * const modalidades = await prisma.modalidades.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Modalidades and only return the `id`
+     * const modalidadesWithIdOnly = await prisma.modalidades.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends modalidadesUpdateManyAndReturnArgs>(args: SelectSubset<T, modalidadesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Modalidades.
+     * @param {modalidadesUpsertArgs} args - Arguments to update or create a Modalidades.
+     * @example
+     * // Update or create a Modalidades
+     * const modalidades = await prisma.modalidades.upsert({
+     *   create: {
+     *     // ... data to create a Modalidades
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Modalidades we want to update
+     *   }
+     * })
+     */
+    upsert<T extends modalidadesUpsertArgs>(args: SelectSubset<T, modalidadesUpsertArgs<ExtArgs>>): Prisma__modalidadesClient<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Modalidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {modalidadesCountArgs} args - Arguments to filter Modalidades to count.
+     * @example
+     * // Count the number of Modalidades
+     * const count = await prisma.modalidades.count({
+     *   where: {
+     *     // ... the filter for the Modalidades we want to count
+     *   }
+     * })
+    **/
+    count<T extends modalidadesCountArgs>(
+      args?: Subset<T, modalidadesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ModalidadesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Modalidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ModalidadesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ModalidadesAggregateArgs>(args: Subset<T, ModalidadesAggregateArgs>): Prisma.PrismaPromise<GetModalidadesAggregateType<T>>
+
+    /**
+     * Group by Modalidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {modalidadesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends modalidadesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: modalidadesGroupByArgs['orderBy'] }
+        : { orderBy?: modalidadesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, modalidadesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetModalidadesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the modalidades model
+   */
+  readonly fields: modalidadesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for modalidades.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__modalidadesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    times<T extends modalidades$timesArgs<ExtArgs> = {}>(args?: Subset<T, modalidades$timesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$timesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    usuario_modalidades<T extends modalidades$usuario_modalidadesArgs<ExtArgs> = {}>(args?: Subset<T, modalidades$usuario_modalidadesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the modalidades model
+   */
+  interface modalidadesFieldRefs {
+    readonly id: FieldRef<"modalidades", 'Int'>
+    readonly nome: FieldRef<"modalidades", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * modalidades findUnique
+   */
+  export type modalidadesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter, which modalidades to fetch.
+     */
+    where: modalidadesWhereUniqueInput
+  }
+
+  /**
+   * modalidades findUniqueOrThrow
+   */
+  export type modalidadesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter, which modalidades to fetch.
+     */
+    where: modalidadesWhereUniqueInput
+  }
+
+  /**
+   * modalidades findFirst
+   */
+  export type modalidadesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter, which modalidades to fetch.
+     */
+    where?: modalidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of modalidades to fetch.
+     */
+    orderBy?: modalidadesOrderByWithRelationInput | modalidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for modalidades.
+     */
+    cursor?: modalidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` modalidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` modalidades.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of modalidades.
+     */
+    distinct?: ModalidadesScalarFieldEnum | ModalidadesScalarFieldEnum[]
+  }
+
+  /**
+   * modalidades findFirstOrThrow
+   */
+  export type modalidadesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter, which modalidades to fetch.
+     */
+    where?: modalidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of modalidades to fetch.
+     */
+    orderBy?: modalidadesOrderByWithRelationInput | modalidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for modalidades.
+     */
+    cursor?: modalidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` modalidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` modalidades.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of modalidades.
+     */
+    distinct?: ModalidadesScalarFieldEnum | ModalidadesScalarFieldEnum[]
+  }
+
+  /**
+   * modalidades findMany
+   */
+  export type modalidadesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter, which modalidades to fetch.
+     */
+    where?: modalidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of modalidades to fetch.
+     */
+    orderBy?: modalidadesOrderByWithRelationInput | modalidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing modalidades.
+     */
+    cursor?: modalidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` modalidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` modalidades.
+     */
+    skip?: number
+    distinct?: ModalidadesScalarFieldEnum | ModalidadesScalarFieldEnum[]
+  }
+
+  /**
+   * modalidades create
+   */
+  export type modalidadesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a modalidades.
+     */
+    data: XOR<modalidadesCreateInput, modalidadesUncheckedCreateInput>
+  }
+
+  /**
+   * modalidades createMany
+   */
+  export type modalidadesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many modalidades.
+     */
+    data: modalidadesCreateManyInput | modalidadesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * modalidades createManyAndReturn
+   */
+  export type modalidadesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * The data used to create many modalidades.
+     */
+    data: modalidadesCreateManyInput | modalidadesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * modalidades update
+   */
+  export type modalidadesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a modalidades.
+     */
+    data: XOR<modalidadesUpdateInput, modalidadesUncheckedUpdateInput>
+    /**
+     * Choose, which modalidades to update.
+     */
+    where: modalidadesWhereUniqueInput
+  }
+
+  /**
+   * modalidades updateMany
+   */
+  export type modalidadesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update modalidades.
+     */
+    data: XOR<modalidadesUpdateManyMutationInput, modalidadesUncheckedUpdateManyInput>
+    /**
+     * Filter which modalidades to update
+     */
+    where?: modalidadesWhereInput
+    /**
+     * Limit how many modalidades to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * modalidades updateManyAndReturn
+   */
+  export type modalidadesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * The data used to update modalidades.
+     */
+    data: XOR<modalidadesUpdateManyMutationInput, modalidadesUncheckedUpdateManyInput>
+    /**
+     * Filter which modalidades to update
+     */
+    where?: modalidadesWhereInput
+    /**
+     * Limit how many modalidades to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * modalidades upsert
+   */
+  export type modalidadesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the modalidades to update in case it exists.
+     */
+    where: modalidadesWhereUniqueInput
+    /**
+     * In case the modalidades found by the `where` argument doesn't exist, create a new modalidades with this data.
+     */
+    create: XOR<modalidadesCreateInput, modalidadesUncheckedCreateInput>
+    /**
+     * In case the modalidades was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<modalidadesUpdateInput, modalidadesUncheckedUpdateInput>
+  }
+
+  /**
+   * modalidades delete
+   */
+  export type modalidadesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter which modalidades to delete.
+     */
+    where: modalidadesWhereUniqueInput
+  }
+
+  /**
+   * modalidades deleteMany
+   */
+  export type modalidadesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which modalidades to delete
+     */
+    where?: modalidadesWhereInput
+    /**
+     * Limit how many modalidades to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * modalidades.times
+   */
+  export type modalidades$timesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the times
+     */
+    select?: timesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the times
+     */
+    omit?: timesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: timesInclude<ExtArgs> | null
+    where?: timesWhereInput
+    orderBy?: timesOrderByWithRelationInput | timesOrderByWithRelationInput[]
+    cursor?: timesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TimesScalarFieldEnum | TimesScalarFieldEnum[]
+  }
+
+  /**
+   * modalidades.usuario_modalidades
+   */
+  export type modalidades$usuario_modalidadesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    where?: usuario_modalidadesWhereInput
+    orderBy?: usuario_modalidadesOrderByWithRelationInput | usuario_modalidadesOrderByWithRelationInput[]
+    cursor?: usuario_modalidadesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Usuario_modalidadesScalarFieldEnum | Usuario_modalidadesScalarFieldEnum[]
+  }
+
+  /**
+   * modalidades without action
+   */
+  export type modalidadesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the modalidades
+     */
+    select?: modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the modalidades
+     */
+    omit?: modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: modalidadesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model usuario_modalidades
+   */
+
+  export type AggregateUsuario_modalidades = {
+    _count: Usuario_modalidadesCountAggregateOutputType | null
+    _avg: Usuario_modalidadesAvgAggregateOutputType | null
+    _sum: Usuario_modalidadesSumAggregateOutputType | null
+    _min: Usuario_modalidadesMinAggregateOutputType | null
+    _max: Usuario_modalidadesMaxAggregateOutputType | null
+  }
+
+  export type Usuario_modalidadesAvgAggregateOutputType = {
+    usuario_id: number | null
+    modalidade_id: number | null
+  }
+
+  export type Usuario_modalidadesSumAggregateOutputType = {
+    usuario_id: number | null
+    modalidade_id: number | null
+  }
+
+  export type Usuario_modalidadesMinAggregateOutputType = {
+    usuario_id: number | null
+    modalidade_id: number | null
+  }
+
+  export type Usuario_modalidadesMaxAggregateOutputType = {
+    usuario_id: number | null
+    modalidade_id: number | null
+  }
+
+  export type Usuario_modalidadesCountAggregateOutputType = {
+    usuario_id: number
+    modalidade_id: number
+    _all: number
+  }
+
+
+  export type Usuario_modalidadesAvgAggregateInputType = {
+    usuario_id?: true
+    modalidade_id?: true
+  }
+
+  export type Usuario_modalidadesSumAggregateInputType = {
+    usuario_id?: true
+    modalidade_id?: true
+  }
+
+  export type Usuario_modalidadesMinAggregateInputType = {
+    usuario_id?: true
+    modalidade_id?: true
+  }
+
+  export type Usuario_modalidadesMaxAggregateInputType = {
+    usuario_id?: true
+    modalidade_id?: true
+  }
+
+  export type Usuario_modalidadesCountAggregateInputType = {
+    usuario_id?: true
+    modalidade_id?: true
+    _all?: true
+  }
+
+  export type Usuario_modalidadesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which usuario_modalidades to aggregate.
+     */
+    where?: usuario_modalidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of usuario_modalidades to fetch.
+     */
+    orderBy?: usuario_modalidadesOrderByWithRelationInput | usuario_modalidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: usuario_modalidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` usuario_modalidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` usuario_modalidades.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned usuario_modalidades
+    **/
+    _count?: true | Usuario_modalidadesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Usuario_modalidadesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Usuario_modalidadesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Usuario_modalidadesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Usuario_modalidadesMaxAggregateInputType
+  }
+
+  export type GetUsuario_modalidadesAggregateType<T extends Usuario_modalidadesAggregateArgs> = {
+        [P in keyof T & keyof AggregateUsuario_modalidades]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUsuario_modalidades[P]>
+      : GetScalarType<T[P], AggregateUsuario_modalidades[P]>
+  }
+
+
+
+
+  export type usuario_modalidadesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: usuario_modalidadesWhereInput
+    orderBy?: usuario_modalidadesOrderByWithAggregationInput | usuario_modalidadesOrderByWithAggregationInput[]
+    by: Usuario_modalidadesScalarFieldEnum[] | Usuario_modalidadesScalarFieldEnum
+    having?: usuario_modalidadesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Usuario_modalidadesCountAggregateInputType | true
+    _avg?: Usuario_modalidadesAvgAggregateInputType
+    _sum?: Usuario_modalidadesSumAggregateInputType
+    _min?: Usuario_modalidadesMinAggregateInputType
+    _max?: Usuario_modalidadesMaxAggregateInputType
+  }
+
+  export type Usuario_modalidadesGroupByOutputType = {
+    usuario_id: number
+    modalidade_id: number
+    _count: Usuario_modalidadesCountAggregateOutputType | null
+    _avg: Usuario_modalidadesAvgAggregateOutputType | null
+    _sum: Usuario_modalidadesSumAggregateOutputType | null
+    _min: Usuario_modalidadesMinAggregateOutputType | null
+    _max: Usuario_modalidadesMaxAggregateOutputType | null
+  }
+
+  type GetUsuario_modalidadesGroupByPayload<T extends usuario_modalidadesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Usuario_modalidadesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Usuario_modalidadesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Usuario_modalidadesGroupByOutputType[P]>
+            : GetScalarType<T[P], Usuario_modalidadesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type usuario_modalidadesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    usuario_id?: boolean
+    modalidade_id?: boolean
+    modalidades?: boolean | modalidadesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["usuario_modalidades"]>
+
+  export type usuario_modalidadesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    usuario_id?: boolean
+    modalidade_id?: boolean
+    modalidades?: boolean | modalidadesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["usuario_modalidades"]>
+
+  export type usuario_modalidadesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    usuario_id?: boolean
+    modalidade_id?: boolean
+    modalidades?: boolean | modalidadesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["usuario_modalidades"]>
+
+  export type usuario_modalidadesSelectScalar = {
+    usuario_id?: boolean
+    modalidade_id?: boolean
+  }
+
+  export type usuario_modalidadesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"usuario_id" | "modalidade_id", ExtArgs["result"]["usuario_modalidades"]>
+  export type usuario_modalidadesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modalidades?: boolean | modalidadesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
+  }
+  export type usuario_modalidadesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modalidades?: boolean | modalidadesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
+  }
+  export type usuario_modalidadesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    modalidades?: boolean | modalidadesDefaultArgs<ExtArgs>
+    usuarios?: boolean | usuariosDefaultArgs<ExtArgs>
+  }
+
+  export type $usuario_modalidadesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "usuario_modalidades"
+    objects: {
+      modalidades: Prisma.$modalidadesPayload<ExtArgs>
+      usuarios: Prisma.$usuariosPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      usuario_id: number
+      modalidade_id: number
+    }, ExtArgs["result"]["usuario_modalidades"]>
+    composites: {}
+  }
+
+  type usuario_modalidadesGetPayload<S extends boolean | null | undefined | usuario_modalidadesDefaultArgs> = $Result.GetResult<Prisma.$usuario_modalidadesPayload, S>
+
+  type usuario_modalidadesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<usuario_modalidadesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Usuario_modalidadesCountAggregateInputType | true
+    }
+
+  export interface usuario_modalidadesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['usuario_modalidades'], meta: { name: 'usuario_modalidades' } }
+    /**
+     * Find zero or one Usuario_modalidades that matches the filter.
+     * @param {usuario_modalidadesFindUniqueArgs} args - Arguments to find a Usuario_modalidades
+     * @example
+     * // Get one Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends usuario_modalidadesFindUniqueArgs>(args: SelectSubset<T, usuario_modalidadesFindUniqueArgs<ExtArgs>>): Prisma__usuario_modalidadesClient<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Usuario_modalidades that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {usuario_modalidadesFindUniqueOrThrowArgs} args - Arguments to find a Usuario_modalidades
+     * @example
+     * // Get one Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends usuario_modalidadesFindUniqueOrThrowArgs>(args: SelectSubset<T, usuario_modalidadesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__usuario_modalidadesClient<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Usuario_modalidades that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {usuario_modalidadesFindFirstArgs} args - Arguments to find a Usuario_modalidades
+     * @example
+     * // Get one Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends usuario_modalidadesFindFirstArgs>(args?: SelectSubset<T, usuario_modalidadesFindFirstArgs<ExtArgs>>): Prisma__usuario_modalidadesClient<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Usuario_modalidades that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {usuario_modalidadesFindFirstOrThrowArgs} args - Arguments to find a Usuario_modalidades
+     * @example
+     * // Get one Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends usuario_modalidadesFindFirstOrThrowArgs>(args?: SelectSubset<T, usuario_modalidadesFindFirstOrThrowArgs<ExtArgs>>): Prisma__usuario_modalidadesClient<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Usuario_modalidades that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {usuario_modalidadesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.findMany()
+     * 
+     * // Get first 10 Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.findMany({ take: 10 })
+     * 
+     * // Only select the `usuario_id`
+     * const usuario_modalidadesWithUsuario_idOnly = await prisma.usuario_modalidades.findMany({ select: { usuario_id: true } })
+     * 
+     */
+    findMany<T extends usuario_modalidadesFindManyArgs>(args?: SelectSubset<T, usuario_modalidadesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Usuario_modalidades.
+     * @param {usuario_modalidadesCreateArgs} args - Arguments to create a Usuario_modalidades.
+     * @example
+     * // Create one Usuario_modalidades
+     * const Usuario_modalidades = await prisma.usuario_modalidades.create({
+     *   data: {
+     *     // ... data to create a Usuario_modalidades
+     *   }
+     * })
+     * 
+     */
+    create<T extends usuario_modalidadesCreateArgs>(args: SelectSubset<T, usuario_modalidadesCreateArgs<ExtArgs>>): Prisma__usuario_modalidadesClient<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Usuario_modalidades.
+     * @param {usuario_modalidadesCreateManyArgs} args - Arguments to create many Usuario_modalidades.
+     * @example
+     * // Create many Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends usuario_modalidadesCreateManyArgs>(args?: SelectSubset<T, usuario_modalidadesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Usuario_modalidades and returns the data saved in the database.
+     * @param {usuario_modalidadesCreateManyAndReturnArgs} args - Arguments to create many Usuario_modalidades.
+     * @example
+     * // Create many Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Usuario_modalidades and only return the `usuario_id`
+     * const usuario_modalidadesWithUsuario_idOnly = await prisma.usuario_modalidades.createManyAndReturn({
+     *   select: { usuario_id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends usuario_modalidadesCreateManyAndReturnArgs>(args?: SelectSubset<T, usuario_modalidadesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Usuario_modalidades.
+     * @param {usuario_modalidadesDeleteArgs} args - Arguments to delete one Usuario_modalidades.
+     * @example
+     * // Delete one Usuario_modalidades
+     * const Usuario_modalidades = await prisma.usuario_modalidades.delete({
+     *   where: {
+     *     // ... filter to delete one Usuario_modalidades
+     *   }
+     * })
+     * 
+     */
+    delete<T extends usuario_modalidadesDeleteArgs>(args: SelectSubset<T, usuario_modalidadesDeleteArgs<ExtArgs>>): Prisma__usuario_modalidadesClient<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Usuario_modalidades.
+     * @param {usuario_modalidadesUpdateArgs} args - Arguments to update one Usuario_modalidades.
+     * @example
+     * // Update one Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends usuario_modalidadesUpdateArgs>(args: SelectSubset<T, usuario_modalidadesUpdateArgs<ExtArgs>>): Prisma__usuario_modalidadesClient<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Usuario_modalidades.
+     * @param {usuario_modalidadesDeleteManyArgs} args - Arguments to filter Usuario_modalidades to delete.
+     * @example
+     * // Delete a few Usuario_modalidades
+     * const { count } = await prisma.usuario_modalidades.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends usuario_modalidadesDeleteManyArgs>(args?: SelectSubset<T, usuario_modalidadesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Usuario_modalidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {usuario_modalidadesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends usuario_modalidadesUpdateManyArgs>(args: SelectSubset<T, usuario_modalidadesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Usuario_modalidades and returns the data updated in the database.
+     * @param {usuario_modalidadesUpdateManyAndReturnArgs} args - Arguments to update many Usuario_modalidades.
+     * @example
+     * // Update many Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Usuario_modalidades and only return the `usuario_id`
+     * const usuario_modalidadesWithUsuario_idOnly = await prisma.usuario_modalidades.updateManyAndReturn({
+     *   select: { usuario_id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends usuario_modalidadesUpdateManyAndReturnArgs>(args: SelectSubset<T, usuario_modalidadesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Usuario_modalidades.
+     * @param {usuario_modalidadesUpsertArgs} args - Arguments to update or create a Usuario_modalidades.
+     * @example
+     * // Update or create a Usuario_modalidades
+     * const usuario_modalidades = await prisma.usuario_modalidades.upsert({
+     *   create: {
+     *     // ... data to create a Usuario_modalidades
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Usuario_modalidades we want to update
+     *   }
+     * })
+     */
+    upsert<T extends usuario_modalidadesUpsertArgs>(args: SelectSubset<T, usuario_modalidadesUpsertArgs<ExtArgs>>): Prisma__usuario_modalidadesClient<$Result.GetResult<Prisma.$usuario_modalidadesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Usuario_modalidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {usuario_modalidadesCountArgs} args - Arguments to filter Usuario_modalidades to count.
+     * @example
+     * // Count the number of Usuario_modalidades
+     * const count = await prisma.usuario_modalidades.count({
+     *   where: {
+     *     // ... the filter for the Usuario_modalidades we want to count
+     *   }
+     * })
+    **/
+    count<T extends usuario_modalidadesCountArgs>(
+      args?: Subset<T, usuario_modalidadesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Usuario_modalidadesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Usuario_modalidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Usuario_modalidadesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Usuario_modalidadesAggregateArgs>(args: Subset<T, Usuario_modalidadesAggregateArgs>): Prisma.PrismaPromise<GetUsuario_modalidadesAggregateType<T>>
+
+    /**
+     * Group by Usuario_modalidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {usuario_modalidadesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends usuario_modalidadesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: usuario_modalidadesGroupByArgs['orderBy'] }
+        : { orderBy?: usuario_modalidadesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, usuario_modalidadesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUsuario_modalidadesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the usuario_modalidades model
+   */
+  readonly fields: usuario_modalidadesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for usuario_modalidades.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__usuario_modalidadesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    modalidades<T extends modalidadesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, modalidadesDefaultArgs<ExtArgs>>): Prisma__modalidadesClient<$Result.GetResult<Prisma.$modalidadesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    usuarios<T extends usuariosDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usuariosDefaultArgs<ExtArgs>>): Prisma__usuariosClient<$Result.GetResult<Prisma.$usuariosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the usuario_modalidades model
+   */
+  interface usuario_modalidadesFieldRefs {
+    readonly usuario_id: FieldRef<"usuario_modalidades", 'Int'>
+    readonly modalidade_id: FieldRef<"usuario_modalidades", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * usuario_modalidades findUnique
+   */
+  export type usuario_modalidadesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter, which usuario_modalidades to fetch.
+     */
+    where: usuario_modalidadesWhereUniqueInput
+  }
+
+  /**
+   * usuario_modalidades findUniqueOrThrow
+   */
+  export type usuario_modalidadesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter, which usuario_modalidades to fetch.
+     */
+    where: usuario_modalidadesWhereUniqueInput
+  }
+
+  /**
+   * usuario_modalidades findFirst
+   */
+  export type usuario_modalidadesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter, which usuario_modalidades to fetch.
+     */
+    where?: usuario_modalidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of usuario_modalidades to fetch.
+     */
+    orderBy?: usuario_modalidadesOrderByWithRelationInput | usuario_modalidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for usuario_modalidades.
+     */
+    cursor?: usuario_modalidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` usuario_modalidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` usuario_modalidades.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of usuario_modalidades.
+     */
+    distinct?: Usuario_modalidadesScalarFieldEnum | Usuario_modalidadesScalarFieldEnum[]
+  }
+
+  /**
+   * usuario_modalidades findFirstOrThrow
+   */
+  export type usuario_modalidadesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter, which usuario_modalidades to fetch.
+     */
+    where?: usuario_modalidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of usuario_modalidades to fetch.
+     */
+    orderBy?: usuario_modalidadesOrderByWithRelationInput | usuario_modalidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for usuario_modalidades.
+     */
+    cursor?: usuario_modalidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` usuario_modalidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` usuario_modalidades.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of usuario_modalidades.
+     */
+    distinct?: Usuario_modalidadesScalarFieldEnum | Usuario_modalidadesScalarFieldEnum[]
+  }
+
+  /**
+   * usuario_modalidades findMany
+   */
+  export type usuario_modalidadesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter, which usuario_modalidades to fetch.
+     */
+    where?: usuario_modalidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of usuario_modalidades to fetch.
+     */
+    orderBy?: usuario_modalidadesOrderByWithRelationInput | usuario_modalidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing usuario_modalidades.
+     */
+    cursor?: usuario_modalidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` usuario_modalidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` usuario_modalidades.
+     */
+    skip?: number
+    distinct?: Usuario_modalidadesScalarFieldEnum | Usuario_modalidadesScalarFieldEnum[]
+  }
+
+  /**
+   * usuario_modalidades create
+   */
+  export type usuario_modalidadesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a usuario_modalidades.
+     */
+    data: XOR<usuario_modalidadesCreateInput, usuario_modalidadesUncheckedCreateInput>
+  }
+
+  /**
+   * usuario_modalidades createMany
+   */
+  export type usuario_modalidadesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many usuario_modalidades.
+     */
+    data: usuario_modalidadesCreateManyInput | usuario_modalidadesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * usuario_modalidades createManyAndReturn
+   */
+  export type usuario_modalidadesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * The data used to create many usuario_modalidades.
+     */
+    data: usuario_modalidadesCreateManyInput | usuario_modalidadesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * usuario_modalidades update
+   */
+  export type usuario_modalidadesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a usuario_modalidades.
+     */
+    data: XOR<usuario_modalidadesUpdateInput, usuario_modalidadesUncheckedUpdateInput>
+    /**
+     * Choose, which usuario_modalidades to update.
+     */
+    where: usuario_modalidadesWhereUniqueInput
+  }
+
+  /**
+   * usuario_modalidades updateMany
+   */
+  export type usuario_modalidadesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update usuario_modalidades.
+     */
+    data: XOR<usuario_modalidadesUpdateManyMutationInput, usuario_modalidadesUncheckedUpdateManyInput>
+    /**
+     * Filter which usuario_modalidades to update
+     */
+    where?: usuario_modalidadesWhereInput
+    /**
+     * Limit how many usuario_modalidades to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * usuario_modalidades updateManyAndReturn
+   */
+  export type usuario_modalidadesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * The data used to update usuario_modalidades.
+     */
+    data: XOR<usuario_modalidadesUpdateManyMutationInput, usuario_modalidadesUncheckedUpdateManyInput>
+    /**
+     * Filter which usuario_modalidades to update
+     */
+    where?: usuario_modalidadesWhereInput
+    /**
+     * Limit how many usuario_modalidades to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * usuario_modalidades upsert
+   */
+  export type usuario_modalidadesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the usuario_modalidades to update in case it exists.
+     */
+    where: usuario_modalidadesWhereUniqueInput
+    /**
+     * In case the usuario_modalidades found by the `where` argument doesn't exist, create a new usuario_modalidades with this data.
+     */
+    create: XOR<usuario_modalidadesCreateInput, usuario_modalidadesUncheckedCreateInput>
+    /**
+     * In case the usuario_modalidades was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<usuario_modalidadesUpdateInput, usuario_modalidadesUncheckedUpdateInput>
+  }
+
+  /**
+   * usuario_modalidades delete
+   */
+  export type usuario_modalidadesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+    /**
+     * Filter which usuario_modalidades to delete.
+     */
+    where: usuario_modalidadesWhereUniqueInput
+  }
+
+  /**
+   * usuario_modalidades deleteMany
+   */
+  export type usuario_modalidadesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which usuario_modalidades to delete
+     */
+    where?: usuario_modalidadesWhereInput
+    /**
+     * Limit how many usuario_modalidades to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * usuario_modalidades without action
+   */
+  export type usuario_modalidadesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuario_modalidades
+     */
+    select?: usuario_modalidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuario_modalidades
+     */
+    omit?: usuario_modalidadesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuario_modalidadesInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -5868,8 +8303,7 @@ export namespace Prisma {
     codigo_verificacao: 'codigo_verificacao',
     codigo_gerado_em: 'codigo_gerado_em',
     tentativas_login: 'tentativas_login',
-    tipo_usuario: 'tipo_usuario',
-    modalidades: 'modalidades'
+    tipo_usuario: 'tipo_usuario'
   };
 
   export type UsuariosScalarFieldEnum = (typeof UsuariosScalarFieldEnum)[keyof typeof UsuariosScalarFieldEnum]
@@ -5878,7 +8312,7 @@ export namespace Prisma {
   export const TimesScalarFieldEnum: {
     id: 'id',
     nome: 'nome',
-    modalidades: 'modalidades'
+    modalidade_id: 'modalidade_id'
   };
 
   export type TimesScalarFieldEnum = (typeof TimesScalarFieldEnum)[keyof typeof TimesScalarFieldEnum]
@@ -5893,6 +8327,22 @@ export namespace Prisma {
   export type Membros_timeScalarFieldEnum = (typeof Membros_timeScalarFieldEnum)[keyof typeof Membros_timeScalarFieldEnum]
 
 
+  export const ModalidadesScalarFieldEnum: {
+    id: 'id',
+    nome: 'nome'
+  };
+
+  export type ModalidadesScalarFieldEnum = (typeof ModalidadesScalarFieldEnum)[keyof typeof ModalidadesScalarFieldEnum]
+
+
+  export const Usuario_modalidadesScalarFieldEnum: {
+    usuario_id: 'usuario_id',
+    modalidade_id: 'modalidade_id'
+  };
+
+  export type Usuario_modalidadesScalarFieldEnum = (typeof Usuario_modalidadesScalarFieldEnum)[keyof typeof Usuario_modalidadesScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -5901,29 +8351,12 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
-  export const NullableJsonNullValueInput: {
-    DbNull: typeof DbNull,
-    JsonNull: typeof JsonNull
-  };
-
-  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
-
-
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
-  export const JsonNullValueFilter: {
-    DbNull: typeof DbNull,
-    JsonNull: typeof JsonNull,
-    AnyNull: typeof AnyNull
-  };
-
-  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   export const NullsOrder: {
@@ -5992,34 +8425,6 @@ export namespace Prisma {
    * Reference to a field of type 'tipo_usuario[]'
    */
   export type ListEnumtipo_usuarioFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tipo_usuario[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
-   * Reference to a field of type 'tipo_modalidade'
-   */
-  export type Enumtipo_modalidadeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tipo_modalidade'>
-    
-
-
-  /**
-   * Reference to a field of type 'tipo_modalidade[]'
-   */
-  export type ListEnumtipo_modalidadeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'tipo_modalidade[]'>
     
 
 
@@ -6130,8 +8535,8 @@ export namespace Prisma {
     codigo_gerado_em?: DateTimeNullableFilter<"usuarios"> | Date | string | null
     tentativas_login?: IntFilter<"usuarios"> | number
     tipo_usuario?: Enumtipo_usuarioFilter<"usuarios"> | $Enums.tipo_usuario
-    modalidades?: JsonNullableFilter<"usuarios">
     membros_time?: Membros_timeListRelationFilter
+    usuario_modalidades?: Usuario_modalidadesListRelationFilter
     cursos?: XOR<CursosNullableScalarRelationFilter, cursosWhereInput> | null
   }
 
@@ -6151,8 +8556,8 @@ export namespace Prisma {
     codigo_gerado_em?: SortOrderInput | SortOrder
     tentativas_login?: SortOrder
     tipo_usuario?: SortOrder
-    modalidades?: SortOrderInput | SortOrder
     membros_time?: membros_timeOrderByRelationAggregateInput
+    usuario_modalidades?: usuario_modalidadesOrderByRelationAggregateInput
     cursos?: cursosOrderByWithRelationInput
   }
 
@@ -6175,8 +8580,8 @@ export namespace Prisma {
     codigo_gerado_em?: DateTimeNullableFilter<"usuarios"> | Date | string | null
     tentativas_login?: IntFilter<"usuarios"> | number
     tipo_usuario?: Enumtipo_usuarioFilter<"usuarios"> | $Enums.tipo_usuario
-    modalidades?: JsonNullableFilter<"usuarios">
     membros_time?: Membros_timeListRelationFilter
+    usuario_modalidades?: Usuario_modalidadesListRelationFilter
     cursos?: XOR<CursosNullableScalarRelationFilter, cursosWhereInput> | null
   }, "id" | "rm" | "email">
 
@@ -6196,7 +8601,6 @@ export namespace Prisma {
     codigo_gerado_em?: SortOrderInput | SortOrder
     tentativas_login?: SortOrder
     tipo_usuario?: SortOrder
-    modalidades?: SortOrderInput | SortOrder
     _count?: usuariosCountOrderByAggregateInput
     _avg?: usuariosAvgOrderByAggregateInput
     _max?: usuariosMaxOrderByAggregateInput
@@ -6223,7 +8627,6 @@ export namespace Prisma {
     codigo_gerado_em?: DateTimeNullableWithAggregatesFilter<"usuarios"> | Date | string | null
     tentativas_login?: IntWithAggregatesFilter<"usuarios"> | number
     tipo_usuario?: Enumtipo_usuarioWithAggregatesFilter<"usuarios"> | $Enums.tipo_usuario
-    modalidades?: JsonNullableWithAggregatesFilter<"usuarios">
   }
 
   export type timesWhereInput = {
@@ -6232,15 +8635,17 @@ export namespace Prisma {
     NOT?: timesWhereInput | timesWhereInput[]
     id?: IntFilter<"times"> | number
     nome?: StringFilter<"times"> | string
-    modalidades?: Enumtipo_modalidadeNullableFilter<"times"> | $Enums.tipo_modalidade | null
+    modalidade_id?: IntNullableFilter<"times"> | number | null
     membros_time?: Membros_timeListRelationFilter
+    modalidades?: XOR<ModalidadesNullableScalarRelationFilter, modalidadesWhereInput> | null
   }
 
   export type timesOrderByWithRelationInput = {
     id?: SortOrder
     nome?: SortOrder
-    modalidades?: SortOrderInput | SortOrder
+    modalidade_id?: SortOrderInput | SortOrder
     membros_time?: membros_timeOrderByRelationAggregateInput
+    modalidades?: modalidadesOrderByWithRelationInput
   }
 
   export type timesWhereUniqueInput = Prisma.AtLeast<{
@@ -6249,14 +8654,15 @@ export namespace Prisma {
     AND?: timesWhereInput | timesWhereInput[]
     OR?: timesWhereInput[]
     NOT?: timesWhereInput | timesWhereInput[]
-    modalidades?: Enumtipo_modalidadeNullableFilter<"times"> | $Enums.tipo_modalidade | null
+    modalidade_id?: IntNullableFilter<"times"> | number | null
     membros_time?: Membros_timeListRelationFilter
+    modalidades?: XOR<ModalidadesNullableScalarRelationFilter, modalidadesWhereInput> | null
   }, "id" | "nome">
 
   export type timesOrderByWithAggregationInput = {
     id?: SortOrder
     nome?: SortOrder
-    modalidades?: SortOrderInput | SortOrder
+    modalidade_id?: SortOrderInput | SortOrder
     _count?: timesCountOrderByAggregateInput
     _avg?: timesAvgOrderByAggregateInput
     _max?: timesMaxOrderByAggregateInput
@@ -6270,7 +8676,7 @@ export namespace Prisma {
     NOT?: timesScalarWhereWithAggregatesInput | timesScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"times"> | number
     nome?: StringWithAggregatesFilter<"times"> | string
-    modalidades?: Enumtipo_modalidadeNullableWithAggregatesFilter<"times"> | $Enums.tipo_modalidade | null
+    modalidade_id?: IntNullableWithAggregatesFilter<"times"> | number | null
   }
 
   export type membros_timeWhereInput = {
@@ -6280,16 +8686,16 @@ export namespace Prisma {
     time_id?: IntFilter<"membros_time"> | number
     membro_id?: IntFilter<"membros_time"> | number
     funcao?: Enumtipo_funcaoNullableFilter<"membros_time"> | $Enums.tipo_funcao | null
-    usuarios?: XOR<UsuariosScalarRelationFilter, usuariosWhereInput>
     times?: XOR<TimesScalarRelationFilter, timesWhereInput>
+    usuarios?: XOR<UsuariosScalarRelationFilter, usuariosWhereInput>
   }
 
   export type membros_timeOrderByWithRelationInput = {
     time_id?: SortOrder
     membro_id?: SortOrder
     funcao?: SortOrderInput | SortOrder
-    usuarios?: usuariosOrderByWithRelationInput
     times?: timesOrderByWithRelationInput
+    usuarios?: usuariosOrderByWithRelationInput
   }
 
   export type membros_timeWhereUniqueInput = Prisma.AtLeast<{
@@ -6300,8 +8706,8 @@ export namespace Prisma {
     time_id?: IntFilter<"membros_time"> | number
     membro_id?: IntFilter<"membros_time"> | number
     funcao?: Enumtipo_funcaoNullableFilter<"membros_time"> | $Enums.tipo_funcao | null
-    usuarios?: XOR<UsuariosScalarRelationFilter, usuariosWhereInput>
     times?: XOR<TimesScalarRelationFilter, timesWhereInput>
+    usuarios?: XOR<UsuariosScalarRelationFilter, usuariosWhereInput>
   }, "time_id_membro_id">
 
   export type membros_timeOrderByWithAggregationInput = {
@@ -6322,6 +8728,97 @@ export namespace Prisma {
     time_id?: IntWithAggregatesFilter<"membros_time"> | number
     membro_id?: IntWithAggregatesFilter<"membros_time"> | number
     funcao?: Enumtipo_funcaoNullableWithAggregatesFilter<"membros_time"> | $Enums.tipo_funcao | null
+  }
+
+  export type modalidadesWhereInput = {
+    AND?: modalidadesWhereInput | modalidadesWhereInput[]
+    OR?: modalidadesWhereInput[]
+    NOT?: modalidadesWhereInput | modalidadesWhereInput[]
+    id?: IntFilter<"modalidades"> | number
+    nome?: StringFilter<"modalidades"> | string
+    times?: TimesListRelationFilter
+    usuario_modalidades?: Usuario_modalidadesListRelationFilter
+  }
+
+  export type modalidadesOrderByWithRelationInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    times?: timesOrderByRelationAggregateInput
+    usuario_modalidades?: usuario_modalidadesOrderByRelationAggregateInput
+  }
+
+  export type modalidadesWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    nome?: string
+    AND?: modalidadesWhereInput | modalidadesWhereInput[]
+    OR?: modalidadesWhereInput[]
+    NOT?: modalidadesWhereInput | modalidadesWhereInput[]
+    times?: TimesListRelationFilter
+    usuario_modalidades?: Usuario_modalidadesListRelationFilter
+  }, "id" | "nome">
+
+  export type modalidadesOrderByWithAggregationInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    _count?: modalidadesCountOrderByAggregateInput
+    _avg?: modalidadesAvgOrderByAggregateInput
+    _max?: modalidadesMaxOrderByAggregateInput
+    _min?: modalidadesMinOrderByAggregateInput
+    _sum?: modalidadesSumOrderByAggregateInput
+  }
+
+  export type modalidadesScalarWhereWithAggregatesInput = {
+    AND?: modalidadesScalarWhereWithAggregatesInput | modalidadesScalarWhereWithAggregatesInput[]
+    OR?: modalidadesScalarWhereWithAggregatesInput[]
+    NOT?: modalidadesScalarWhereWithAggregatesInput | modalidadesScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"modalidades"> | number
+    nome?: StringWithAggregatesFilter<"modalidades"> | string
+  }
+
+  export type usuario_modalidadesWhereInput = {
+    AND?: usuario_modalidadesWhereInput | usuario_modalidadesWhereInput[]
+    OR?: usuario_modalidadesWhereInput[]
+    NOT?: usuario_modalidadesWhereInput | usuario_modalidadesWhereInput[]
+    usuario_id?: IntFilter<"usuario_modalidades"> | number
+    modalidade_id?: IntFilter<"usuario_modalidades"> | number
+    modalidades?: XOR<ModalidadesScalarRelationFilter, modalidadesWhereInput>
+    usuarios?: XOR<UsuariosScalarRelationFilter, usuariosWhereInput>
+  }
+
+  export type usuario_modalidadesOrderByWithRelationInput = {
+    usuario_id?: SortOrder
+    modalidade_id?: SortOrder
+    modalidades?: modalidadesOrderByWithRelationInput
+    usuarios?: usuariosOrderByWithRelationInput
+  }
+
+  export type usuario_modalidadesWhereUniqueInput = Prisma.AtLeast<{
+    usuario_id_modalidade_id?: usuario_modalidadesUsuario_idModalidade_idCompoundUniqueInput
+    AND?: usuario_modalidadesWhereInput | usuario_modalidadesWhereInput[]
+    OR?: usuario_modalidadesWhereInput[]
+    NOT?: usuario_modalidadesWhereInput | usuario_modalidadesWhereInput[]
+    usuario_id?: IntFilter<"usuario_modalidades"> | number
+    modalidade_id?: IntFilter<"usuario_modalidades"> | number
+    modalidades?: XOR<ModalidadesScalarRelationFilter, modalidadesWhereInput>
+    usuarios?: XOR<UsuariosScalarRelationFilter, usuariosWhereInput>
+  }, "usuario_id_modalidade_id">
+
+  export type usuario_modalidadesOrderByWithAggregationInput = {
+    usuario_id?: SortOrder
+    modalidade_id?: SortOrder
+    _count?: usuario_modalidadesCountOrderByAggregateInput
+    _avg?: usuario_modalidadesAvgOrderByAggregateInput
+    _max?: usuario_modalidadesMaxOrderByAggregateInput
+    _min?: usuario_modalidadesMinOrderByAggregateInput
+    _sum?: usuario_modalidadesSumOrderByAggregateInput
+  }
+
+  export type usuario_modalidadesScalarWhereWithAggregatesInput = {
+    AND?: usuario_modalidadesScalarWhereWithAggregatesInput | usuario_modalidadesScalarWhereWithAggregatesInput[]
+    OR?: usuario_modalidadesScalarWhereWithAggregatesInput[]
+    NOT?: usuario_modalidadesScalarWhereWithAggregatesInput | usuario_modalidadesScalarWhereWithAggregatesInput[]
+    usuario_id?: IntWithAggregatesFilter<"usuario_modalidades"> | number
+    modalidade_id?: IntWithAggregatesFilter<"usuario_modalidades"> | number
   }
 
   export type cursosCreateInput = {
@@ -6395,8 +8892,8 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeCreateNestedManyWithoutUsuariosInput
+    usuario_modalidades?: usuario_modalidadesCreateNestedManyWithoutUsuariosInput
     cursos?: cursosCreateNestedOneWithoutUsuariosInput
   }
 
@@ -6416,8 +8913,8 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUncheckedCreateNestedManyWithoutUsuariosInput
+    usuario_modalidades?: usuario_modalidadesUncheckedCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosUpdateInput = {
@@ -6434,8 +8931,8 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUpdateManyWithoutUsuariosNestedInput
+    usuario_modalidades?: usuario_modalidadesUpdateManyWithoutUsuariosNestedInput
     cursos?: cursosUpdateOneWithoutUsuariosNestedInput
   }
 
@@ -6455,8 +8952,8 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUncheckedUpdateManyWithoutUsuariosNestedInput
+    usuario_modalidades?: usuario_modalidadesUncheckedUpdateManyWithoutUsuariosNestedInput
   }
 
   export type usuariosCreateManyInput = {
@@ -6475,7 +8972,6 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type usuariosUpdateManyMutationInput = {
@@ -6492,7 +8988,6 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type usuariosUncheckedUpdateManyInput = {
@@ -6511,56 +9006,54 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type timesCreateInput = {
     nome: string
-    modalidades?: $Enums.tipo_modalidade | null
     membros_time?: membros_timeCreateNestedManyWithoutTimesInput
+    modalidades?: modalidadesCreateNestedOneWithoutTimesInput
   }
 
   export type timesUncheckedCreateInput = {
     id?: number
     nome: string
-    modalidades?: $Enums.tipo_modalidade | null
+    modalidade_id?: number | null
     membros_time?: membros_timeUncheckedCreateNestedManyWithoutTimesInput
   }
 
   export type timesUpdateInput = {
     nome?: StringFieldUpdateOperationsInput | string
-    modalidades?: NullableEnumtipo_modalidadeFieldUpdateOperationsInput | $Enums.tipo_modalidade | null
     membros_time?: membros_timeUpdateManyWithoutTimesNestedInput
+    modalidades?: modalidadesUpdateOneWithoutTimesNestedInput
   }
 
   export type timesUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
-    modalidades?: NullableEnumtipo_modalidadeFieldUpdateOperationsInput | $Enums.tipo_modalidade | null
+    modalidade_id?: NullableIntFieldUpdateOperationsInput | number | null
     membros_time?: membros_timeUncheckedUpdateManyWithoutTimesNestedInput
   }
 
   export type timesCreateManyInput = {
     id?: number
     nome: string
-    modalidades?: $Enums.tipo_modalidade | null
+    modalidade_id?: number | null
   }
 
   export type timesUpdateManyMutationInput = {
     nome?: StringFieldUpdateOperationsInput | string
-    modalidades?: NullableEnumtipo_modalidadeFieldUpdateOperationsInput | $Enums.tipo_modalidade | null
   }
 
   export type timesUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
-    modalidades?: NullableEnumtipo_modalidadeFieldUpdateOperationsInput | $Enums.tipo_modalidade | null
+    modalidade_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type membros_timeCreateInput = {
     funcao?: $Enums.tipo_funcao | null
-    usuarios: usuariosCreateNestedOneWithoutMembros_timeInput
     times: timesCreateNestedOneWithoutMembros_timeInput
+    usuarios: usuariosCreateNestedOneWithoutMembros_timeInput
   }
 
   export type membros_timeUncheckedCreateInput = {
@@ -6571,8 +9064,8 @@ export namespace Prisma {
 
   export type membros_timeUpdateInput = {
     funcao?: NullableEnumtipo_funcaoFieldUpdateOperationsInput | $Enums.tipo_funcao | null
-    usuarios?: usuariosUpdateOneRequiredWithoutMembros_timeNestedInput
     times?: timesUpdateOneRequiredWithoutMembros_timeNestedInput
+    usuarios?: usuariosUpdateOneRequiredWithoutMembros_timeNestedInput
   }
 
   export type membros_timeUncheckedUpdateInput = {
@@ -6595,6 +9088,80 @@ export namespace Prisma {
     time_id?: IntFieldUpdateOperationsInput | number
     membro_id?: IntFieldUpdateOperationsInput | number
     funcao?: NullableEnumtipo_funcaoFieldUpdateOperationsInput | $Enums.tipo_funcao | null
+  }
+
+  export type modalidadesCreateInput = {
+    nome: string
+    times?: timesCreateNestedManyWithoutModalidadesInput
+    usuario_modalidades?: usuario_modalidadesCreateNestedManyWithoutModalidadesInput
+  }
+
+  export type modalidadesUncheckedCreateInput = {
+    id?: number
+    nome: string
+    times?: timesUncheckedCreateNestedManyWithoutModalidadesInput
+    usuario_modalidades?: usuario_modalidadesUncheckedCreateNestedManyWithoutModalidadesInput
+  }
+
+  export type modalidadesUpdateInput = {
+    nome?: StringFieldUpdateOperationsInput | string
+    times?: timesUpdateManyWithoutModalidadesNestedInput
+    usuario_modalidades?: usuario_modalidadesUpdateManyWithoutModalidadesNestedInput
+  }
+
+  export type modalidadesUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nome?: StringFieldUpdateOperationsInput | string
+    times?: timesUncheckedUpdateManyWithoutModalidadesNestedInput
+    usuario_modalidades?: usuario_modalidadesUncheckedUpdateManyWithoutModalidadesNestedInput
+  }
+
+  export type modalidadesCreateManyInput = {
+    id?: number
+    nome: string
+  }
+
+  export type modalidadesUpdateManyMutationInput = {
+    nome?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type modalidadesUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nome?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type usuario_modalidadesCreateInput = {
+    modalidades: modalidadesCreateNestedOneWithoutUsuario_modalidadesInput
+    usuarios: usuariosCreateNestedOneWithoutUsuario_modalidadesInput
+  }
+
+  export type usuario_modalidadesUncheckedCreateInput = {
+    usuario_id: number
+    modalidade_id: number
+  }
+
+  export type usuario_modalidadesUpdateInput = {
+    modalidades?: modalidadesUpdateOneRequiredWithoutUsuario_modalidadesNestedInput
+    usuarios?: usuariosUpdateOneRequiredWithoutUsuario_modalidadesNestedInput
+  }
+
+  export type usuario_modalidadesUncheckedUpdateInput = {
+    usuario_id?: IntFieldUpdateOperationsInput | number
+    modalidade_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type usuario_modalidadesCreateManyInput = {
+    usuario_id: number
+    modalidade_id: number
+  }
+
+  export type usuario_modalidadesUpdateManyMutationInput = {
+
+  }
+
+  export type usuario_modalidadesUncheckedUpdateManyInput = {
+    usuario_id?: IntFieldUpdateOperationsInput | number
+    modalidade_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -6757,34 +9324,17 @@ export namespace Prisma {
     notIn?: $Enums.tipo_usuario[] | ListEnumtipo_usuarioFieldRefInput<$PrismaModel>
     not?: NestedEnumtipo_usuarioFilter<$PrismaModel> | $Enums.tipo_usuario
   }
-  export type JsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type JsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
 
   export type Membros_timeListRelationFilter = {
     every?: membros_timeWhereInput
     some?: membros_timeWhereInput
     none?: membros_timeWhereInput
+  }
+
+  export type Usuario_modalidadesListRelationFilter = {
+    every?: usuario_modalidadesWhereInput
+    some?: usuario_modalidadesWhereInput
+    none?: usuario_modalidadesWhereInput
   }
 
   export type CursosNullableScalarRelationFilter = {
@@ -6798,6 +9348,10 @@ export namespace Prisma {
   }
 
   export type membros_timeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type usuario_modalidadesOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -6817,7 +9371,6 @@ export namespace Prisma {
     codigo_gerado_em?: SortOrder
     tentativas_login?: SortOrder
     tipo_usuario?: SortOrder
-    modalidades?: SortOrder
   }
 
   export type usuariosAvgOrderByAggregateInput = {
@@ -6941,74 +9494,38 @@ export namespace Prisma {
     _min?: NestedEnumtipo_usuarioFilter<$PrismaModel>
     _max?: NestedEnumtipo_usuarioFilter<$PrismaModel>
   }
-  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
-        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
 
-  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedJsonNullableFilter<$PrismaModel>
-    _max?: NestedJsonNullableFilter<$PrismaModel>
-  }
-
-  export type Enumtipo_modalidadeNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.tipo_modalidade | Enumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.tipo_modalidade[] | ListEnumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.tipo_modalidade[] | ListEnumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumtipo_modalidadeNullableFilter<$PrismaModel> | $Enums.tipo_modalidade | null
+  export type ModalidadesNullableScalarRelationFilter = {
+    is?: modalidadesWhereInput | null
+    isNot?: modalidadesWhereInput | null
   }
 
   export type timesCountOrderByAggregateInput = {
     id?: SortOrder
     nome?: SortOrder
-    modalidades?: SortOrder
+    modalidade_id?: SortOrder
   }
 
   export type timesAvgOrderByAggregateInput = {
     id?: SortOrder
+    modalidade_id?: SortOrder
   }
 
   export type timesMaxOrderByAggregateInput = {
     id?: SortOrder
     nome?: SortOrder
-    modalidades?: SortOrder
+    modalidade_id?: SortOrder
   }
 
   export type timesMinOrderByAggregateInput = {
     id?: SortOrder
     nome?: SortOrder
-    modalidades?: SortOrder
+    modalidade_id?: SortOrder
   }
 
   export type timesSumOrderByAggregateInput = {
     id?: SortOrder
-  }
-
-  export type Enumtipo_modalidadeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.tipo_modalidade | Enumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.tipo_modalidade[] | ListEnumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.tipo_modalidade[] | ListEnumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumtipo_modalidadeNullableWithAggregatesFilter<$PrismaModel> | $Enums.tipo_modalidade | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumtipo_modalidadeNullableFilter<$PrismaModel>
-    _max?: NestedEnumtipo_modalidadeNullableFilter<$PrismaModel>
+    modalidade_id?: SortOrder
   }
 
   export type Enumtipo_funcaoNullableFilter<$PrismaModel = never> = {
@@ -7018,14 +9535,14 @@ export namespace Prisma {
     not?: NestedEnumtipo_funcaoNullableFilter<$PrismaModel> | $Enums.tipo_funcao | null
   }
 
-  export type UsuariosScalarRelationFilter = {
-    is?: usuariosWhereInput
-    isNot?: usuariosWhereInput
-  }
-
   export type TimesScalarRelationFilter = {
     is?: timesWhereInput
     isNot?: timesWhereInput
+  }
+
+  export type UsuariosScalarRelationFilter = {
+    is?: usuariosWhereInput
+    isNot?: usuariosWhereInput
   }
 
   export type membros_timeTime_idMembro_idCompoundUniqueInput = {
@@ -7069,6 +9586,74 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumtipo_funcaoNullableFilter<$PrismaModel>
     _max?: NestedEnumtipo_funcaoNullableFilter<$PrismaModel>
+  }
+
+  export type TimesListRelationFilter = {
+    every?: timesWhereInput
+    some?: timesWhereInput
+    none?: timesWhereInput
+  }
+
+  export type timesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type modalidadesCountOrderByAggregateInput = {
+    id?: SortOrder
+    nome?: SortOrder
+  }
+
+  export type modalidadesAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type modalidadesMaxOrderByAggregateInput = {
+    id?: SortOrder
+    nome?: SortOrder
+  }
+
+  export type modalidadesMinOrderByAggregateInput = {
+    id?: SortOrder
+    nome?: SortOrder
+  }
+
+  export type modalidadesSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type ModalidadesScalarRelationFilter = {
+    is?: modalidadesWhereInput
+    isNot?: modalidadesWhereInput
+  }
+
+  export type usuario_modalidadesUsuario_idModalidade_idCompoundUniqueInput = {
+    usuario_id: number
+    modalidade_id: number
+  }
+
+  export type usuario_modalidadesCountOrderByAggregateInput = {
+    usuario_id?: SortOrder
+    modalidade_id?: SortOrder
+  }
+
+  export type usuario_modalidadesAvgOrderByAggregateInput = {
+    usuario_id?: SortOrder
+    modalidade_id?: SortOrder
+  }
+
+  export type usuario_modalidadesMaxOrderByAggregateInput = {
+    usuario_id?: SortOrder
+    modalidade_id?: SortOrder
+  }
+
+  export type usuario_modalidadesMinOrderByAggregateInput = {
+    usuario_id?: SortOrder
+    modalidade_id?: SortOrder
+  }
+
+  export type usuario_modalidadesSumOrderByAggregateInput = {
+    usuario_id?: SortOrder
+    modalidade_id?: SortOrder
   }
 
   export type usuariosCreateNestedManyWithoutCursosInput = {
@@ -7132,6 +9717,13 @@ export namespace Prisma {
     connect?: membros_timeWhereUniqueInput | membros_timeWhereUniqueInput[]
   }
 
+  export type usuario_modalidadesCreateNestedManyWithoutUsuariosInput = {
+    create?: XOR<usuario_modalidadesCreateWithoutUsuariosInput, usuario_modalidadesUncheckedCreateWithoutUsuariosInput> | usuario_modalidadesCreateWithoutUsuariosInput[] | usuario_modalidadesUncheckedCreateWithoutUsuariosInput[]
+    connectOrCreate?: usuario_modalidadesCreateOrConnectWithoutUsuariosInput | usuario_modalidadesCreateOrConnectWithoutUsuariosInput[]
+    createMany?: usuario_modalidadesCreateManyUsuariosInputEnvelope
+    connect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+  }
+
   export type cursosCreateNestedOneWithoutUsuariosInput = {
     create?: XOR<cursosCreateWithoutUsuariosInput, cursosUncheckedCreateWithoutUsuariosInput>
     connectOrCreate?: cursosCreateOrConnectWithoutUsuariosInput
@@ -7143,6 +9735,13 @@ export namespace Prisma {
     connectOrCreate?: membros_timeCreateOrConnectWithoutUsuariosInput | membros_timeCreateOrConnectWithoutUsuariosInput[]
     createMany?: membros_timeCreateManyUsuariosInputEnvelope
     connect?: membros_timeWhereUniqueInput | membros_timeWhereUniqueInput[]
+  }
+
+  export type usuario_modalidadesUncheckedCreateNestedManyWithoutUsuariosInput = {
+    create?: XOR<usuario_modalidadesCreateWithoutUsuariosInput, usuario_modalidadesUncheckedCreateWithoutUsuariosInput> | usuario_modalidadesCreateWithoutUsuariosInput[] | usuario_modalidadesUncheckedCreateWithoutUsuariosInput[]
+    connectOrCreate?: usuario_modalidadesCreateOrConnectWithoutUsuariosInput | usuario_modalidadesCreateOrConnectWithoutUsuariosInput[]
+    createMany?: usuario_modalidadesCreateManyUsuariosInputEnvelope
+    connect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -7183,6 +9782,20 @@ export namespace Prisma {
     deleteMany?: membros_timeScalarWhereInput | membros_timeScalarWhereInput[]
   }
 
+  export type usuario_modalidadesUpdateManyWithoutUsuariosNestedInput = {
+    create?: XOR<usuario_modalidadesCreateWithoutUsuariosInput, usuario_modalidadesUncheckedCreateWithoutUsuariosInput> | usuario_modalidadesCreateWithoutUsuariosInput[] | usuario_modalidadesUncheckedCreateWithoutUsuariosInput[]
+    connectOrCreate?: usuario_modalidadesCreateOrConnectWithoutUsuariosInput | usuario_modalidadesCreateOrConnectWithoutUsuariosInput[]
+    upsert?: usuario_modalidadesUpsertWithWhereUniqueWithoutUsuariosInput | usuario_modalidadesUpsertWithWhereUniqueWithoutUsuariosInput[]
+    createMany?: usuario_modalidadesCreateManyUsuariosInputEnvelope
+    set?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    disconnect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    delete?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    connect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    update?: usuario_modalidadesUpdateWithWhereUniqueWithoutUsuariosInput | usuario_modalidadesUpdateWithWhereUniqueWithoutUsuariosInput[]
+    updateMany?: usuario_modalidadesUpdateManyWithWhereWithoutUsuariosInput | usuario_modalidadesUpdateManyWithWhereWithoutUsuariosInput[]
+    deleteMany?: usuario_modalidadesScalarWhereInput | usuario_modalidadesScalarWhereInput[]
+  }
+
   export type cursosUpdateOneWithoutUsuariosNestedInput = {
     create?: XOR<cursosCreateWithoutUsuariosInput, cursosUncheckedCreateWithoutUsuariosInput>
     connectOrCreate?: cursosCreateOrConnectWithoutUsuariosInput
@@ -7207,6 +9820,20 @@ export namespace Prisma {
     deleteMany?: membros_timeScalarWhereInput | membros_timeScalarWhereInput[]
   }
 
+  export type usuario_modalidadesUncheckedUpdateManyWithoutUsuariosNestedInput = {
+    create?: XOR<usuario_modalidadesCreateWithoutUsuariosInput, usuario_modalidadesUncheckedCreateWithoutUsuariosInput> | usuario_modalidadesCreateWithoutUsuariosInput[] | usuario_modalidadesUncheckedCreateWithoutUsuariosInput[]
+    connectOrCreate?: usuario_modalidadesCreateOrConnectWithoutUsuariosInput | usuario_modalidadesCreateOrConnectWithoutUsuariosInput[]
+    upsert?: usuario_modalidadesUpsertWithWhereUniqueWithoutUsuariosInput | usuario_modalidadesUpsertWithWhereUniqueWithoutUsuariosInput[]
+    createMany?: usuario_modalidadesCreateManyUsuariosInputEnvelope
+    set?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    disconnect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    delete?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    connect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    update?: usuario_modalidadesUpdateWithWhereUniqueWithoutUsuariosInput | usuario_modalidadesUpdateWithWhereUniqueWithoutUsuariosInput[]
+    updateMany?: usuario_modalidadesUpdateManyWithWhereWithoutUsuariosInput | usuario_modalidadesUpdateManyWithWhereWithoutUsuariosInput[]
+    deleteMany?: usuario_modalidadesScalarWhereInput | usuario_modalidadesScalarWhereInput[]
+  }
+
   export type membros_timeCreateNestedManyWithoutTimesInput = {
     create?: XOR<membros_timeCreateWithoutTimesInput, membros_timeUncheckedCreateWithoutTimesInput> | membros_timeCreateWithoutTimesInput[] | membros_timeUncheckedCreateWithoutTimesInput[]
     connectOrCreate?: membros_timeCreateOrConnectWithoutTimesInput | membros_timeCreateOrConnectWithoutTimesInput[]
@@ -7214,15 +9841,17 @@ export namespace Prisma {
     connect?: membros_timeWhereUniqueInput | membros_timeWhereUniqueInput[]
   }
 
+  export type modalidadesCreateNestedOneWithoutTimesInput = {
+    create?: XOR<modalidadesCreateWithoutTimesInput, modalidadesUncheckedCreateWithoutTimesInput>
+    connectOrCreate?: modalidadesCreateOrConnectWithoutTimesInput
+    connect?: modalidadesWhereUniqueInput
+  }
+
   export type membros_timeUncheckedCreateNestedManyWithoutTimesInput = {
     create?: XOR<membros_timeCreateWithoutTimesInput, membros_timeUncheckedCreateWithoutTimesInput> | membros_timeCreateWithoutTimesInput[] | membros_timeUncheckedCreateWithoutTimesInput[]
     connectOrCreate?: membros_timeCreateOrConnectWithoutTimesInput | membros_timeCreateOrConnectWithoutTimesInput[]
     createMany?: membros_timeCreateManyTimesInputEnvelope
     connect?: membros_timeWhereUniqueInput | membros_timeWhereUniqueInput[]
-  }
-
-  export type NullableEnumtipo_modalidadeFieldUpdateOperationsInput = {
-    set?: $Enums.tipo_modalidade | null
   }
 
   export type membros_timeUpdateManyWithoutTimesNestedInput = {
@@ -7239,6 +9868,16 @@ export namespace Prisma {
     deleteMany?: membros_timeScalarWhereInput | membros_timeScalarWhereInput[]
   }
 
+  export type modalidadesUpdateOneWithoutTimesNestedInput = {
+    create?: XOR<modalidadesCreateWithoutTimesInput, modalidadesUncheckedCreateWithoutTimesInput>
+    connectOrCreate?: modalidadesCreateOrConnectWithoutTimesInput
+    upsert?: modalidadesUpsertWithoutTimesInput
+    disconnect?: modalidadesWhereInput | boolean
+    delete?: modalidadesWhereInput | boolean
+    connect?: modalidadesWhereUniqueInput
+    update?: XOR<XOR<modalidadesUpdateToOneWithWhereWithoutTimesInput, modalidadesUpdateWithoutTimesInput>, modalidadesUncheckedUpdateWithoutTimesInput>
+  }
+
   export type membros_timeUncheckedUpdateManyWithoutTimesNestedInput = {
     create?: XOR<membros_timeCreateWithoutTimesInput, membros_timeUncheckedCreateWithoutTimesInput> | membros_timeCreateWithoutTimesInput[] | membros_timeUncheckedCreateWithoutTimesInput[]
     connectOrCreate?: membros_timeCreateOrConnectWithoutTimesInput | membros_timeCreateOrConnectWithoutTimesInput[]
@@ -7253,20 +9892,28 @@ export namespace Prisma {
     deleteMany?: membros_timeScalarWhereInput | membros_timeScalarWhereInput[]
   }
 
-  export type usuariosCreateNestedOneWithoutMembros_timeInput = {
-    create?: XOR<usuariosCreateWithoutMembros_timeInput, usuariosUncheckedCreateWithoutMembros_timeInput>
-    connectOrCreate?: usuariosCreateOrConnectWithoutMembros_timeInput
-    connect?: usuariosWhereUniqueInput
-  }
-
   export type timesCreateNestedOneWithoutMembros_timeInput = {
     create?: XOR<timesCreateWithoutMembros_timeInput, timesUncheckedCreateWithoutMembros_timeInput>
     connectOrCreate?: timesCreateOrConnectWithoutMembros_timeInput
     connect?: timesWhereUniqueInput
   }
 
+  export type usuariosCreateNestedOneWithoutMembros_timeInput = {
+    create?: XOR<usuariosCreateWithoutMembros_timeInput, usuariosUncheckedCreateWithoutMembros_timeInput>
+    connectOrCreate?: usuariosCreateOrConnectWithoutMembros_timeInput
+    connect?: usuariosWhereUniqueInput
+  }
+
   export type NullableEnumtipo_funcaoFieldUpdateOperationsInput = {
     set?: $Enums.tipo_funcao | null
+  }
+
+  export type timesUpdateOneRequiredWithoutMembros_timeNestedInput = {
+    create?: XOR<timesCreateWithoutMembros_timeInput, timesUncheckedCreateWithoutMembros_timeInput>
+    connectOrCreate?: timesCreateOrConnectWithoutMembros_timeInput
+    upsert?: timesUpsertWithoutMembros_timeInput
+    connect?: timesWhereUniqueInput
+    update?: XOR<XOR<timesUpdateToOneWithWhereWithoutMembros_timeInput, timesUpdateWithoutMembros_timeInput>, timesUncheckedUpdateWithoutMembros_timeInput>
   }
 
   export type usuariosUpdateOneRequiredWithoutMembros_timeNestedInput = {
@@ -7277,12 +9924,116 @@ export namespace Prisma {
     update?: XOR<XOR<usuariosUpdateToOneWithWhereWithoutMembros_timeInput, usuariosUpdateWithoutMembros_timeInput>, usuariosUncheckedUpdateWithoutMembros_timeInput>
   }
 
-  export type timesUpdateOneRequiredWithoutMembros_timeNestedInput = {
-    create?: XOR<timesCreateWithoutMembros_timeInput, timesUncheckedCreateWithoutMembros_timeInput>
-    connectOrCreate?: timesCreateOrConnectWithoutMembros_timeInput
-    upsert?: timesUpsertWithoutMembros_timeInput
-    connect?: timesWhereUniqueInput
-    update?: XOR<XOR<timesUpdateToOneWithWhereWithoutMembros_timeInput, timesUpdateWithoutMembros_timeInput>, timesUncheckedUpdateWithoutMembros_timeInput>
+  export type timesCreateNestedManyWithoutModalidadesInput = {
+    create?: XOR<timesCreateWithoutModalidadesInput, timesUncheckedCreateWithoutModalidadesInput> | timesCreateWithoutModalidadesInput[] | timesUncheckedCreateWithoutModalidadesInput[]
+    connectOrCreate?: timesCreateOrConnectWithoutModalidadesInput | timesCreateOrConnectWithoutModalidadesInput[]
+    createMany?: timesCreateManyModalidadesInputEnvelope
+    connect?: timesWhereUniqueInput | timesWhereUniqueInput[]
+  }
+
+  export type usuario_modalidadesCreateNestedManyWithoutModalidadesInput = {
+    create?: XOR<usuario_modalidadesCreateWithoutModalidadesInput, usuario_modalidadesUncheckedCreateWithoutModalidadesInput> | usuario_modalidadesCreateWithoutModalidadesInput[] | usuario_modalidadesUncheckedCreateWithoutModalidadesInput[]
+    connectOrCreate?: usuario_modalidadesCreateOrConnectWithoutModalidadesInput | usuario_modalidadesCreateOrConnectWithoutModalidadesInput[]
+    createMany?: usuario_modalidadesCreateManyModalidadesInputEnvelope
+    connect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+  }
+
+  export type timesUncheckedCreateNestedManyWithoutModalidadesInput = {
+    create?: XOR<timesCreateWithoutModalidadesInput, timesUncheckedCreateWithoutModalidadesInput> | timesCreateWithoutModalidadesInput[] | timesUncheckedCreateWithoutModalidadesInput[]
+    connectOrCreate?: timesCreateOrConnectWithoutModalidadesInput | timesCreateOrConnectWithoutModalidadesInput[]
+    createMany?: timesCreateManyModalidadesInputEnvelope
+    connect?: timesWhereUniqueInput | timesWhereUniqueInput[]
+  }
+
+  export type usuario_modalidadesUncheckedCreateNestedManyWithoutModalidadesInput = {
+    create?: XOR<usuario_modalidadesCreateWithoutModalidadesInput, usuario_modalidadesUncheckedCreateWithoutModalidadesInput> | usuario_modalidadesCreateWithoutModalidadesInput[] | usuario_modalidadesUncheckedCreateWithoutModalidadesInput[]
+    connectOrCreate?: usuario_modalidadesCreateOrConnectWithoutModalidadesInput | usuario_modalidadesCreateOrConnectWithoutModalidadesInput[]
+    createMany?: usuario_modalidadesCreateManyModalidadesInputEnvelope
+    connect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+  }
+
+  export type timesUpdateManyWithoutModalidadesNestedInput = {
+    create?: XOR<timesCreateWithoutModalidadesInput, timesUncheckedCreateWithoutModalidadesInput> | timesCreateWithoutModalidadesInput[] | timesUncheckedCreateWithoutModalidadesInput[]
+    connectOrCreate?: timesCreateOrConnectWithoutModalidadesInput | timesCreateOrConnectWithoutModalidadesInput[]
+    upsert?: timesUpsertWithWhereUniqueWithoutModalidadesInput | timesUpsertWithWhereUniqueWithoutModalidadesInput[]
+    createMany?: timesCreateManyModalidadesInputEnvelope
+    set?: timesWhereUniqueInput | timesWhereUniqueInput[]
+    disconnect?: timesWhereUniqueInput | timesWhereUniqueInput[]
+    delete?: timesWhereUniqueInput | timesWhereUniqueInput[]
+    connect?: timesWhereUniqueInput | timesWhereUniqueInput[]
+    update?: timesUpdateWithWhereUniqueWithoutModalidadesInput | timesUpdateWithWhereUniqueWithoutModalidadesInput[]
+    updateMany?: timesUpdateManyWithWhereWithoutModalidadesInput | timesUpdateManyWithWhereWithoutModalidadesInput[]
+    deleteMany?: timesScalarWhereInput | timesScalarWhereInput[]
+  }
+
+  export type usuario_modalidadesUpdateManyWithoutModalidadesNestedInput = {
+    create?: XOR<usuario_modalidadesCreateWithoutModalidadesInput, usuario_modalidadesUncheckedCreateWithoutModalidadesInput> | usuario_modalidadesCreateWithoutModalidadesInput[] | usuario_modalidadesUncheckedCreateWithoutModalidadesInput[]
+    connectOrCreate?: usuario_modalidadesCreateOrConnectWithoutModalidadesInput | usuario_modalidadesCreateOrConnectWithoutModalidadesInput[]
+    upsert?: usuario_modalidadesUpsertWithWhereUniqueWithoutModalidadesInput | usuario_modalidadesUpsertWithWhereUniqueWithoutModalidadesInput[]
+    createMany?: usuario_modalidadesCreateManyModalidadesInputEnvelope
+    set?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    disconnect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    delete?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    connect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    update?: usuario_modalidadesUpdateWithWhereUniqueWithoutModalidadesInput | usuario_modalidadesUpdateWithWhereUniqueWithoutModalidadesInput[]
+    updateMany?: usuario_modalidadesUpdateManyWithWhereWithoutModalidadesInput | usuario_modalidadesUpdateManyWithWhereWithoutModalidadesInput[]
+    deleteMany?: usuario_modalidadesScalarWhereInput | usuario_modalidadesScalarWhereInput[]
+  }
+
+  export type timesUncheckedUpdateManyWithoutModalidadesNestedInput = {
+    create?: XOR<timesCreateWithoutModalidadesInput, timesUncheckedCreateWithoutModalidadesInput> | timesCreateWithoutModalidadesInput[] | timesUncheckedCreateWithoutModalidadesInput[]
+    connectOrCreate?: timesCreateOrConnectWithoutModalidadesInput | timesCreateOrConnectWithoutModalidadesInput[]
+    upsert?: timesUpsertWithWhereUniqueWithoutModalidadesInput | timesUpsertWithWhereUniqueWithoutModalidadesInput[]
+    createMany?: timesCreateManyModalidadesInputEnvelope
+    set?: timesWhereUniqueInput | timesWhereUniqueInput[]
+    disconnect?: timesWhereUniqueInput | timesWhereUniqueInput[]
+    delete?: timesWhereUniqueInput | timesWhereUniqueInput[]
+    connect?: timesWhereUniqueInput | timesWhereUniqueInput[]
+    update?: timesUpdateWithWhereUniqueWithoutModalidadesInput | timesUpdateWithWhereUniqueWithoutModalidadesInput[]
+    updateMany?: timesUpdateManyWithWhereWithoutModalidadesInput | timesUpdateManyWithWhereWithoutModalidadesInput[]
+    deleteMany?: timesScalarWhereInput | timesScalarWhereInput[]
+  }
+
+  export type usuario_modalidadesUncheckedUpdateManyWithoutModalidadesNestedInput = {
+    create?: XOR<usuario_modalidadesCreateWithoutModalidadesInput, usuario_modalidadesUncheckedCreateWithoutModalidadesInput> | usuario_modalidadesCreateWithoutModalidadesInput[] | usuario_modalidadesUncheckedCreateWithoutModalidadesInput[]
+    connectOrCreate?: usuario_modalidadesCreateOrConnectWithoutModalidadesInput | usuario_modalidadesCreateOrConnectWithoutModalidadesInput[]
+    upsert?: usuario_modalidadesUpsertWithWhereUniqueWithoutModalidadesInput | usuario_modalidadesUpsertWithWhereUniqueWithoutModalidadesInput[]
+    createMany?: usuario_modalidadesCreateManyModalidadesInputEnvelope
+    set?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    disconnect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    delete?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    connect?: usuario_modalidadesWhereUniqueInput | usuario_modalidadesWhereUniqueInput[]
+    update?: usuario_modalidadesUpdateWithWhereUniqueWithoutModalidadesInput | usuario_modalidadesUpdateWithWhereUniqueWithoutModalidadesInput[]
+    updateMany?: usuario_modalidadesUpdateManyWithWhereWithoutModalidadesInput | usuario_modalidadesUpdateManyWithWhereWithoutModalidadesInput[]
+    deleteMany?: usuario_modalidadesScalarWhereInput | usuario_modalidadesScalarWhereInput[]
+  }
+
+  export type modalidadesCreateNestedOneWithoutUsuario_modalidadesInput = {
+    create?: XOR<modalidadesCreateWithoutUsuario_modalidadesInput, modalidadesUncheckedCreateWithoutUsuario_modalidadesInput>
+    connectOrCreate?: modalidadesCreateOrConnectWithoutUsuario_modalidadesInput
+    connect?: modalidadesWhereUniqueInput
+  }
+
+  export type usuariosCreateNestedOneWithoutUsuario_modalidadesInput = {
+    create?: XOR<usuariosCreateWithoutUsuario_modalidadesInput, usuariosUncheckedCreateWithoutUsuario_modalidadesInput>
+    connectOrCreate?: usuariosCreateOrConnectWithoutUsuario_modalidadesInput
+    connect?: usuariosWhereUniqueInput
+  }
+
+  export type modalidadesUpdateOneRequiredWithoutUsuario_modalidadesNestedInput = {
+    create?: XOR<modalidadesCreateWithoutUsuario_modalidadesInput, modalidadesUncheckedCreateWithoutUsuario_modalidadesInput>
+    connectOrCreate?: modalidadesCreateOrConnectWithoutUsuario_modalidadesInput
+    upsert?: modalidadesUpsertWithoutUsuario_modalidadesInput
+    connect?: modalidadesWhereUniqueInput
+    update?: XOR<XOR<modalidadesUpdateToOneWithWhereWithoutUsuario_modalidadesInput, modalidadesUpdateWithoutUsuario_modalidadesInput>, modalidadesUncheckedUpdateWithoutUsuario_modalidadesInput>
+  }
+
+  export type usuariosUpdateOneRequiredWithoutUsuario_modalidadesNestedInput = {
+    create?: XOR<usuariosCreateWithoutUsuario_modalidadesInput, usuariosUncheckedCreateWithoutUsuario_modalidadesInput>
+    connectOrCreate?: usuariosCreateOrConnectWithoutUsuario_modalidadesInput
+    upsert?: usuariosUpsertWithoutUsuario_modalidadesInput
+    connect?: usuariosWhereUniqueInput
+    update?: XOR<XOR<usuariosUpdateToOneWithWhereWithoutUsuario_modalidadesInput, usuariosUpdateWithoutUsuario_modalidadesInput>, usuariosUncheckedUpdateWithoutUsuario_modalidadesInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -7489,46 +10240,6 @@ export namespace Prisma {
     _min?: NestedEnumtipo_usuarioFilter<$PrismaModel>
     _max?: NestedEnumtipo_usuarioFilter<$PrismaModel>
   }
-  export type NestedJsonNullableFilter<$PrismaModel = never> =
-    | PatchUndefined<
-        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
-        Required<NestedJsonNullableFilterBase<$PrismaModel>>
-      >
-    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
-
-  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
-    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-    path?: string[]
-    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
-    string_contains?: string | StringFieldRefInput<$PrismaModel>
-    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
-    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
-    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
-    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
-    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
-  }
-
-  export type NestedEnumtipo_modalidadeNullableFilter<$PrismaModel = never> = {
-    equals?: $Enums.tipo_modalidade | Enumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.tipo_modalidade[] | ListEnumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.tipo_modalidade[] | ListEnumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumtipo_modalidadeNullableFilter<$PrismaModel> | $Enums.tipo_modalidade | null
-  }
-
-  export type NestedEnumtipo_modalidadeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: $Enums.tipo_modalidade | Enumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    in?: $Enums.tipo_modalidade[] | ListEnumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    notIn?: $Enums.tipo_modalidade[] | ListEnumtipo_modalidadeFieldRefInput<$PrismaModel> | null
-    not?: NestedEnumtipo_modalidadeNullableWithAggregatesFilter<$PrismaModel> | $Enums.tipo_modalidade | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedEnumtipo_modalidadeNullableFilter<$PrismaModel>
-    _max?: NestedEnumtipo_modalidadeNullableFilter<$PrismaModel>
-  }
 
   export type NestedEnumtipo_funcaoNullableFilter<$PrismaModel = never> = {
     equals?: $Enums.tipo_funcao | Enumtipo_funcaoFieldRefInput<$PrismaModel> | null
@@ -7561,8 +10272,8 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeCreateNestedManyWithoutUsuariosInput
+    usuario_modalidades?: usuario_modalidadesCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosUncheckedCreateWithoutCursosInput = {
@@ -7580,8 +10291,8 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUncheckedCreateNestedManyWithoutUsuariosInput
+    usuario_modalidades?: usuario_modalidadesUncheckedCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosCreateOrConnectWithoutCursosInput = {
@@ -7629,7 +10340,6 @@ export namespace Prisma {
     codigo_gerado_em?: DateTimeNullableFilter<"usuarios"> | Date | string | null
     tentativas_login?: IntFilter<"usuarios"> | number
     tipo_usuario?: Enumtipo_usuarioFilter<"usuarios"> | $Enums.tipo_usuario
-    modalidades?: JsonNullableFilter<"usuarios">
   }
 
   export type membros_timeCreateWithoutUsuariosInput = {
@@ -7649,6 +10359,24 @@ export namespace Prisma {
 
   export type membros_timeCreateManyUsuariosInputEnvelope = {
     data: membros_timeCreateManyUsuariosInput | membros_timeCreateManyUsuariosInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type usuario_modalidadesCreateWithoutUsuariosInput = {
+    modalidades: modalidadesCreateNestedOneWithoutUsuario_modalidadesInput
+  }
+
+  export type usuario_modalidadesUncheckedCreateWithoutUsuariosInput = {
+    modalidade_id: number
+  }
+
+  export type usuario_modalidadesCreateOrConnectWithoutUsuariosInput = {
+    where: usuario_modalidadesWhereUniqueInput
+    create: XOR<usuario_modalidadesCreateWithoutUsuariosInput, usuario_modalidadesUncheckedCreateWithoutUsuariosInput>
+  }
+
+  export type usuario_modalidadesCreateManyUsuariosInputEnvelope = {
+    data: usuario_modalidadesCreateManyUsuariosInput | usuario_modalidadesCreateManyUsuariosInput[]
     skipDuplicates?: boolean
   }
 
@@ -7697,6 +10425,30 @@ export namespace Prisma {
     funcao?: Enumtipo_funcaoNullableFilter<"membros_time"> | $Enums.tipo_funcao | null
   }
 
+  export type usuario_modalidadesUpsertWithWhereUniqueWithoutUsuariosInput = {
+    where: usuario_modalidadesWhereUniqueInput
+    update: XOR<usuario_modalidadesUpdateWithoutUsuariosInput, usuario_modalidadesUncheckedUpdateWithoutUsuariosInput>
+    create: XOR<usuario_modalidadesCreateWithoutUsuariosInput, usuario_modalidadesUncheckedCreateWithoutUsuariosInput>
+  }
+
+  export type usuario_modalidadesUpdateWithWhereUniqueWithoutUsuariosInput = {
+    where: usuario_modalidadesWhereUniqueInput
+    data: XOR<usuario_modalidadesUpdateWithoutUsuariosInput, usuario_modalidadesUncheckedUpdateWithoutUsuariosInput>
+  }
+
+  export type usuario_modalidadesUpdateManyWithWhereWithoutUsuariosInput = {
+    where: usuario_modalidadesScalarWhereInput
+    data: XOR<usuario_modalidadesUpdateManyMutationInput, usuario_modalidadesUncheckedUpdateManyWithoutUsuariosInput>
+  }
+
+  export type usuario_modalidadesScalarWhereInput = {
+    AND?: usuario_modalidadesScalarWhereInput | usuario_modalidadesScalarWhereInput[]
+    OR?: usuario_modalidadesScalarWhereInput[]
+    NOT?: usuario_modalidadesScalarWhereInput | usuario_modalidadesScalarWhereInput[]
+    usuario_id?: IntFilter<"usuario_modalidades"> | number
+    modalidade_id?: IntFilter<"usuario_modalidades"> | number
+  }
+
   export type cursosUpsertWithoutUsuariosInput = {
     update: XOR<cursosUpdateWithoutUsuariosInput, cursosUncheckedUpdateWithoutUsuariosInput>
     create: XOR<cursosCreateWithoutUsuariosInput, cursosUncheckedCreateWithoutUsuariosInput>
@@ -7743,6 +10495,22 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type modalidadesCreateWithoutTimesInput = {
+    nome: string
+    usuario_modalidades?: usuario_modalidadesCreateNestedManyWithoutModalidadesInput
+  }
+
+  export type modalidadesUncheckedCreateWithoutTimesInput = {
+    id?: number
+    nome: string
+    usuario_modalidades?: usuario_modalidadesUncheckedCreateNestedManyWithoutModalidadesInput
+  }
+
+  export type modalidadesCreateOrConnectWithoutTimesInput = {
+    where: modalidadesWhereUniqueInput
+    create: XOR<modalidadesCreateWithoutTimesInput, modalidadesUncheckedCreateWithoutTimesInput>
+  }
+
   export type membros_timeUpsertWithWhereUniqueWithoutTimesInput = {
     where: membros_timeWhereUniqueInput
     update: XOR<membros_timeUpdateWithoutTimesInput, membros_timeUncheckedUpdateWithoutTimesInput>
@@ -7759,6 +10527,44 @@ export namespace Prisma {
     data: XOR<membros_timeUpdateManyMutationInput, membros_timeUncheckedUpdateManyWithoutTimesInput>
   }
 
+  export type modalidadesUpsertWithoutTimesInput = {
+    update: XOR<modalidadesUpdateWithoutTimesInput, modalidadesUncheckedUpdateWithoutTimesInput>
+    create: XOR<modalidadesCreateWithoutTimesInput, modalidadesUncheckedCreateWithoutTimesInput>
+    where?: modalidadesWhereInput
+  }
+
+  export type modalidadesUpdateToOneWithWhereWithoutTimesInput = {
+    where?: modalidadesWhereInput
+    data: XOR<modalidadesUpdateWithoutTimesInput, modalidadesUncheckedUpdateWithoutTimesInput>
+  }
+
+  export type modalidadesUpdateWithoutTimesInput = {
+    nome?: StringFieldUpdateOperationsInput | string
+    usuario_modalidades?: usuario_modalidadesUpdateManyWithoutModalidadesNestedInput
+  }
+
+  export type modalidadesUncheckedUpdateWithoutTimesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nome?: StringFieldUpdateOperationsInput | string
+    usuario_modalidades?: usuario_modalidadesUncheckedUpdateManyWithoutModalidadesNestedInput
+  }
+
+  export type timesCreateWithoutMembros_timeInput = {
+    nome: string
+    modalidades?: modalidadesCreateNestedOneWithoutTimesInput
+  }
+
+  export type timesUncheckedCreateWithoutMembros_timeInput = {
+    id?: number
+    nome: string
+    modalidade_id?: number | null
+  }
+
+  export type timesCreateOrConnectWithoutMembros_timeInput = {
+    where: timesWhereUniqueInput
+    create: XOR<timesCreateWithoutMembros_timeInput, timesUncheckedCreateWithoutMembros_timeInput>
+  }
+
   export type usuariosCreateWithoutMembros_timeInput = {
     rm: string
     nome: string
@@ -7773,7 +10579,7 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
+    usuario_modalidades?: usuario_modalidadesCreateNestedManyWithoutUsuariosInput
     cursos?: cursosCreateNestedOneWithoutUsuariosInput
   }
 
@@ -7793,7 +10599,7 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
+    usuario_modalidades?: usuario_modalidadesUncheckedCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosCreateOrConnectWithoutMembros_timeInput = {
@@ -7801,20 +10607,26 @@ export namespace Prisma {
     create: XOR<usuariosCreateWithoutMembros_timeInput, usuariosUncheckedCreateWithoutMembros_timeInput>
   }
 
-  export type timesCreateWithoutMembros_timeInput = {
-    nome: string
-    modalidades?: $Enums.tipo_modalidade | null
-  }
-
-  export type timesUncheckedCreateWithoutMembros_timeInput = {
-    id?: number
-    nome: string
-    modalidades?: $Enums.tipo_modalidade | null
-  }
-
-  export type timesCreateOrConnectWithoutMembros_timeInput = {
-    where: timesWhereUniqueInput
+  export type timesUpsertWithoutMembros_timeInput = {
+    update: XOR<timesUpdateWithoutMembros_timeInput, timesUncheckedUpdateWithoutMembros_timeInput>
     create: XOR<timesCreateWithoutMembros_timeInput, timesUncheckedCreateWithoutMembros_timeInput>
+    where?: timesWhereInput
+  }
+
+  export type timesUpdateToOneWithWhereWithoutMembros_timeInput = {
+    where?: timesWhereInput
+    data: XOR<timesUpdateWithoutMembros_timeInput, timesUncheckedUpdateWithoutMembros_timeInput>
+  }
+
+  export type timesUpdateWithoutMembros_timeInput = {
+    nome?: StringFieldUpdateOperationsInput | string
+    modalidades?: modalidadesUpdateOneWithoutTimesNestedInput
+  }
+
+  export type timesUncheckedUpdateWithoutMembros_timeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nome?: StringFieldUpdateOperationsInput | string
+    modalidade_id?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type usuariosUpsertWithoutMembros_timeInput = {
@@ -7842,7 +10654,7 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
+    usuario_modalidades?: usuario_modalidadesUpdateManyWithoutUsuariosNestedInput
     cursos?: cursosUpdateOneWithoutUsuariosNestedInput
   }
 
@@ -7862,29 +10674,215 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
+    usuario_modalidades?: usuario_modalidadesUncheckedUpdateManyWithoutUsuariosNestedInput
   }
 
-  export type timesUpsertWithoutMembros_timeInput = {
-    update: XOR<timesUpdateWithoutMembros_timeInput, timesUncheckedUpdateWithoutMembros_timeInput>
-    create: XOR<timesCreateWithoutMembros_timeInput, timesUncheckedCreateWithoutMembros_timeInput>
-    where?: timesWhereInput
+  export type timesCreateWithoutModalidadesInput = {
+    nome: string
+    membros_time?: membros_timeCreateNestedManyWithoutTimesInput
   }
 
-  export type timesUpdateToOneWithWhereWithoutMembros_timeInput = {
-    where?: timesWhereInput
-    data: XOR<timesUpdateWithoutMembros_timeInput, timesUncheckedUpdateWithoutMembros_timeInput>
+  export type timesUncheckedCreateWithoutModalidadesInput = {
+    id?: number
+    nome: string
+    membros_time?: membros_timeUncheckedCreateNestedManyWithoutTimesInput
   }
 
-  export type timesUpdateWithoutMembros_timeInput = {
+  export type timesCreateOrConnectWithoutModalidadesInput = {
+    where: timesWhereUniqueInput
+    create: XOR<timesCreateWithoutModalidadesInput, timesUncheckedCreateWithoutModalidadesInput>
+  }
+
+  export type timesCreateManyModalidadesInputEnvelope = {
+    data: timesCreateManyModalidadesInput | timesCreateManyModalidadesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type usuario_modalidadesCreateWithoutModalidadesInput = {
+    usuarios: usuariosCreateNestedOneWithoutUsuario_modalidadesInput
+  }
+
+  export type usuario_modalidadesUncheckedCreateWithoutModalidadesInput = {
+    usuario_id: number
+  }
+
+  export type usuario_modalidadesCreateOrConnectWithoutModalidadesInput = {
+    where: usuario_modalidadesWhereUniqueInput
+    create: XOR<usuario_modalidadesCreateWithoutModalidadesInput, usuario_modalidadesUncheckedCreateWithoutModalidadesInput>
+  }
+
+  export type usuario_modalidadesCreateManyModalidadesInputEnvelope = {
+    data: usuario_modalidadesCreateManyModalidadesInput | usuario_modalidadesCreateManyModalidadesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type timesUpsertWithWhereUniqueWithoutModalidadesInput = {
+    where: timesWhereUniqueInput
+    update: XOR<timesUpdateWithoutModalidadesInput, timesUncheckedUpdateWithoutModalidadesInput>
+    create: XOR<timesCreateWithoutModalidadesInput, timesUncheckedCreateWithoutModalidadesInput>
+  }
+
+  export type timesUpdateWithWhereUniqueWithoutModalidadesInput = {
+    where: timesWhereUniqueInput
+    data: XOR<timesUpdateWithoutModalidadesInput, timesUncheckedUpdateWithoutModalidadesInput>
+  }
+
+  export type timesUpdateManyWithWhereWithoutModalidadesInput = {
+    where: timesScalarWhereInput
+    data: XOR<timesUpdateManyMutationInput, timesUncheckedUpdateManyWithoutModalidadesInput>
+  }
+
+  export type timesScalarWhereInput = {
+    AND?: timesScalarWhereInput | timesScalarWhereInput[]
+    OR?: timesScalarWhereInput[]
+    NOT?: timesScalarWhereInput | timesScalarWhereInput[]
+    id?: IntFilter<"times"> | number
+    nome?: StringFilter<"times"> | string
+    modalidade_id?: IntNullableFilter<"times"> | number | null
+  }
+
+  export type usuario_modalidadesUpsertWithWhereUniqueWithoutModalidadesInput = {
+    where: usuario_modalidadesWhereUniqueInput
+    update: XOR<usuario_modalidadesUpdateWithoutModalidadesInput, usuario_modalidadesUncheckedUpdateWithoutModalidadesInput>
+    create: XOR<usuario_modalidadesCreateWithoutModalidadesInput, usuario_modalidadesUncheckedCreateWithoutModalidadesInput>
+  }
+
+  export type usuario_modalidadesUpdateWithWhereUniqueWithoutModalidadesInput = {
+    where: usuario_modalidadesWhereUniqueInput
+    data: XOR<usuario_modalidadesUpdateWithoutModalidadesInput, usuario_modalidadesUncheckedUpdateWithoutModalidadesInput>
+  }
+
+  export type usuario_modalidadesUpdateManyWithWhereWithoutModalidadesInput = {
+    where: usuario_modalidadesScalarWhereInput
+    data: XOR<usuario_modalidadesUpdateManyMutationInput, usuario_modalidadesUncheckedUpdateManyWithoutModalidadesInput>
+  }
+
+  export type modalidadesCreateWithoutUsuario_modalidadesInput = {
+    nome: string
+    times?: timesCreateNestedManyWithoutModalidadesInput
+  }
+
+  export type modalidadesUncheckedCreateWithoutUsuario_modalidadesInput = {
+    id?: number
+    nome: string
+    times?: timesUncheckedCreateNestedManyWithoutModalidadesInput
+  }
+
+  export type modalidadesCreateOrConnectWithoutUsuario_modalidadesInput = {
+    where: modalidadesWhereUniqueInput
+    create: XOR<modalidadesCreateWithoutUsuario_modalidadesInput, modalidadesUncheckedCreateWithoutUsuario_modalidadesInput>
+  }
+
+  export type usuariosCreateWithoutUsuario_modalidadesInput = {
+    rm: string
+    nome: string
+    data_nascimento?: Date | string | null
+    email: string
+    senha: string
+    telefone: string
+    foto_perfil?: string | null
+    criado_em?: Date | string
+    atualizado_em?: Date | string
+    codigo_verificacao?: number | null
+    codigo_gerado_em?: Date | string | null
+    tentativas_login?: number
+    tipo_usuario?: $Enums.tipo_usuario
+    membros_time?: membros_timeCreateNestedManyWithoutUsuariosInput
+    cursos?: cursosCreateNestedOneWithoutUsuariosInput
+  }
+
+  export type usuariosUncheckedCreateWithoutUsuario_modalidadesInput = {
+    id?: number
+    rm: string
+    nome: string
+    data_nascimento?: Date | string | null
+    curso_id?: number | null
+    email: string
+    senha: string
+    telefone: string
+    foto_perfil?: string | null
+    criado_em?: Date | string
+    atualizado_em?: Date | string
+    codigo_verificacao?: number | null
+    codigo_gerado_em?: Date | string | null
+    tentativas_login?: number
+    tipo_usuario?: $Enums.tipo_usuario
+    membros_time?: membros_timeUncheckedCreateNestedManyWithoutUsuariosInput
+  }
+
+  export type usuariosCreateOrConnectWithoutUsuario_modalidadesInput = {
+    where: usuariosWhereUniqueInput
+    create: XOR<usuariosCreateWithoutUsuario_modalidadesInput, usuariosUncheckedCreateWithoutUsuario_modalidadesInput>
+  }
+
+  export type modalidadesUpsertWithoutUsuario_modalidadesInput = {
+    update: XOR<modalidadesUpdateWithoutUsuario_modalidadesInput, modalidadesUncheckedUpdateWithoutUsuario_modalidadesInput>
+    create: XOR<modalidadesCreateWithoutUsuario_modalidadesInput, modalidadesUncheckedCreateWithoutUsuario_modalidadesInput>
+    where?: modalidadesWhereInput
+  }
+
+  export type modalidadesUpdateToOneWithWhereWithoutUsuario_modalidadesInput = {
+    where?: modalidadesWhereInput
+    data: XOR<modalidadesUpdateWithoutUsuario_modalidadesInput, modalidadesUncheckedUpdateWithoutUsuario_modalidadesInput>
+  }
+
+  export type modalidadesUpdateWithoutUsuario_modalidadesInput = {
     nome?: StringFieldUpdateOperationsInput | string
-    modalidades?: NullableEnumtipo_modalidadeFieldUpdateOperationsInput | $Enums.tipo_modalidade | null
+    times?: timesUpdateManyWithoutModalidadesNestedInput
   }
 
-  export type timesUncheckedUpdateWithoutMembros_timeInput = {
+  export type modalidadesUncheckedUpdateWithoutUsuario_modalidadesInput = {
     id?: IntFieldUpdateOperationsInput | number
     nome?: StringFieldUpdateOperationsInput | string
-    modalidades?: NullableEnumtipo_modalidadeFieldUpdateOperationsInput | $Enums.tipo_modalidade | null
+    times?: timesUncheckedUpdateManyWithoutModalidadesNestedInput
+  }
+
+  export type usuariosUpsertWithoutUsuario_modalidadesInput = {
+    update: XOR<usuariosUpdateWithoutUsuario_modalidadesInput, usuariosUncheckedUpdateWithoutUsuario_modalidadesInput>
+    create: XOR<usuariosCreateWithoutUsuario_modalidadesInput, usuariosUncheckedCreateWithoutUsuario_modalidadesInput>
+    where?: usuariosWhereInput
+  }
+
+  export type usuariosUpdateToOneWithWhereWithoutUsuario_modalidadesInput = {
+    where?: usuariosWhereInput
+    data: XOR<usuariosUpdateWithoutUsuario_modalidadesInput, usuariosUncheckedUpdateWithoutUsuario_modalidadesInput>
+  }
+
+  export type usuariosUpdateWithoutUsuario_modalidadesInput = {
+    rm?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    data_nascimento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    senha?: StringFieldUpdateOperationsInput | string
+    telefone?: StringFieldUpdateOperationsInput | string
+    foto_perfil?: NullableStringFieldUpdateOperationsInput | string | null
+    criado_em?: DateTimeFieldUpdateOperationsInput | Date | string
+    atualizado_em?: DateTimeFieldUpdateOperationsInput | Date | string
+    codigo_verificacao?: NullableIntFieldUpdateOperationsInput | number | null
+    codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tentativas_login?: IntFieldUpdateOperationsInput | number
+    tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    membros_time?: membros_timeUpdateManyWithoutUsuariosNestedInput
+    cursos?: cursosUpdateOneWithoutUsuariosNestedInput
+  }
+
+  export type usuariosUncheckedUpdateWithoutUsuario_modalidadesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    rm?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    data_nascimento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    curso_id?: NullableIntFieldUpdateOperationsInput | number | null
+    email?: StringFieldUpdateOperationsInput | string
+    senha?: StringFieldUpdateOperationsInput | string
+    telefone?: StringFieldUpdateOperationsInput | string
+    foto_perfil?: NullableStringFieldUpdateOperationsInput | string | null
+    criado_em?: DateTimeFieldUpdateOperationsInput | Date | string
+    atualizado_em?: DateTimeFieldUpdateOperationsInput | Date | string
+    codigo_verificacao?: NullableIntFieldUpdateOperationsInput | number | null
+    codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tentativas_login?: IntFieldUpdateOperationsInput | number
+    tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
+    membros_time?: membros_timeUncheckedUpdateManyWithoutUsuariosNestedInput
   }
 
   export type usuariosCreateManyCursosInput = {
@@ -7902,7 +10900,6 @@ export namespace Prisma {
     codigo_gerado_em?: Date | string | null
     tentativas_login?: number
     tipo_usuario?: $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type usuariosUpdateWithoutCursosInput = {
@@ -7919,8 +10916,8 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUpdateManyWithoutUsuariosNestedInput
+    usuario_modalidades?: usuario_modalidadesUpdateManyWithoutUsuariosNestedInput
   }
 
   export type usuariosUncheckedUpdateWithoutCursosInput = {
@@ -7938,8 +10935,8 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
     membros_time?: membros_timeUncheckedUpdateManyWithoutUsuariosNestedInput
+    usuario_modalidades?: usuario_modalidadesUncheckedUpdateManyWithoutUsuariosNestedInput
   }
 
   export type usuariosUncheckedUpdateManyWithoutCursosInput = {
@@ -7957,12 +10954,15 @@ export namespace Prisma {
     codigo_gerado_em?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     tentativas_login?: IntFieldUpdateOperationsInput | number
     tipo_usuario?: Enumtipo_usuarioFieldUpdateOperationsInput | $Enums.tipo_usuario
-    modalidades?: NullableJsonNullValueInput | InputJsonValue
   }
 
   export type membros_timeCreateManyUsuariosInput = {
     time_id: number
     funcao?: $Enums.tipo_funcao | null
+  }
+
+  export type usuario_modalidadesCreateManyUsuariosInput = {
+    modalidade_id: number
   }
 
   export type membros_timeUpdateWithoutUsuariosInput = {
@@ -7978,6 +10978,18 @@ export namespace Prisma {
   export type membros_timeUncheckedUpdateManyWithoutUsuariosInput = {
     time_id?: IntFieldUpdateOperationsInput | number
     funcao?: NullableEnumtipo_funcaoFieldUpdateOperationsInput | $Enums.tipo_funcao | null
+  }
+
+  export type usuario_modalidadesUpdateWithoutUsuariosInput = {
+    modalidades?: modalidadesUpdateOneRequiredWithoutUsuario_modalidadesNestedInput
+  }
+
+  export type usuario_modalidadesUncheckedUpdateWithoutUsuariosInput = {
+    modalidade_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type usuario_modalidadesUncheckedUpdateManyWithoutUsuariosInput = {
+    modalidade_id?: IntFieldUpdateOperationsInput | number
   }
 
   export type membros_timeCreateManyTimesInput = {
@@ -7998,6 +11010,43 @@ export namespace Prisma {
   export type membros_timeUncheckedUpdateManyWithoutTimesInput = {
     membro_id?: IntFieldUpdateOperationsInput | number
     funcao?: NullableEnumtipo_funcaoFieldUpdateOperationsInput | $Enums.tipo_funcao | null
+  }
+
+  export type timesCreateManyModalidadesInput = {
+    id?: number
+    nome: string
+  }
+
+  export type usuario_modalidadesCreateManyModalidadesInput = {
+    usuario_id: number
+  }
+
+  export type timesUpdateWithoutModalidadesInput = {
+    nome?: StringFieldUpdateOperationsInput | string
+    membros_time?: membros_timeUpdateManyWithoutTimesNestedInput
+  }
+
+  export type timesUncheckedUpdateWithoutModalidadesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nome?: StringFieldUpdateOperationsInput | string
+    membros_time?: membros_timeUncheckedUpdateManyWithoutTimesNestedInput
+  }
+
+  export type timesUncheckedUpdateManyWithoutModalidadesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    nome?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type usuario_modalidadesUpdateWithoutModalidadesInput = {
+    usuarios?: usuariosUpdateOneRequiredWithoutUsuario_modalidadesNestedInput
+  }
+
+  export type usuario_modalidadesUncheckedUpdateWithoutModalidadesInput = {
+    usuario_id?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type usuario_modalidadesUncheckedUpdateManyWithoutModalidadesInput = {
+    usuario_id?: IntFieldUpdateOperationsInput | number
   }
 
 

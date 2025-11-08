@@ -4,9 +4,8 @@ import { formatTelefone } from "../../utils/sanitization.js";
 import Logo from "../../assets/logo.png";
 import ProfileUploader from "../../components/ProfileUploader.jsx";
 import SelectCursos from "../../components/selectCursos.jsx";
-import { BASE_URL } from "../../utils/enviromentSettings.js";
 import { HandleIsAdmin } from "../../utils/handleIsAdmin.js";
-import { EditarUsuário, verUsuários } from "../../hooks/api.js";
+import { EditarUsuário, verModalidades, verUsuários } from "../../hooks/api.js";
 
 function ClickableUserEntry({ name, rm, course }) {
   return (
@@ -27,52 +26,44 @@ export default function ManagementUsersPage() {
   const [id, setId] = useState("");
   const [rm, setRm] = useState("");
   const [nome, setNome] = useState("");
+  const [nomeExib, setNomeExib] = useState("");
   const [periodo, setPeriodo] = useState("");
   const [curso, setCurso] = useState("");
   const [email, setEmail] = useState("");
   const [data_nascimento, setDataNascimento] = useState("");
   const [telefone, setTelefone] = useState("");
-  const [file, setFile] = useState("");
-  const [modalidades, setModalidades] = useState({
-    Futebol: false,
-    Vôlei: false,
-    Basquete: false,
-    Natação: false,
-  });
-  const [filtro, setFiltro] = useState(false);
+  const [selectedModalidades, setSelectedModalidades] = useState([]);
+  const [file, setFile] = useState(null);
 
-
-  const nomeRef = useRef(false);
+  const [filtro, setFiltro] = useState("");
+  const [availableModalidades, setAvailableModalidades] = useState([]);
   function ChangeForm(usuario) {
-    nomeRef.current = usuario.nome;
+    setNomeExib(usuario.nome || "");
     setId(usuario.id);
-    setRm(usuario.rm);
-    setNome(usuario.nome);
-    setEmail(usuario.email);
-    setDataNascimento(new Date(usuario.data_nascimento).toISOString().split("T")[0]);
-    setTelefone(usuario.telefone);
-    setPeriodo(`${usuario.cursos.periodo}`);
-    setCurso(usuario.curso_id);
+    setRm(usuario.rm || "");
+    setNome(usuario.nome || "");
+    setEmail(usuario.email || "");
+    setDataNascimento(usuario.data_nascimento ? new Date(usuario.data_nascimento).toISOString().split("T")[0] : "");
+    setTelefone(usuario.telefone || "");
+    setPeriodo(`${usuario.cursos?.periodo || ""}`);
+    setCurso(usuario.curso_id || "");
     setFile(usuario.foto_perfil || null);
-    const userModalidades = JSON.parse(usuario.modalidades) || {};
-    setModalidades({
-      Futebol: !!userModalidades.Futebol,
-      Vôlei: !!userModalidades.Vôlei,
-      Basquete: !!userModalidades.Basquete,
-      Natação: !!userModalidades.Natação,
-    });
+    const userModalidades = selectedUser.usuario_modalidades?.map((m) => m.modalidade_id) || [];
+    setSelectedModalidades(userModalidades);
   }
 
-  const HandleUsers = async () => {
-    const result = await verUsuários();
+  const HandleLoading = async () => {
+    const isAdmin = await HandleIsAdmin(navigate);
+    if (!isAdmin) return;
 
-    if (result && result.usuarios && result.usuarios.length > 0) {
-      const usuarios = result.usuarios;
+    const { usuarios } = await verUsuários();
+    const { modalidades } = await verModalidades();
+    if (usuarios && usuarios.length > 0 && modalidades) {
       setUsers(usuarios);
       setSelectedUser(usuarios[0]);
+      setAvailableModalidades(modalidades);
     } else {
-      setUsers([]);
-      setSelectedUser(null);
+      navigate("/");
     }
   };
 
@@ -80,11 +71,8 @@ export default function ManagementUsersPage() {
   useEffect(() => {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
-    (async () => {
-      const isAdmin = await HandleIsAdmin(navigate);
-      if (isAdmin) await HandleUsers();
-    })();
-  }, [BASE_URL]);
+    HandleLoading();
+  });
 
   useEffect(() => {
     if (selectedUser) {
@@ -93,9 +81,14 @@ export default function ManagementUsersPage() {
   }, [selectedUser]);
 
   function handleChange(e) {
-    const { name, value } = e.target;
+    const { name, value, checked } = e.target;
+    if (name === "modalidade") {
+      setSelectedModalidades((prev) =>
+        checked ? [...prev, parseInt(value)] : prev.filter((id) => id !== parseInt(value))
+      );
+    }
+
     const setters = {
-      rm: setRm,
       nome: setNome,
       email: setEmail,
       data_nascimento: setDataNascimento,
@@ -104,11 +97,6 @@ export default function ManagementUsersPage() {
     setters[name]?.(value);
   }
 
-  const handleModalidadeChange = (e) => {
-    const { value, checked } = e.target;
-    setModalidades((prev) => ({ ...prev, [value]: checked }));
-  };
-
   const handleFiltroChange = (e) => {
     const value = e.target.value;
     setFiltro(value);
@@ -116,35 +104,32 @@ export default function ManagementUsersPage() {
       setSelectedUser(users[0]);
       return;
     }
-
-    const filtredUsers = users.filter((u) => {
-      const userModalidades = JSON.parse(u.modalidades || "{}");
-      return !!userModalidades[value];
-    });
-    setSelectedUser(filtredUsers[0] || null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
-    data.append("rm", rm);
     data.append("nome", nome);
     data.append("email", email);
     data.append("data_nascimento", data_nascimento);
     data.append("telefone", telefone);
     data.append("curso_id", parseInt(curso));
-    data.append("modalidades", JSON.stringify(modalidades));
 
-    if (file) {
+    const modalidades = Array.isArray(selectedModalidades)
+      ? selectedModalidades.map((id) => Number(id)).filter((id) => !isNaN(id))
+      : [];
+
+    modalidades.forEach((id) => {
+      data.append("modalidades[]", id);
+    });
+
+    if (file && file instanceof File) {
       data.append("photo", file);
     }
 
-    const result = await EditarUsuário(data, id)
+    const result = await EditarUsuário(data, id);
     if (result) {
-      nomeRef.current = nome;
-      HandleUsers();
-    } else {
-      throw new Error(result.message || "Erro na edição");
+      setNomeExib(result.nome);
     }
   };
 
@@ -155,8 +140,8 @@ export default function ManagementUsersPage() {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <img src={Logo} alt="Logo" className="w-[50px] h-[50px]" />
-            <div className="border-l border-neutra-pretaw-[10px] h-[50px]"></div>
-            <h1 className="text-lg font-[energy] mt-5">Área do Administrador</h1>
+            <div className="border-l border-neutra-preta w-[10px] h-[50px]"></div>
+            <h1 className="text-lg font-[energy] mt-5">Usuários</h1>
           </div>
         </div>
 
@@ -166,12 +151,13 @@ export default function ManagementUsersPage() {
           <div className="h-[85%] w-[50%]">
             <h2 className="text-lg font-[energy] border-b-2 border-b-black">VISUALIZAR ALUNOS</h2>
             <div className="flex flex-col h-full justify-between">
+              {!users.length && <p className="text-center">Carregando usuários...</p>}
               <div className="w-full max-h-[80%] overflow-y-scroll flex flex-col">
                 {users
                   .filter((u) => {
                     if (!filtro) return true;
-                    const userModalidades = JSON.parse(u.modalidades || "{}");
-                    return !!userModalidades[filtro];
+                    const filtredUsers = u.usuario_modalidades?.some((m) => String(m.modalidade_id) === String(filtro));
+                    return filtredUsers;
                   })
                   .map((u) => (
                     <div key={u.id} onClick={() => setSelectedUser(u)} className="cursor-pointer hover:bg-gray-100 p-1">
@@ -187,12 +173,12 @@ export default function ManagementUsersPage() {
                   id="filtro"
                   value={filtro}
                   onChange={handleFiltroChange}
-                  className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+                  className="bg-neutra-branca border rounded-lg p-3 w-full"
                 >
                   <option value="">Selecione uma modalidade</option>
-                  {Object.keys(modalidades).map((mod) => (
-                    <option key={mod} value={mod}>
-                      {mod}
+                  {availableModalidades.map((mod) => (
+                    <option key={mod.id} value={mod.id}>
+                      {mod.nome}
                     </option>
                   ))}
                 </select>
@@ -203,7 +189,7 @@ export default function ManagementUsersPage() {
           {/* Info do aluno selecionado */}
           <div className="h-[85%] w-[50%] flex flex-col">
             <h2 className="text-xl font-bold  border-b-2 border-b-black font-[Energy]">
-              {selectedUser ? selectedUser.nome : "ALUNO"}
+              {selectedUser ? nomeExib : "ALUNO"}
             </h2>
             <div className="h-full w-full overflow-y-scroll">
               <div className="flex flex-col justify-around w-full gap-2">
@@ -224,11 +210,11 @@ export default function ManagementUsersPage() {
                     value={rm}
                     onChange={handleChange}
                     disabled
-                    className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-[#aaa] text-base w-full"
+                    className="px-3 py-2 bg-gray-100 border rounded text-[#aaa] text-base w-full"
                   />
                 </div>
                 <div className="flex flex-col mb-2">
-                  <label htmlFor="name" className="mb-1 text-neutra-preta">
+                  <label htmlFor="nome" className="mb-1 text-neutra-preta">
                     Nome
                   </label>
                   <input
@@ -239,8 +225,8 @@ export default function ManagementUsersPage() {
                     onChange={handleChange}
                     required
                     autoComplete="name"
-                    pattern="[a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+( [a-zA-Z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+)*"
-                    className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
+                    pattern="[a-zA-Z\u00C0-\u024F]+( [a-zA-Z\u00C0-\u024F]+)*"
+                    className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full"
                   />
                 </div>
                 <div className="flex flex-col mb-2">
@@ -255,7 +241,7 @@ export default function ManagementUsersPage() {
                     onChange={handleChange}
                     required
                     autoComplete="email"
-                    className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
+                    className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full"
                   />
                 </div>
                 <div className="flex flex-col mb-2">
@@ -270,22 +256,23 @@ export default function ManagementUsersPage() {
                     value={telefone}
                     onChange={handleChange}
                     required
-                    className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
+                    className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full"
                   />
                 </div>
                 <div className="flex flex-col mb-2">
-                  <label htmlFor="dataNascimento" className="mb-1 text-neutra-preta">
+                  <label htmlFor="data_nascimento" className="mb-1 text-neutra-preta">
                     Data de Nascimento
                   </label>
                   <input
                     type="date"
-                    id="dataNascimento"
+                    id="data_nascimento"
+                    name="data_nascimento"
                     value={data_nascimento}
                     onChange={handleChange}
-                    min="2000-01-01"
+                    min="1900-01-01"
                     max={new Date().toISOString().split("T")[0]}
                     required
-                    className="px-3 py-2 bg-gray-100 border-3 border-gray-300 rounded text-neutra-preta text-base w-full"
+                    className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full"
                   />
                 </div>
 
@@ -303,14 +290,23 @@ export default function ManagementUsersPage() {
                   </label>
                 </div>
 
-                {/* Modalidades */}
-                <div className="flex flex-col mb-2">
-                  {Object.keys(modalidades).map((mod) => (
-                    <label key={mod} className="block mb-1">
-                      <input type="checkbox" value={mod} name="modalidades" checked={modalidades[mod]} onChange={handleModalidadeChange} />
-                      {mod}
-                    </label>
-                  ))}
+                {/* Modalidades: checkboxes baseadas em availableModalidades (ids) */}
+                <h4 className="text-neutra-preta mb-2 font-bold">Modalidades</h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {availableModalidades &&
+                    availableModalidades.map((mod) => (
+                      <label key={mod.id} className="flex items-center gap-2 text-neutra-preta">
+                        <input
+                          type="checkbox"
+                          name="modalidade"
+                          value={mod.id}
+                          checked={selectedModalidades.includes(mod.id)}
+                          onChange={handleChange}
+                          className="w-4 h-4"
+                        />
+                        {mod.nome}
+                      </label>
+                    ))}
                 </div>
               </div>
 

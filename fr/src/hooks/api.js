@@ -127,16 +127,6 @@ export const verUsuários = async () => {
   }
 };
 
-export const verTimes = async () => {
-  try {
-    const response = await api.get(`${BASE_URL}/time/`);
-    return response.data;
-  } catch (err) {
-    toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
-    return null;
-  }
-};
-
 export const criarTime = async (data) => {
   try {
     const response = await api.post(`${BASE_URL}/time/`, data);
@@ -163,6 +153,26 @@ export const deletarTime = async (id) => {
   try {
     const response = await api.delete(`${BASE_URL}/time/${id}`);
     toast.success("Time apagado com sucesso!", toastSettings);
+    return response.data;
+  } catch (err) {
+    toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
+    return null;
+  }
+};
+
+export const verTimes = async () => {
+  try {
+    const response = await api.get(`${BASE_URL}/time/`);
+    return response.data;
+  } catch (err) {
+    toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
+    return null;
+  }
+};
+
+export const verModalidades = async () => {
+  try {
+    const response = await api.get(`${BASE_URL}/time/modalidades`);
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);

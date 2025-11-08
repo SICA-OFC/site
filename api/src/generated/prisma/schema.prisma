@@ -21,41 +21,58 @@ model cursos {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model usuarios {
-  id                 Int            @id @default(autoincrement())
-  rm                 String         @unique @db.VarChar(5)
-  nome               String         @db.VarChar(100)
-  data_nascimento    DateTime?      @db.Date
-  curso_id           Int?
-  email              String         @unique @db.VarChar(255)
-  senha              String
-  telefone           String         @db.VarChar(15)
-  foto_perfil        String?
-  criado_em          DateTime       @default(now()) @db.Timestamptz(6)
-  atualizado_em      DateTime       @default(now()) @db.Timestamptz(6)
-  codigo_verificacao Int?
-  codigo_gerado_em   DateTime?      @db.Timestamptz(6)
-  tentativas_login   Int            @default(0)
-  tipo_usuario       tipo_usuario   @default(aluno)
-  modalidades        Json?
-  membros_time       membros_time[]
-  cursos             cursos?        @relation(fields: [curso_id], references: [id], onDelete: Restrict)
+  id                  Int                   @id @default(autoincrement())
+  rm                  String                @unique @db.VarChar(5)
+  nome                String                @db.VarChar(100)
+  data_nascimento     DateTime?             @db.Date
+  curso_id            Int?
+  email               String                @unique @db.VarChar(255)
+  senha               String
+  telefone            String                @db.VarChar(15)
+  foto_perfil         String?
+  criado_em           DateTime              @default(now()) @db.Timestamptz(6)
+  atualizado_em       DateTime              @default(now()) @db.Timestamptz(6)
+  codigo_verificacao  Int?
+  codigo_gerado_em    DateTime?             @db.Timestamptz(6)
+  tentativas_login    Int                   @default(0)
+  tipo_usuario        tipo_usuario          @default(aluno)
+  membros_time        membros_time[]
+  usuario_modalidades usuario_modalidades[]
+  cursos              cursos?               @relation(fields: [curso_id], references: [id], onDelete: Restrict, map: "fk_usuario_curso")
 }
 
 model times {
-  id           Int              @id @default(autoincrement())
-  nome         String           @unique @db.VarChar(100)
-  modalidades  tipo_modalidade?
-  membros_time membros_time[]
+  id            Int            @id @default(autoincrement())
+  nome          String         @unique @db.VarChar(100)
+  modalidade_id Int?
+  membros_time  membros_time[]
+  modalidades   modalidades?   @relation(fields: [modalidade_id], references: [id], onDelete: Restrict, map: "fk_time_modalidade")
 }
 
 model membros_time {
   time_id   Int
   membro_id Int
   funcao    tipo_funcao?
-  usuarios  usuarios     @relation(fields: [membro_id], references: [id])
-  times     times        @relation(fields: [time_id], references: [id])
+  times     times        @relation(fields: [time_id], references: [id], map: "fk_membro_time")
+  usuarios  usuarios     @relation(fields: [membro_id], references: [id], map: "fk_membro_usuario")
 
   @@id([time_id, membro_id])
+}
+
+model modalidades {
+  id                  Int                   @id @default(autoincrement())
+  nome                String                @unique @db.VarChar(50)
+  times               times[]
+  usuario_modalidades usuario_modalidades[]
+}
+
+model usuario_modalidades {
+  usuario_id    Int
+  modalidade_id Int
+  modalidades   modalidades @relation(fields: [modalidade_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario_modalidade_modalidade")
+  usuarios      usuarios    @relation(fields: [usuario_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_usuario_modalidade_usuario")
+
+  @@id([usuario_id, modalidade_id])
 }
 
 enum tipo_funcao {
@@ -70,11 +87,4 @@ enum tipo_usuario {
   coordenador
   diretor
   visitante
-}
-
-enum tipo_modalidade {
-  Futebol
-  V_lei    @map("Vôlei")
-  Basquete
-  Nata__o  @map("Natação")
 }
