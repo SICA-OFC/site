@@ -140,7 +140,7 @@ export default function ManagementUsersPage() {
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             <img src={Logo} alt="Logo" className="w-[50px] h-[50px]" />
-            <div className="border-l border-neutra-preta w-[10px] h-[50px]"></div>
+            <div className="border-l border-neutra-preta w-2.5 h-[50px]"></div>
             <h1 className="text-lg font-[energy] mt-5">Usuários</h1>
           </div>
         </div>
@@ -295,7 +295,7 @@ export default function ManagementUsersPage() {
                 <div className="grid grid-cols-2 gap-2">
                   {availableModalidades &&
                     availableModalidades.map((mod) => (
-                      <label key={mod.id} className="flex items-center gap-2 text-neutra-preta">
+                      <label key={mod.id} className="flex items-center gap-2 accent-neutra-preta text-neutra-preta">
                         <input
                           type="checkbox"
                           name="modalidade"

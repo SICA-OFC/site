@@ -123,8 +123,8 @@ export default function TeamCreatorPage() {
       {/* CADASTRAR TIME */}
       <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[3%] max-w-[500px] w-full flex flex-col items-center">
         <div className="flex items-center w-full">
-          <img src={logo} alt="Logo" className="w-[80px]" />
-          <div className="border-l border-neutra-preta w-[10px] h-[60px] mx-4"></div>
+          <img src={logo} alt="Logo" className="w-20" />
+          <div className="border-l border-neutra-preta w-2.5 h-[60px] mx-4"></div>
           <h2 className="text-lg font-[energy]">Criar Times</h2>
         </div>
 
@@ -163,7 +163,7 @@ export default function TeamCreatorPage() {
                           ev.stopPropagation();
                           toggleUserId(u.id);
                         }}
-                        className="w-4 h-4"
+                        className="w-4 h-4 accent-neutra-preta"
                       />
                       <ClickableUserEntry
                         name={u.nome}
@@ -296,7 +296,7 @@ export default function TeamCreatorPage() {
                               ev.stopPropagation();
                               toggleEditUserId(u.id);
                             }}
-                            className="w-4 h-4"
+                            className="w-4 h-4 accent-neutra-preta"
                           />
                           <ClickableUserEntry name={u.nome} />
                         </div>

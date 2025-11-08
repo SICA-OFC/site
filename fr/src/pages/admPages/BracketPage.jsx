@@ -380,8 +380,8 @@ export default function BracketEditorPage() {
       {/* Container 1: Torneios */}
       <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[500px] w-full flex flex-col items-center">
         <div className="flex items-center w-full">
-          <img src={logo} alt="Logo" className="w-[80px]" />
-          <div className="border-l border-neutra-preta w-[10px] h-[60px] mx-4"></div>
+          <img src={logo} alt="Logo" className="w-20" />
+          <div className="border-l border-neutra-preta w-2.5 h-[60px] mx-4"></div>
           <h2 className="text-lg font-[energy]">Área do Administrador</h2>
         </div>
 
