@@ -145,9 +145,15 @@ const editUserSchema = Joi.object({
     }),
 
   modalidades: Joi.array()
-    .items(Joi.number().integer().positive())
-    .unique() 
-    .default([]),
+    .items(Joi.number().integer().positive().messages({
+    "number.base": "O ID da modalidade é inválido",
+    }))
+    .unique()
+    .required()
+    .default([])
+    .messages({
+      "any.required": "Escolha, pelo menos, 1 modalidade de interesse.",
+    }),
 });
 
 const verifySchema = Joi.object({
