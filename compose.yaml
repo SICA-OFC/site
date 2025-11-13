@@ -26,13 +26,13 @@ services:
       command: npm start
   front-end:
       container_name: front-end
-      build: ./fr
+      build: ./front-end
       restart: always
       env_file:
           - .env
       volumes:
-          - ./fr:/fr
-          - front_node_modules:/fr/node_modules
+          - ./front-end:/front-end
+          - front_node_modules:/front-end/node_modules
       ports:
           - "5173:5173"
       command: npm run dev -- --host
