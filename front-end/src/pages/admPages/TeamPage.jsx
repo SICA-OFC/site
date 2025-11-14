@@ -38,7 +38,6 @@ export default function TeamCreatorPage() {
       setUsers(usuarios);
       setTeams(times);
       setAvailableModalidades(modalidades);
-    } else {
     }
   };
 

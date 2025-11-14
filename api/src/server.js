@@ -5,7 +5,7 @@ const limiter = require('./middlewares/rateLimit.js')
 const errorHandler = require("./middlewares/errorHandler.js");
 const userRoutes = require("./routes/userRoutes.js");
 const teamRoutes = require("./routes/teamRoutes.js");
-const bracketsRoutes = require("./routes/bracketsRoutes.js");
+const challongeRoutes = require("./routes/challongeRoutes.js");
 const path = require("path");
 
 const app = express();
@@ -21,7 +21,7 @@ app.use(limiter);
 
 app.use("/usuario", userRoutes);
 app.use("/time", teamRoutes);
-app.use("/chaveamento", bracketsRoutes);
+app.use("/torneio", challongeRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.use(errorHandler);
