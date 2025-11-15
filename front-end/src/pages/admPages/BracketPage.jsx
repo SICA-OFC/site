@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { toastSettings } from "../../utils/toastSettings";
 import { HandleIsAdmin } from "../../utils/handleIsAdmin";
 import {
+  adicionarData,
   comecarCampeonato,
   editarParticipantes,
   editarPartidas,
@@ -35,6 +36,7 @@ export default function BracketEditorPage() {
 
   const [seedSelections, setSeedSelections] = useState({});
   const [scoreInputs, setScoreInputs] = useState({});
+  const [dataPartida, setDataPartida] = useState({});
 
   const [chaveamento, setChaveamento] = useState("");
   const [chaveamentoTs, setChaveamentoTs] = useState(Date.now());
@@ -235,6 +237,7 @@ export default function BracketEditorPage() {
     const p1 = inputs.p1 === "" ? null : parseInt(inputs.p1, 10);
     const p2 = inputs.p2 === "" ? null : parseInt(inputs.p2, 10);
     const winner = inputs.winner === "" ? null : inputs.winner;
+    const description = inputs.description === "" ? null : inputs.description;
 
     if (p1 === null || p2 === null) {
       toast.warn("Preencha ambos os placares antes de enviar.", toastSettings);
@@ -247,6 +250,10 @@ export default function BracketEditorPage() {
 
     const result = await editarPartidas(body, selectedTournament.id, match.id);
     if (result) {
+      if (description) {
+        await adicionarData({ match_attachment: { description: description } }, selectedTournament.id, match.id);
+      }
+
       const updatedTournamentsList = await verCampeonatos();
       setTournaments(updatedTournamentsList);
       const updatedTournament = updatedTournamentsList.find((t) => t.tournament.id === selectedTournament.id);
@@ -553,6 +560,17 @@ export default function BracketEditorPage() {
                             </option>
                           </select>
 
+                          <input
+                            className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-full"
+                            value={dataPartida[m.id]}
+                            onChange={(e) => handleMatchScoreChange(m.id, "description", e.target.value)}
+                            type="date"
+                            id="nascimento"
+                            name="data_nascimento"
+                            min={new Date().toISOString().split("T")[0]}
+                            max="2100-01-01"
+                            required
+                          />
                           <button
                             onClick={() => updateMatchScore(m)}
                             className="bg-neutra-preta text-white px-4 py-2 rounded-lg border 

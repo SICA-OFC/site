@@ -384,3 +384,13 @@ export const editarPartidas = async (data, id, matchId) => {
     return null;
   }
 };
+
+export const adicionarData = async (data, id, matchId) => {
+  try {
+    const response = await api.post(`${BASE_URL}/campeonato/${id}/matches/${matchId}/attachments`, data);
+    return response.data;
+  } catch (err) {
+    toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
+    return null;
+  }
+};
