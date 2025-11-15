@@ -21,7 +21,7 @@ app.use(limiter);
 
 app.use("/usuario", userRoutes);
 app.use("/time", teamRoutes);
-app.use("/torneio", challongeRoutes);
+app.use("/campeonato", challongeRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 app.use(errorHandler);

@@ -1,4 +1,4 @@
-const challongeFetch = async (route, method, extra_headers, body) => {
+const challongeFetch = async (route, method, body, extra_headers) => {
   const auth_header = "Basic " + Buffer.from(`knuckles240:${process.env.CHALLONGE_API_KEY}`).toString("base64");
 
   const default_headers = {
@@ -8,7 +8,6 @@ const challongeFetch = async (route, method, extra_headers, body) => {
   };
 
   const url = `https://api.challonge.com/v1/${route}`;
-
   const response = await fetch(url, {
     method,
     headers: {
@@ -17,9 +16,8 @@ const challongeFetch = async (route, method, extra_headers, body) => {
     },
     body: body ? JSON.stringify(body) : undefined,
   });
-
   const result = await response.json();
-  res.status(response.status).send(result);
+  return result;
 };
 
 module.exports = { challongeFetch };

@@ -7,12 +7,19 @@ module.exports = {
   },
 
   editTournament: async (req, res) => {
-    const data = await challongeFetch(`tournaments/${tournamentId}/`, "PATCH", req.body);
+    const { tournamentId } = req.params;
+    const data = await challongeFetch(`tournaments/${tournamentId}.json`, "PATCH", req.body);
     res.status(201).json(data);
   },
 
   deleteTournament: async (req, res) => {
-    const data = await challongeFetch(`tournaments/${tournamentId}/`, "DELETE");
+    const { tournamentId } = req.params;
+    const data = await challongeFetch(`tournaments/${tournamentId}.json`, "DELETE");
+    res.status(201).json(data);
+  },
+
+  getTournaments: async (req, res) => {
+    const data = await challongeFetch(`tournaments.json`, "GET");
     res.status(201).json(data);
   },
 

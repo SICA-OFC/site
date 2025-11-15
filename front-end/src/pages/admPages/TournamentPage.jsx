@@ -1,11 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/logo.png";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { toastSettings } from "../../utils/toastSettings";
-import { BASE_URL } from "../../utils/enviromentSettings";
 import { HandleIsAdmin } from "../../utils/handleIsAdmin";
-import { verModalidades, verTimes, verUsuários } from "../../hooks/api";
+import {
+  adicionarParticipantes,
+  criarCampeonato,
+  deletarCampeonato,
+  editarCampeonato,
+  removerParticipantes,
+  verCampeonatos,
+  verModalidades,
+  verTimes,
+  verUsuários,
+} from "../../hooks/api";
 
 function ClickableUserEntry({ name, rm, course, modality }) {
   const parts = [name, rm, course, modality].filter(Boolean);
@@ -25,7 +32,6 @@ export default function TournamentCreatorPage() {
     fetchedRef.current = true;
 
     HandleLoading();
-    verCampeonatos();
   }, []);
 
   const [teams, setTeams] = useState([]);
@@ -64,6 +70,7 @@ export default function TournamentCreatorPage() {
 
     const result = await verTimes();
     const { modalidades } = await verModalidades();
+    const campeonatos = await verCampeonatos();
 
     if (modalidades) {
       setAvailableModalidades(modalidades);
@@ -74,82 +81,40 @@ export default function TournamentCreatorPage() {
     } else {
       setTeams(result.times);
     }
-  };
 
-  const verCampeonatos = async () => {
-    const tournamentInfo = {
-      route: "tournaments.json",
-      method: "GET",
-    };
-
-    try {
-      const response = await fetch(`${BASE_URL}/chaveamento`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tournamentInfo),
-        credentials: "include",
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setTournaments(result);
-      } else {
-        toast.error(result.erro, toastSettings);
-      }
-    } catch (error) {
-      toast.error("Algo deu errado ao consultar os campeonatos! Tente novamente!", toastSettings);
-      console.error("Erro ao verificar autenticação:", error);
+    if ((campeonatos.total = 0)) {
+      setTournaments();
+    } else {
+      setTournaments(campeonatos);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const tournamentInfo = {
-      route: "tournaments.json",
-      method: "POST",
-      body: {
-        name: nome,
-        tournament_type: tipo,
-        description: modalidade,
-      },
-    };
+    const result = await criarCampeonato({
+      name: nome,
+      tournament_type: tipo,
+      description: modalidade,
+    });
 
-    try {
-      const response = await fetch(`${BASE_URL}/chaveamento`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tournamentInfo),
-        credentials: "include",
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        setNome("");
-        setChaveamento();
-        verCampeonatos();
-        toast.success("Torneio criado com sucesso!", toastSettings);
-      } else {
-        toast.error("Erro ao criar o torneio", toastSettings);
-      }
-    } catch (error) {
-      toast.error("Erro ao criar o torneio. Tente novamente!", toastSettings);
-      console.error("Erro ao criar o torneio:", error);
+    if (!result.error) {
+      setNome("");
+      setChaveamento();
+      setTournaments(await verCampeonatos());
     }
   };
 
   const handleEdit = async (e) => {
     e.preventDefault();
 
-    const tournamentInfo = {
-      route: `tournaments/${selectedTournament.id}.json`,
-      method: "PATCH",
-      body: {
+    const result = await editarCampeonato(
+      {
         name: editNome,
         tournament_type: editTipo,
       },
-    };
+      selectedTournament.id
+    );
 
     const participants = teams
       .filter((t) => selectedTeamIds.includes(t.id))
@@ -158,82 +123,25 @@ export default function TournamentCreatorPage() {
         seed: index + 1,
       }));
 
-    const tournamentInfo2 = {
-      route: `tournaments/${selectedTournament.id}/participants/clear.json`,
-      method: "DELETE",
-    };
+    await removerParticipantes();
 
-    const tournamentInfo3 = {
-      route: `tournaments/${selectedTournament.id}/participants/bulk_add.json`,
-      method: "POST",
-      body: { participants },
-    };
-    try {
-      const response = await fetch(`${BASE_URL}/chaveamento`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tournamentInfo),
-        credentials: "include",
-      });
+    const result2 = await adicionarParticipantes({ participants }, selectedTournament.id);
 
-      await fetch(`${BASE_URL}/chaveamento`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tournamentInfo2),
-        credentials: "include",
-      });
-
-      const response3 = await fetch(`${BASE_URL}/chaveamento`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tournamentInfo3),
-        credentials: "include",
-      });
-
-      const result = await response.json();
-      const result3 = await response3.json();
-      console.log(result3);
-      if (response.ok && response3.ok) {
-        setNome("");
-        verCampeonatos();
-        toast.success("Torneio editado com sucesso!", toastSettings);
-      } else {
-        toast.error("Erro ao editar o torneio", toastSettings);
-      }
-    } catch (error) {
-      toast.error("Erro ao editar o torneio. Tente novamente!", toastSettings);
-      console.error("Erro ao editar o torneio:", error);
+    if (result && result2) {
+      setNome("");
+      setTournaments(await verCampeonatos());
     }
   };
 
   const handleDelete = async (e) => {
     e.preventDefault();
 
-    const tournamentInfo = {
-      route: `tournaments/${selectedTournament.id}.json`,
-      method: "DELETE",
-    };
+    const result = await deletarCampeonato(selectedTournament.id);
 
-    try {
-      const response = await fetch(`${BASE_URL}/chaveamento`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(tournamentInfo),
-        credentials: "include",
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        setNome("");
-        setChaveamento("");
-        verCampeonatos();
-        toast.success("Torneio deletado com sucesso!", toastSettings);
-      } else {
-        toast.error("Erro ao deletar o torneio", toastSettings);
-      }
-    } catch (error) {
-      toast.error("Erro ao deletar o torneio. Tente novamente!", toastSettings);
-      console.error("Erro ao deletar o torneio:", error);
+    if (result) {
+      setNome("");
+      setChaveamento("");
+      setTournaments(await verCampeonatos());
     }
   };
 

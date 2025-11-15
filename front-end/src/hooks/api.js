@@ -130,6 +130,10 @@ export const verUsuários = async () => {
 export const criarTime = async (data) => {
   try {
     const response = await api.post(`${BASE_URL}/time/`, data);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
     toast.success("Time criado com sucesso!", toastSettings);
     return response.data;
   } catch (err) {
@@ -141,6 +145,10 @@ export const criarTime = async (data) => {
 export const editarTime = async (data, id) => {
   try {
     const response = await api.patch(`${BASE_URL}/time/${id}`, data);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
     toast.success("Time editado com sucesso!", toastSettings);
     return response.data;
   } catch (err) {
@@ -152,6 +160,10 @@ export const editarTime = async (data, id) => {
 export const deletarTime = async (id) => {
   try {
     const response = await api.delete(`${BASE_URL}/time/${id}`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
     toast.success("Time apagado com sucesso!", toastSettings);
     return response.data;
   } catch (err) {
@@ -163,6 +175,10 @@ export const deletarTime = async (id) => {
 export const verTimes = async () => {
   try {
     const response = await api.get(`${BASE_URL}/time/`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -173,6 +189,10 @@ export const verTimes = async () => {
 export const verModalidades = async () => {
   try {
     const response = await api.get(`${BASE_URL}/time/modalidades`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -180,9 +200,14 @@ export const verModalidades = async () => {
   }
 };
 
-export const criarTorneio = async (data) => {
+export const criarCampeonato = async (data) => {
   try {
-    const response = await api.post(`${BASE_URL}/torneio`, data);
+    const response = await api.post(`${BASE_URL}/campeonato`, data);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
+    toast.success("Campeonato criado com sucesso!", toastSettings);
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -190,9 +215,14 @@ export const criarTorneio = async (data) => {
   }
 };
 
-export const editarTorneio = async (data, id) => {
+export const editarCampeonato = async (data, id) => {
   try {
-    const response = await api.patch(`${BASE_URL}/torneio/${id}`, data);
+    const response = await api.patch(`${BASE_URL}/campeonato/${id}`, data);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
+    toast.success("Campeonato editado com sucesso!", toastSettings);
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -200,9 +230,14 @@ export const editarTorneio = async (data, id) => {
   }
 };
 
-export const deletarTorneio = async (id) => {
+export const deletarCampeonato = async (id) => {
   try {
-    const response = await api.delete(`${BASE_URL}/torneio/${id}`);
+    const response = await api.delete(`${BASE_URL}/campeonato/${id}`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
+    toast.success("Campeonato apagado com sucesso!", toastSettings);
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -210,9 +245,28 @@ export const deletarTorneio = async (id) => {
   }
 };
 
-export const comecarTorneio = async (id) => {
+export const verCampeonatos = async () => {
   try {
-    const response = await api.post(`${BASE_URL}/torneio/${id}/start`);
+    const response = await api.get(`${BASE_URL}/campeonato/`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
+    return response.data;
+  } catch (err) {
+    toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
+    return null;
+  }
+};
+
+export const comecarCampeonato = async (id) => {
+  try {
+    const response = await api.post(`${BASE_URL}/campeonato/${id}/start`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
+    toast.success("Campeonato iniciado com sucesso!", toastSettings);
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -222,7 +276,11 @@ export const comecarTorneio = async (id) => {
 
 export const adicionarParticipantes = async (data, id) => {
   try {
-    const response = await api.post(`${BASE_URL}/torneio/${id}/participants/bulk_add`, data);
+    const response = await api.post(`${BASE_URL}/campeonato/${id}/participants/bulk_add`, data);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -232,7 +290,11 @@ export const adicionarParticipantes = async (data, id) => {
 
 export const removerParticipantes = async (id) => {
   try {
-    const response = await api.delete(`${BASE_URL}/torneio/${id}/participants/clear`);
+    const response = await api.delete(`${BASE_URL}/campeonato/${id}/participants/clear`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -242,7 +304,11 @@ export const removerParticipantes = async (id) => {
 
 export const verParticipantes = async (id) => {
   try {
-    const response = await api.get(`${BASE_URL}/torneio/${id}/participants/`);
+    const response = await api.get(`${BASE_URL}/campeonato/${id}/participants/`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -252,7 +318,11 @@ export const verParticipantes = async (id) => {
 
 export const verPartidas = async (id) => {
   try {
-    const response = await api.get(`${BASE_URL}/torneio/${id}/matches/`);
+    const response = await api.get(`${BASE_URL}/campeonato/${id}/matches/`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -262,7 +332,8 @@ export const verPartidas = async (id) => {
 
 export const editarPartidas = async (data, id, matchId) => {
   try {
-    const response = await api.get(`${BASE_URL}/torneio/${id}/matches/${matchId}`, data);
+    const response = await api.get(`${BASE_URL}/campeonato/${id}/matches/${matchId}`, data);
+    toast.success("Placar atualizado com sucesso!", toastSettings);
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);

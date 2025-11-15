@@ -1,13 +1,15 @@
 const express = require("express");
 const challongeController = require("../controllers/ChallongeController.js");
 const authToken = require("../middlewares/authToken.js");
+const catchAsync = require("../middlewares/catchAsync.js");
 
 const router = express.Router();
 
 router.post("/", catchAsync(challongeController.createTournament));
-router.patch("/:tournamentId/", catchAsync(challongeController.editTournament));
-router.delete("/:tournamentId/", catchAsync(challongeController.deleteTournament));
+router.patch("/:tournamentId", catchAsync(challongeController.editTournament));
+router.delete("/:tournamentId", catchAsync(challongeController.deleteTournament));
 router.post("/:tournamentId/start", catchAsync(challongeController.startTournament));
+router.get("/", catchAsync(challongeController.getTournaments));
 
 router.post("/:tournamentId/participants/bulk_add", catchAsync(challongeController.addParticipants));
 router.delete("/:tournamentId/participants/clear", catchAsync(challongeController.removeParticipants));
