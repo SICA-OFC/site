@@ -19,7 +19,7 @@ module.exports = {
   },
 
   getTournaments: async (req, res) => {
-    const data = await challongeFetch(`tournaments.json`, "GET");
+    const data = await challongeFetch(`tournaments.json?include_participants=1&include_matches=1`, "GET");
     res.status(201).json(data);
   },
 
@@ -41,6 +41,18 @@ module.exports = {
     res.status(200).json(data);
   },
 
+  finalizeTournament: async (req, res) => {
+    const { tournamentId } = req.params;
+    const data = await challongeFetch(`tournaments/${tournamentId}/finalize.json`, "POST");
+    res.status(200).json(data);
+  },
+
+  resetTournament: async (req, res) => {
+    const { tournamentId } = req.params;
+    const data = await challongeFetch(`tournaments/${tournamentId}/reset.json`, "POST");
+    res.status(200).json(data);
+  },
+
   getMatches: async (req, res) => {
     const { tournamentId } = req.params;
     const data = await challongeFetch(`tournaments/${tournamentId}/matches.json`, "GET");
@@ -56,6 +68,12 @@ module.exports = {
   getParticipants: async (req, res) => {
     const { tournamentId } = req.params;
     const data = await challongeFetch(`tournaments/${tournamentId}/participants.json`, "GET");
+    res.status(200).json(data);
+  },
+
+  updateParticipants: async (req, res) => {
+    const { tournamentId, participantsId } = req.params;
+    const data = await challongeFetch(`tournaments/${tournamentId}/participants/${participantsId}.json`, "PATCH", req.body);
     res.status(200).json(data);
   },
 };

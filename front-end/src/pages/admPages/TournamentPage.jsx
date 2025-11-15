@@ -46,6 +46,7 @@ export default function TournamentCreatorPage() {
   const [editNome, setEditNome] = useState("");
   const [editTipo, setEditTipo] = useState("single elimination");
   const [chaveamento, setChaveamento] = useState("");
+  const [chaveamentoTs, setChaveamentoTs] = useState(Date.now());
   const [selectedTeamIds, setSelectedTeamIds] = useState([]);
 
   function handleChange(e) {
@@ -121,14 +122,16 @@ export default function TournamentCreatorPage() {
       .map((t, index) => ({
         name: t.nome,
         seed: index + 1,
+        misc: t.id,
       }));
 
-    await removerParticipantes();
+    await removerParticipantes(selectedTournament.id);
 
     const result2 = await adicionarParticipantes({ participants }, selectedTournament.id);
 
     if (result && result2) {
       setNome("");
+      setChaveamentoTs(Date.now());
       setTournaments(await verCampeonatos());
     }
   };
@@ -144,6 +147,12 @@ export default function TournamentCreatorPage() {
       setTournaments(await verCampeonatos());
     }
   };
+
+  function buildChaveamentoUrl(url) {
+    if (!url) return "";
+    const sep = url.includes("?") ? "&" : "?";
+    return `${url}${sep}t=${chaveamentoTs}`;
+  }
 
   return (
     <div className="min-h-screen bg-[url('/assets/AdmBG.png')] bg-cover bg-center flex flex-col gap-5 py-5 items-center justify-center">
@@ -260,8 +269,8 @@ export default function TournamentCreatorPage() {
                 <>
                   {chaveamento && (
                     <img
-                      src={chaveamento}
-                      className="w-full max-h-[200px] object-cover object-center rounded mt-3"
+                      src={buildChaveamentoUrl(chaveamento)}
+                      className="w-full h-60 object-[left 140px] object-cover object-center rounded mt-3"
                       alt="Chaveamento"
                     />
                   )}
@@ -270,25 +279,33 @@ export default function TournamentCreatorPage() {
                     Nome do Campeonato
                   </label>
                   <input
-                    className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
+                    className={`
+                      bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full 
+                      ${selectedTournament.state === "underway" ? "text-[#aaa]" : ""}
+                    `}
                     value={editNome}
                     onChange={handleChange}
                     type="text"
                     id="editNome"
                     name="editNome"
-                    required
+                    required={selectedTournament.state !== "underway"}
+                    disabled={selectedTournament.state === "underway"}
                   />
 
                   <label className="text-sm text-center w-full mt-2" htmlFor="tipo">
                     Tipo de torneio
                   </label>
                   <select
-                    className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
+                    className={`
+                      bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full 
+                      ${selectedTournament.state === "underway" ? "text-[#aaa]" : ""}
+                    `}
                     value={editTipo}
                     id="tipo"
                     name="editTipo"
                     onChange={handleChange}
-                    required
+                    required={selectedTournament.state !== "underway"}
+                    disabled={selectedTournament.state === "underway"}
                   >
                     <option value="single elimination">Eliminação</option>
                   </select>
@@ -308,55 +325,76 @@ export default function TournamentCreatorPage() {
                     disabled
                   />
 
-                  <label className="text-sm text-center w-full mt-2" htmlFor="tipo">
-                    Times
-                  </label>
-                  <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
-                    {teams && teams.length > 0 ? (
-                      teams.map((t) => (
-                        <div
-                          key={t.id}
-                          className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between"
+                  {selectedTournament.state == "pending" ? (
+                    <>
+                      <label className="text-sm text-center w-full mt-2" htmlFor="tipo">
+                        Times
+                      </label>
+                      <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
+                        {teams && teams.length > 0 ? (
+                          teams.map((t) => (
+                            <div
+                              key={t.id}
+                              className="cursor-pointer hover:bg-gray-100 p-1 flex items-center justify-between"
+                            >
+                              <div className="flex items-center gap-3">
+                                <input
+                                  type="checkbox"
+                                  name="checkbox"
+                                  checked={selectedTeamIds.includes(t.id)}
+                                  onChange={(ev) => {
+                                    ev.stopPropagation();
+                                    toggleTeamId(t.id);
+                                  }}
+                                  className="w-4 h-4 accent-neutra-preta"
+                                />
+                                <ClickableUserEntry name={t.nome} />
+                              </div>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-center text-sm text-gray-500 mt-2">Sem times</p>
+                        )}
+                      </div>
+
+                      <p className="text-xs mt-2">Selecionados: {selectedTeamIds.length}</p>
+                      {/* Botões de ação */}
+                      <div className="flex justify-center gap-5 mt-8">
+                        <button
+                          type="submit"
+                          className="bg-neutra-preta text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
                         >
-                          <div className="flex items-center gap-3">
-                            <input
-                              type="checkbox"
-                              name="checkbox"
-                              checked={selectedTeamIds.includes(t.id)}
-                              onChange={(ev) => {
-                                ev.stopPropagation();
-                                toggleTeamId(t.id);
-                              }}
-                              className="w-4 h-4 accent-neutra-preta"
-                            />
-                            <ClickableUserEntry name={t.nome} />
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <p className="text-center text-sm text-gray-500 mt-2">Sem times</p>
-                    )}
-                  </div>
+                          Atualizar Campeonato
+                        </button>
 
-                  <p className="text-xs mt-2">Selecionados: {selectedTeamIds.length}</p>
-
-                  {/* Botões de ação */}
-                  <div className="flex justify-center gap-5 mt-8">
-                    <button
-                      type="submit"
-                      className="bg-neutra-preta text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
-                    >
-                      Atualizar Campeonato
-                    </button>
-
-                    <button
-                      onClick={handleDelete}
-                      type="button"
-                      className="bg-red-600 text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-red-600 hover:border-red-600"
-                    >
-                      Deletar Campeonato
-                    </button>
-                  </div>
+                        <button
+                          onClick={handleDelete}
+                          type="button"
+                          className="bg-red-600 text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-red-600 hover:border-red-600"
+                        >
+                          Deletar Campeonato
+                        </button>
+                      </div>
+                    </>
+                  ) : selectedTournament.state == "underway" ? (
+                    <div className="bg-neutra-branca rounded font-bold shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[900px] w-full flex flex-col items-center">
+                      Torneio em Andamento
+                    </div>
+                  ) : (
+                    selectedTournament.state == "complete" && (
+                      <div className="bg-neutra-branca rounded font-bold shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[900px] w-full flex flex-col items-center">
+                        Torneio Finalizado
+                        <button
+                          onClick={handleDelete}
+                          className="bg-red-600 text-white font-normal px-6 py-2 rounded-lg border-neutra-branca 
+                hover:bg-white hover:text-red-600 border hover:border-red-600 transition 
+                cursor-pointer"
+                        >
+                          Deletar Torneio
+                        </button>
+                      </div>
+                    )
+                  )}
                 </>
               )}
             </div>

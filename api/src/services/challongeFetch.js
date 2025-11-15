@@ -1,4 +1,5 @@
 const challongeFetch = async (route, method, body, extra_headers) => {
+  console.log(route, method, body, extra_headers)
   const auth_header = "Basic " + Buffer.from(`knuckles240:${process.env.CHALLONGE_API_KEY}`).toString("base64");
 
   const default_headers = {

@@ -60,7 +60,7 @@ export default function SelectCursos({ periodo, curso, onPeriodoChange, onCursoC
                 onChange={(e) => onPeriodoChange(e.target.value)}
                 required
                 className="appearance-none w-3 h-3 border border-destaque rounded-lg bg-neutra-branca
-                cursor-pointer checked:bg-[#001429]"
+                cursor-pointer checked:bg-neutra-preta"
               />
               {labelText}
             </label>

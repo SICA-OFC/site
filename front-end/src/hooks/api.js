@@ -274,6 +274,36 @@ export const comecarCampeonato = async (id) => {
   }
 };
 
+export const finalizarCampeonato = async (id) => {
+  try {
+    const response = await api.post(`${BASE_URL}/campeonato/${id}/finalize`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
+    toast.success("Campeonato finalizado com sucesso!", toastSettings);
+    return response.data;
+  } catch (err) {
+    toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
+    return null;
+  }
+};
+
+export const resetarCampeonato = async (id) => {
+  try {
+    const response = await api.post(`${BASE_URL}/campeonato/${id}/reset`);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
+    toast.success("Campeonato resetado com sucesso!", toastSettings);
+    return response.data;
+  } catch (err) {
+    toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
+    return null;
+  }
+};
+
 export const adicionarParticipantes = async (data, id) => {
   try {
     const response = await api.post(`${BASE_URL}/campeonato/${id}/participants/bulk_add`, data);
@@ -316,6 +346,20 @@ export const verParticipantes = async (id) => {
   }
 };
 
+export const editarParticipantes = async (data, id, participantId) => {
+  try {
+    const response = await api.patch(`${BASE_URL}/campeonato/${id}/participants/${participantId}`, data);
+    if (response.data.error) {
+      toast.error(response.data.erro || "Algo deu errado! Tente novamente!", toastSettings);
+      return true;
+    }
+    return response.data;
+  } catch (err) {
+    toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
+    return null;
+  }
+};
+
 export const verPartidas = async (id) => {
   try {
     const response = await api.get(`${BASE_URL}/campeonato/${id}/matches/`);
@@ -332,7 +376,7 @@ export const verPartidas = async (id) => {
 
 export const editarPartidas = async (data, id, matchId) => {
   try {
-    const response = await api.get(`${BASE_URL}/campeonato/${id}/matches/${matchId}`, data);
+    const response = await api.patch(`${BASE_URL}/campeonato/${id}/matches/${matchId}`, data);
     toast.success("Placar atualizado com sucesso!", toastSettings);
     return response.data;
   } catch (err) {

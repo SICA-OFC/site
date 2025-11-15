@@ -83,8 +83,8 @@ const Header = () => {
               <Link to="/equipes" className="hover:border-b-2 border-primaria transition">
                 Equipes
               </Link>
-              <Link to="/chaves" className="hover:border-b-2 border-primaria transition">
-                Chaves
+              <Link to="/campeonatos" className="hover:border-b-2 border-primaria transition">
+                Campeonatos
               </Link>
               <Link to="/modalidades" className="hover:border-b-2 border-primaria transition">
                 Modalidades

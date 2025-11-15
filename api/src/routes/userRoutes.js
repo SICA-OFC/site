@@ -19,6 +19,8 @@ router.post("/verificarSessao", catchAsync(userController.VerificarSessao));
 // Rotas protegidas (requerem autenticação)
 router.use(authToken);
 router.get("/logout", catchAsync(userController.Logout));
+ 
+router.get("/torneios/", catchAsync(userController.verTorneios));
 
 router.get("/", catchAsync(userController.VerUsuarios));
 router.get("/:id", catchAsync(userController.VerUsuario));

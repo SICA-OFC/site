@@ -3,8 +3,18 @@ import logo from "../../assets/logo.png";
 import { Bounce, toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { toastSettings } from "../../utils/toastSettings";
-import { BASE_URL } from "../../utils/enviromentSettings";
 import { HandleIsAdmin } from "../../utils/handleIsAdmin";
+import {
+  comecarCampeonato,
+  editarParticipantes,
+  editarPartidas,
+  finalizarCampeonato,
+  resetarCampeonato,
+  verCampeonatos,
+  verModalidades,
+  verParticipantes,
+  verPartidas,
+} from "../../hooks/api";
 
 function ClickableUserEntry({ name }) {
   return (
@@ -15,53 +25,54 @@ function ClickableUserEntry({ name }) {
 }
 
 export default function BracketEditorPage() {
+  const [tournaments, setTournaments] = useState([]);
+  const [selectedTournament, setSelectedTournament] = useState(null);
+  const [availableModalidades, setAvailableModalidades] = useState([]);
+
+  const [matches, setMatches] = useState([]);
+  const [participants, setParticipants] = useState([]);
+  const [participantMap, setParticipantMap] = useState({});
+
+  const [seedSelections, setSeedSelections] = useState({});
+  const [scoreInputs, setScoreInputs] = useState({});
+
+  const [chaveamento, setChaveamento] = useState("");
+  const [chaveamentoTs, setChaveamentoTs] = useState(Date.now());
+
   const navigate = useNavigate();
+
+  const atualizarCampeonatos = async () => {
+    const result = await verCampeonatos();
+    setTournaments(result);
+    if (!selectedTournament && Array.isArray(result) && result.length > 0) {
+      setSelectedTournament(result[0].tournament);
+      setChaveamento(result[0].tournament.live_image_url || "");
+      setChaveamentoTs(Date.now());
+    }
+  };
+
+  const HandleLoading = async () => {
+    const isAdmin = await HandleIsAdmin(navigate);
+    if (isAdmin) await atualizarCampeonatos();
+    const { modalidades } = await verModalidades();
+
+    if (modalidades) {
+      setAvailableModalidades(modalidades);
+    }
+  };
 
   const fetchedRef = useRef(false);
   useEffect(() => {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
 
-    (async () => {
-      const isAdmin = await HandleIsAdmin(navigate);
-      if (isAdmin) await verCampeonatos();
-    })();
+    HandleLoading();
   }, []);
 
-
-  const [tournaments, setTournaments] = useState([]);
-  const [selectedTournament, setSelectedTournament] = useState(null);
-
-  const [matches, setMatches] = useState([]); // normalized match objects
-  const [participants, setParticipants] = useState([]);
-  const [participantMap, setParticipantMap] = useState({});
-
-  const [seedSelections, setSeedSelections] = useState({});
-  const [scoreInputs, setScoreInputs] = useState({}); // { [matchId]: { p1: "", p2: "", winner: "" } }
-
-  const [chaveamento, setChaveamento] = useState("");
-  const [chaveamentoTs, setChaveamentoTs] = useState(Date.now());
-
-
-  async function callChaveamento(route, method = "GET", body = null) {
-    const payload = { route, method };
-    if (body !== null) payload.body = body;
-    const res = await fetch(`${BASE_URL}/chaveamento`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      credentials: "include",
-    });
-    const json = await res.json();
-    return { ok: res.ok, json };
-  }
-
-  // flatten / normalize matches response de várias formas (array, matches_by_round, etc.)
   function normalizeMatches(data) {
     const out = [];
     if (!data) return out;
 
-    // if array of items (each item possibly { match: {...} } or direct)
     if (Array.isArray(data)) {
       data.forEach((item) => {
         const m = item.match ? item.match : item;
@@ -70,11 +81,9 @@ export default function BracketEditorPage() {
       return out;
     }
 
-    // if object with matches_by_round
     if (data.matches_by_round) {
       Object.values(data.matches_by_round).forEach((arr) => {
         arr.forEach((item) => {
-          // item in this structure already contains player1, player2 nested
           const m = item.match ? item.match : item;
           out.push(normalizeSingleMatch(m));
         });
@@ -82,7 +91,6 @@ export default function BracketEditorPage() {
       return out;
     }
 
-    // if object with matches property
     if (data.matches && Array.isArray(data.matches)) {
       data.matches.forEach((item) => {
         const m = item.match ? item.match : item;
@@ -91,7 +99,6 @@ export default function BracketEditorPage() {
       return out;
     }
 
-    // fallback: treat as single match object
     if (typeof data === "object") {
       out.push(normalizeSingleMatch(data));
     }
@@ -99,7 +106,6 @@ export default function BracketEditorPage() {
     return out;
   }
 
-  // produce a consistent match object with player1_id, player2_id, scores_csv, id, round, raw
   function normalizeSingleMatch(m) {
     if (!m) return null;
     const player1_id = m.player1_id ?? m.player1?.id ?? m.player1?.participant_id ?? null;
@@ -120,125 +126,100 @@ export default function BracketEditorPage() {
     };
   }
 
-  // list tournaments
-  const verCampeonatos = async () => {
-    try {
-      const { ok, json } = await callChaveamento("tournaments.json", "GET");
-      if (ok) {
-        setTournaments(json);
-        if (!selectedTournament && Array.isArray(json) && json.length > 0) {
-          setSelectedTournament(json[0].tournament);
-          setChaveamento(json[0].tournament.live_image_url || "");
-          setChaveamentoTs(Date.now());
-        }
-      } else {
-        toast.error(json.erro || "Erro ao listar torneios", toastSettings);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Erro ao buscar torneios", toastSettings);
-    }
-  };
-
-  // load matches + participants and normalize
   const loadTournamentData = async (tournament) => {
     if (!tournament?.id) return;
-    try {
-      const matchesPromise = callChaveamento(`tournaments/${tournament.id}/matches.json`, "GET");
-      const participantsPromise = callChaveamento(`tournaments/${tournament.id}/participants.json`, "GET");
 
-      const [mRes, pRes] = await Promise.all([matchesPromise, participantsPromise]);
-
-      // matches: might be array or object; normalize
-      if (mRes.ok) {
-        const normalized = normalizeMatches(mRes.json);
-        setMatches(normalized.filter(Boolean));
-        // initialize scoreInputs for matches if possible (parse scores_csv)
-        const si = {};
-        normalized.forEach((mm) => {
-          if (!mm) return;
-          const csv = mm.scores_csv || "";
-          let p1 = "",
-            p2 = "";
-          if (csv && csv.includes("-")) {
-            const first = csv.split(",")[0].trim();
-            const [a, b] = first.split("-").map((s) => s.trim());
-            p1 = a;
-            p2 = b;
-          }
-          si[mm.id] = { p1: p1 ?? "", p2: p2 ?? "", winner: mm.winner_id ?? "" };
-        });
-        setScoreInputs(si);
-      } else {
-        console.warn("Erro ao buscar matches:", mRes.json);
-      }
-
-      if (!pRes.ok) {
-        toast.error(pRes.json?.erro || "Erro ao buscar participantes", toastSettings);
-        return;
-      }
-
-      const partsRaw = pRes.json || [];
-      const flat = partsRaw.map((p) => p.participant || p);
-      setParticipants(flat);
-
-      const map = {};
-      flat.forEach((p) => {
-        map[p.id] = p;
-      });
-      setParticipantMap(map);
-
-      const initialSeeds = {};
-      flat.forEach((p) => {
-        initialSeeds[p.id] = p.seed ?? "";
-      });
-      setSeedSelections(initialSeeds);
-
-      // update imagem e timestamp
-      setChaveamento(tournament.live_image_url || "");
-      setChaveamentoTs(Date.now());
-    } catch (err) {
-      console.error(err);
-      toast.error("Erro ao carregar dados do torneio", toastSettings);
+    const matches = await verPartidas(tournament.id);
+    if (!matches) {
+      toast.error(matches?.erro || "Erro ao buscar participantes", toastSettings);
+      return;
     }
+
+    const normalized = normalizeMatches(matches);
+    setMatches(normalized.filter(Boolean));
+    const si = {};
+    normalized.forEach((mm) => {
+      if (!mm) return;
+      const csv = mm.scores_csv || "";
+      let p1 = "",
+        p2 = "";
+      if (csv && csv.includes("-")) {
+        const first = csv.split(",")[0].trim();
+        const [a, b] = first.split("-").map((s) => s.trim());
+        p1 = a;
+        p2 = b;
+      }
+      si[mm.id] = { p1: p1 ?? "", p2: p2 ?? "", winner: mm.winner_id ?? "" };
+    });
+    setScoreInputs(si);
+
+    const participants = await verParticipantes(tournament.id);
+    if (!participants) {
+      toast.error(participants?.erro || "Erro ao buscar participantes", toastSettings);
+      return;
+    }
+
+    const flat = participants.map((p) => p.participant || p);
+    setParticipants(flat);
+
+    const map = {};
+    flat.forEach((p) => {
+      map[p.id] = p;
+    });
+    setParticipantMap(map);
+
+    const initialSeeds = {};
+    flat.forEach((p) => {
+      initialSeeds[p.id] = p.seed ?? "";
+    });
+    setSeedSelections(initialSeeds);
+
+    setChaveamento(tournament.live_image_url || "");
+    setChaveamentoTs(Date.now());
   };
 
   useEffect(() => {
     if (selectedTournament) {
       loadTournamentData(selectedTournament);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTournament]);
 
-  // cache-busting builder
   function buildChaveamentoUrl(url) {
     if (!url) return "";
     const sep = url.includes("?") ? "&" : "?";
     return `${url}${sep}t=${chaveamentoTs}`;
   }
 
-  // START tournament
   async function startTournament() {
     if (!selectedTournament?.id) return;
-    try {
-      const route = `tournaments/${selectedTournament.id}/start.json`;
-      const { ok, json } = await callChaveamento(route, "POST");
-      if (ok) {
-        toast.success("Torneio iniciado com sucesso", toastSettings);
-        await verCampeonatos();
-        setTimeout(() => loadTournamentData(selectedTournament), 400);
-        setChaveamentoTs(Date.now());
-      } else {
-        console.error(json);
-        toast.error(json?.erro || "Erro ao iniciar torneio", toastSettings);
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Erro ao iniciar torneio", toastSettings);
+    const result = await comecarCampeonato(selectedTournament.id);
+    if (result) {
+      setSelectedTournament(result.tournament);
+      await atualizarCampeonatos();
+      setChaveamentoTs(Date.now());
     }
   }
 
-  // handlers para inputs de placar e winner por partida
+  async function finalizeTournament() {
+    if (!selectedTournament?.id) return;
+    const result = await finalizarCampeonato(selectedTournament.id);
+    if (result) {
+      setSelectedTournament(result.tournament);
+      await atualizarCampeonatos();
+      setChaveamentoTs(Date.now());
+    }
+  }
+
+  async function restartTournament() {
+    if (!selectedTournament?.id) return;
+    const result = await resetarCampeonato(selectedTournament.id);
+    if (result) {
+      setSelectedTournament(result.tournament);
+      await atualizarCampeonatos();
+      setChaveamentoTs(Date.now());
+    }
+  }
+
   function handleMatchScoreChange(matchId, which, value) {
     setScoreInputs((prev) => ({
       ...prev,
@@ -246,9 +227,10 @@ export default function BracketEditorPage() {
     }));
   }
 
-  // update single match: PATCH tournaments/{id}/matches/{match.id}.json
   async function updateMatchScore(match) {
     if (!selectedTournament?.id || !match?.id) return;
+    if (!match.player1_id || !match.player2_id)
+      return toast.info("Você que tem definir vencedores das partidas anteriores", toastSettings);
     const inputs = scoreInputs[match.id] || { p1: "", p2: "", winner: "" };
     const p1 = inputs.p1 === "" ? null : parseInt(inputs.p1, 10);
     const p2 = inputs.p2 === "" ? null : parseInt(inputs.p2, 10);
@@ -263,23 +245,20 @@ export default function BracketEditorPage() {
     const body = { match: { scores_csv: scoresCsv } };
     if (winner) body.match.winner_id = winner;
 
-    try {
-      const route = `tournaments/${selectedTournament.id}/matches/${match.id}.json`;
-      const { ok, json } = await callChaveamento(route, "PATCH", body);
-      if (ok) {
-        toast.success("Placar atualizado", toastSettings);
-        await loadTournamentData(selectedTournament);
+    const result = await editarPartidas(body, selectedTournament.id, match.id);
+    if (result) {
+      const updatedTournamentsList = await verCampeonatos();
+      setTournaments(updatedTournamentsList);
+      const updatedTournament = updatedTournamentsList.find((t) => t.tournament.id === selectedTournament.id);
+
+      if (updatedTournament) {
+        setSelectedTournament(updatedTournament.tournament);
       } else {
-        console.error(json);
-        toast.error(json?.erro || "Erro ao atualizar placar", toastSettings);
+        await loadTournamentData(selectedTournament);
       }
-    } catch (err) {
-      console.error(err);
-      toast.error("Erro ao enviar alteração de placar", toastSettings);
     }
   }
 
-  // seed helpers retained from before (not modified)
   function handleSeedSelectionChange(participantId, newSeed) {
     setSeedSelections((prev) => ({ ...prev, [participantId]: newSeed === "" ? "" : parseInt(newSeed, 10) }));
   }
@@ -312,51 +291,32 @@ export default function BracketEditorPage() {
 
     const occupant = participants.find((p) => Number(p.seed) === Number(newSeed) && p.id !== participantId);
 
-    try {
-      if (!occupant) {
-        const route = `tournaments/${selectedTournament.id}/participants/${participantId}.json`;
-        const body = { participant: { seed: newSeed } };
-        const { ok, json } = await callChaveamento(route, "PATCH", body);
-        if (ok) {
-          toast.success("Seed atualizada com sucesso", toastSettings);
-          await loadTournamentData(selectedTournament);
-          setChaveamentoTs(Date.now());
-        } else {
-          console.error(json);
-          toast.error(json?.erro || "Erro ao atualizar seed", toastSettings);
-        }
-      } else {
-        const routeOcc = `tournaments/${selectedTournament.id}/participants/${occupant.id}.json`;
-        const routeTarget = `tournaments/${selectedTournament.id}/participants/${participantId}.json`;
-
-        const bodyOcc = { participant: { seed: oldSeed === null ? null : oldSeed } };
-        const bodyTarget = { participant: { seed: newSeed } };
-
-        const [resOcc, resTarget] = await Promise.all([
-          callChaveamento(routeOcc, "PATCH", bodyOcc),
-          callChaveamento(routeTarget, "PATCH", bodyTarget),
-        ]);
-
-        if (resOcc.ok && resTarget.ok) {
-          toast.success(
-            `Swap realizado: ${occupant.name || occupant.display_name} ↔ ${target.name || target.display_name}`,
-            toastSettings
-          );
-          await loadTournamentData(selectedTournament);
-          setChaveamentoTs(Date.now());
-        } else {
-          console.error("swap errors:", resOcc.json, resTarget.json);
-          toast.error("Erro ao trocar seeds (swap). Tente novamente.", toastSettings);
-          await loadTournamentData(selectedTournament);
-        }
+    if (!occupant) {
+      const result = await editarParticipantes(
+        { participant: { seed: newSeed } },
+        selectedTournament.id,
+        participantId
+      );
+      if (result) {
+        await loadTournamentData(selectedTournament);
+        setChaveamentoTs(Date.now());
       }
-    } catch (err) {
-      console.error(err);
-      toast.error("Erro na requisição de atualização de seed", toastSettings);
+    } else {
+      const bodyOcc = { participant: { seed: oldSeed === null ? null : oldSeed } };
+      const bodyTarget = { participant: { seed: newSeed } };
+
+      const result = await editarParticipantes(bodyOcc, selectedTournament.id, occupant.id);
+      const result2 = await editarParticipantes(bodyTarget, selectedTournament.id, participantId);
+      if (result && result2) {
+        toast.success("Alteração do chaveamento feita com sucesso!", toastSettings);
+        await loadTournamentData(selectedTournament);
+        setChaveamentoTs(Date.now());
+      } else {
+        await loadTournamentData(selectedTournament);
+      }
     }
   }
 
-  // render seed options (1..N) — used in participants list
   function renderSeedOptionsForParticipant(participant) {
     const n = Math.max(1, participants.length);
     const options = [];
@@ -426,8 +386,8 @@ export default function BracketEditorPage() {
               type="text"
               className="bg-neutra-branca text-[#aaa] border-3 border-[#ddd] rounded-lg p-3 w-full"
               value={
-                typeof selectedTournament?.description === "string"
-                  ? selectedTournament.description.charAt(0).toUpperCase() + selectedTournament.description.slice(1)
+                parseInt(selectedTournament?.description)
+                  ? availableModalidades[parseInt(selectedTournament.description)]?.nome || ""
                   : ""
               }
               id="tipo"
@@ -436,7 +396,7 @@ export default function BracketEditorPage() {
 
             <img
               src={buildChaveamentoUrl(chaveamento)}
-              className="w-full max-h-[200px] object-[left 140px] object-cover object-center rounded mt-3"
+              className="w-full h-60 object-[left 140px] object-cover object-center rounded mt-3"
               width="100%"
               height="300"
               alt="chaveamento"
@@ -456,9 +416,8 @@ export default function BracketEditorPage() {
           <p className="text-center text-sm text-gray-500 mt-2">Sem torneios</p>
         )}
       </div>
-
       {/* Container 2 OR 3 depending on state */}
-      {selectedTournament && selectedTournament.state !== "underway" ? (
+      {selectedTournament && selectedTournament.state == "pending" ? (
         // Container 2 (pre-start): mostra participantes + botão verde Iniciar Torneio
         <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[900px] w-full flex flex-col items-center">
           <div className="w-full">
@@ -518,8 +477,8 @@ export default function BracketEditorPage() {
             </div>
           </div>
         </div>
-      ) : selectedTournament && selectedTournament.state === "underway" ? (
-        // Container 3 (tournament open): mostra TODAS as partidas e botão para atualizar cada placar + campo winner_id
+      ) : selectedTournament && selectedTournament.state != "pending" && selectedTournament.state != "complete" ? (
+        // Container 3 (tournament open)
         <div className="bg-neutra-branca rounded shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[900px] w-full flex flex-col items-center">
           <div className="w-full">
             <h3 className="text-lg font-[energy] mb-2">Partidas (Torneio Aberto)</h3>
@@ -527,89 +486,123 @@ export default function BracketEditorPage() {
             {matches.length === 0 ? (
               <p className="text-sm text-gray-500">Nenhuma partida carregada.</p>
             ) : (
-              <div className="w-full overflow-y-auto max-h-[60vh] grid gap-3">
-                {matches.map((m) => (
-                  <div
-                    key={m.id || `${m.player1_id}-${m.player2_id}-${m.round}`}
-                    className="bg-white p-3 rounded shadow-sm"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium">{m.round ? `Round ${m.round}` : `Match ${m.id}`}</p>
-                        <p className="text-xs text-gray-600">
-                          {participantMap[m.player1_id]?.name || m.player1_name || "—"} vs{" "}
-                          {participantMap[m.player2_id]?.name || m.player2_name || "—"}
-                        </p>
-                      </div>
-
-                      <div className="text-sm text-gray-700">{m.scores_csv || "—"}</div>
-                    </div>
-
-                    {/* inputs para editar placar + winner */}
-                    <div className="mt-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className="flex flex-col">
-                          <span className="text-xs text-gray-600">
-                            {participantMap[m.player1_id]?.name || m.player1_name || "—"}
-                          </span>
-                          <input
-                            type="text"
-                            inputMode="numeric"
-                            value={(scoreInputs[m.id] && scoreInputs[m.id].p1) ?? ""}
-                            onChange={(e) => handleMatchScoreChange(m.id, "p1", e.target.value)}
-                            className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2 w-24"
-                          />
-                        </div>
-
-                        <div className="text-lg font-bold">—</div>
-
-                        <div className="flex flex-col">
-                          <span className="text-xs text-gray-600">
+              <>
+                <div className="w-full overflow-y-auto max-h-[52vh] grid gap-3">
+                  {matches.map((m) => (
+                    <div
+                      key={m.id || `${m.player1_id}-${m.player2_id}-${m.round}`}
+                      className="bg-white p-3 rounded shadow-sm"
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">{m.round ? `Rodada ${m.round}` : `Match ${m.id}`}</p>
+                          <p className="text-xs text-gray-600">
+                            {participantMap[m.player1_id]?.name || m.player1_name || "—"} vs{" "}
                             {participantMap[m.player2_id]?.name || m.player2_name || "—"}
-                          </span>
-                          <input
-                            type="text"
-                            inputMode="numeric"
-                            value={(scoreInputs[m.id] && scoreInputs[m.id].p2) ?? ""}
-                            onChange={(e) => handleMatchScoreChange(m.id, "p2", e.target.value)}
-                            className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2 w-24"
-                          />
+                          </p>
                         </div>
+
+                        <div className="text-sm text-gray-700">{m.scores_csv || "—"}</div>
                       </div>
 
-                      <div className="flex items-center gap-2">
-                        <label className="text-xs">ID do ganhador</label>
-                        <select
-                          value={(scoreInputs[m.id] && scoreInputs[m.id].winner) ?? ""}
-                          onChange={(e) => handleMatchScoreChange(m.id, "winner", e.target.value)}
-                          className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2"
-                        >
-                          <option value="">—</option>
-                          <option value={m.player1_id}>
-                            {m.player1_id} — {participantMap[m.player1_id]?.name || m.player1_name || "—"}
-                          </option>
-                          <option value={m.player2_id}>
-                            {m.player2_id} — {participantMap[m.player2_id]?.name || m.player2_name || "—"}
-                          </option>
-                        </select>
+                      {/* inputs para editar placar + winner */}
+                      <div className="mt-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className="flex flex-col">
+                            <span className="text-xs text-gray-600">
+                              {participantMap[m.player1_id]?.name || m.player1_name || "—"}
+                            </span>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              value={(scoreInputs[m.id] && scoreInputs[m.id].p1) ?? ""}
+                              onChange={(e) => handleMatchScoreChange(m.id, "p1", e.target.value)}
+                              className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2 w-24"
+                            />
+                          </div>
 
-                        <button
-                          onClick={() => updateMatchScore(m)}
-                          className="bg-neutra-preta text-white px-4 py-2 rounded-lg border 
+                          <div className="text-lg font-bold">—</div>
+
+                          <div className="flex flex-col">
+                            <span className="text-xs text-gray-600">
+                              {participantMap[m.player2_id]?.name || m.player2_name || "—"}
+                            </span>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              value={(scoreInputs[m.id] && scoreInputs[m.id].p2) ?? ""}
+                              onChange={(e) => handleMatchScoreChange(m.id, "p2", e.target.value)}
+                              className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2 w-24"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <label className="text-xs">ID do ganhador</label>
+                          <select
+                            value={(scoreInputs[m.id] && scoreInputs[m.id].winner) ?? ""}
+                            onChange={(e) => handleMatchScoreChange(m.id, "winner", e.target.value)}
+                            className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2"
+                          >
+                            <option value="">—</option>
+                            <option value={m.player1_id}>
+                              {m.player1_id} — {participantMap[m.player1_id]?.name || m.player1_name || "—"}
+                            </option>
+                            <option value={m.player2_id}>
+                              {m.player2_id} — {participantMap[m.player2_id]?.name || m.player2_name || "—"}
+                            </option>
+                          </select>
+
+                          <button
+                            onClick={() => updateMatchScore(m)}
+                            className="bg-neutra-preta text-white px-4 py-2 rounded-lg border 
                           border-neutra-branca cursor-pointer transition-colors duration-300 
                           hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
-                        >
-                          Atualizar Placar
-                        </button>
+                          >
+                            Atualizar Placar
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                <div className="flex justify-center gap-5 mt-6">
+                  <button
+                    onClick={restartTournament}
+                    className="bg-red-600 text-white px-6 py-2 rounded-lg border-neutra-branca 
+                hover:bg-white hover:text-red-600 border hover:border-red-600 transition 
+                cursor-pointer"
+                  >
+                    Resetar Torneio
+                  </button>
+                  {selectedTournament.state == "awaiting_review" && (
+                    <button
+                      onClick={finalizeTournament}
+                      className="bg-green-600 text-white px-6 py-2 rounded-lg border-neutra-branca 
+                hover:bg-white hover:text-green-600 border hover:border-green-600 transition 
+                cursor-pointer"
+                    >
+                      Finalizar Torneio
+                    </button>
+                  )}
+                </div>
+              </>
             )}
           </div>
         </div>
-      ) : null}
+      ) : (
+        <div className="bg-neutra-branca rounded font-bold shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[900px] w-full flex flex-col items-center">
+          Torneio Finalizado
+          <button
+            onClick={restartTournament}
+            className="bg-red-600 text-white font-normal px-6 py-2 rounded-lg border-neutra-branca 
+                hover:bg-white hover:text-red-600 border hover:border-red-600 transition 
+                cursor-pointer"
+          >
+            Resetar Torneio
+          </button>
+        </div>
+      )}
     </div>
   );
 }

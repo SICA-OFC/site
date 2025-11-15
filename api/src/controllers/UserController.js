@@ -12,6 +12,7 @@ const { verificarAccessToken } = require("../services/verificarToken.js");
 const gerarCodigo = require("../services/gerarCodigo.js");
 const { gerarAccessToken, gerarRefreshToken, regerarAccessToken } = require("../services/gerarToken.js");
 const { userSchema, loginSchema, editUserSchema, verifySchema } = require("../schemas/userSchema.js");
+const { Console } = require("console");
 
 module.exports = {
   CriarUsuario: async (req, res) => {
@@ -528,5 +529,37 @@ module.exports = {
       .clearCookie(process.env.ACCESS_TOKEN)
       .status(201)
       .json({ success: true });
+  },
+
+  verTorneios: async (req, res) => {
+    const data = req.user;
+    if (!data) return res.status(404).json({ erro: "Usuário não logado." });
+
+    const associacoesDeTime = await prisma.membros_time.findMany({
+      where: { membro_id: data.id },
+      include: {
+        times: {
+          select: {
+            nome: true,
+            modalidades: {
+              select: {
+                nome: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (associacoesDeTime.length == 0) return res.status(200).json({ erro: "Você não está em nenhum time." });
+    const timesFormatados = associacoesDeTime.map((assoc) => ({
+      id: assoc.time_id,
+      nome: assoc.times.nome,
+      funcao: assoc.funcao, 
+      modalidade: assoc.times.modalidades ? assoc.times.modalidades.nome : null,
+    }));
+    console.log(timesFormatados);
+
+    return { timesFormatados };
   },
 };
