@@ -79,7 +79,13 @@ module.exports = {
 
   addDate: async (req, res) => {
     const { tournamentId, matchId } = req.params;
-    const data = await challongeFetch(`tournaments/${tournamentId}/matches/${matchId}/attachments.json`, "PUT", req.body);
+    const data = await challongeFetch(`tournaments/${tournamentId}/matches/${matchId}/attachments.json`, "POST", req.body);
+    res.status(200).json(data);
+  },
+
+  addDate: async (req, res) => {
+    const { tournamentId, matchId } = req.params;
+    const data = await challongeFetch(`tournaments/${tournamentId}/matches/${matchId}/attachments.json`, "GET");
     res.status(200).json(data);
   },
 };

@@ -97,6 +97,7 @@ export default function TournamentCreatorPage() {
       name: nome,
       tournament_type: tipo,
       description: modalidade,
+      accept_attachments: true,
     });
 
     if (!result.error) {
@@ -204,6 +205,7 @@ export default function TournamentCreatorPage() {
               value={modalidade}
               onChange={handleChange}
               className="bg-neutra-branca border border-[#ddd] rounded-lg p-3 w-full"
+              required
             >
               <option value="">Selecione uma modalidade</option>
               {availableModalidades.map((mod) => (
@@ -281,15 +283,15 @@ export default function TournamentCreatorPage() {
                   <input
                     className={`
                       bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full 
-                      ${selectedTournament.state === "underway" ? "text-[#aaa]" : ""}
+                      ${selectedTournament.state == "pending" ? "" : "text-[#aaa]"}
                     `}
                     value={editNome}
                     onChange={handleChange}
                     type="text"
                     id="editNome"
                     name="editNome"
-                    required={selectedTournament.state !== "underway"}
-                    disabled={selectedTournament.state === "underway"}
+                    required={selectedTournament.state == "pending"}
+                    disabled={selectedTournament.state !== "pending"}
                   />
 
                   <label className="text-sm text-center w-full mt-2" htmlFor="tipo">
@@ -298,14 +300,14 @@ export default function TournamentCreatorPage() {
                   <select
                     className={`
                       bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full 
-                      ${selectedTournament.state === "underway" ? "text-[#aaa]" : ""}
+                      ${selectedTournament.state == "pending" ? "" : "text-[#aaa]"}
                     `}
                     value={editTipo}
                     id="tipo"
                     name="editTipo"
                     onChange={handleChange}
-                    required={selectedTournament.state !== "underway"}
-                    disabled={selectedTournament.state === "underway"}
+                    required={selectedTournament.state == "pending"}
+                    disabled={selectedTournament.state !== "pending"}
                   >
                     <option value="single elimination">Eliminação</option>
                   </select>
@@ -315,7 +317,7 @@ export default function TournamentCreatorPage() {
                   </label>
                   <input
                     type="text"
-                    className="bg-neutra-branca text-[#aaa] border border-[#ddd] rounded-lg p-3 w-full"
+                    className="bg-neutra-branca text-[#aaa] border-3 border-[#ddd] rounded-lg p-3 w-full"
                     value={
                       parseInt(selectedTournament?.description)
                         ? availableModalidades[parseInt(selectedTournament.description)]?.nome || ""
@@ -366,14 +368,6 @@ export default function TournamentCreatorPage() {
                         >
                           Atualizar Campeonato
                         </button>
-
-                        <button
-                          onClick={handleDelete}
-                          type="button"
-                          className="bg-red-600 text-white px-6 py-2 rounded-lg border border-neutra-branca cursor-pointer transition-all duration-300 hover:bg-white hover:text-red-600 hover:border-red-600"
-                        >
-                          Deletar Campeonato
-                        </button>
                       </div>
                     </>
                   ) : selectedTournament.state == "underway" ? (
@@ -384,17 +378,19 @@ export default function TournamentCreatorPage() {
                     selectedTournament.state == "complete" && (
                       <div className="bg-neutra-branca rounded font-bold shadow-[0_0_30px_rgba(0,0,0,0.1)] p-[2%] max-w-[900px] w-full flex flex-col items-center">
                         Torneio Finalizado
-                        <button
-                          onClick={handleDelete}
-                          className="bg-red-600 text-white font-normal px-6 py-2 rounded-lg border-neutra-branca 
-                hover:bg-white hover:text-red-600 border hover:border-red-600 transition 
-                cursor-pointer"
-                        >
-                          Deletar Torneio
-                        </button>
                       </div>
                     )
                   )}
+                  <div className="mt-3 w-full flex items-center justify-center">
+                    <button
+                      onClick={handleDelete}
+                      className="bg-red-600 text-white font-normal px-6 py-2 rounded-lg border-neutra-branca 
+                    hover:bg-white hover:text-red-600 border hover:border-red-600 transition 
+                    cursor-pointer"
+                    >
+                      Deletar Torneio
+                    </button>
+                  </div>
                 </>
               )}
             </div>

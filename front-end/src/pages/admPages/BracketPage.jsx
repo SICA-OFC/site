@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../../assets/logo.png";
-import { Bounce, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { toastSettings } from "../../utils/toastSettings";
 import { HandleIsAdmin } from "../../utils/handleIsAdmin";
@@ -237,7 +237,6 @@ export default function BracketEditorPage() {
     const p1 = inputs.p1 === "" ? null : parseInt(inputs.p1, 10);
     const p2 = inputs.p2 === "" ? null : parseInt(inputs.p2, 10);
     const winner = inputs.winner === "" ? null : inputs.winner;
-    const description = inputs.description === "" ? null : inputs.description;
 
     if (p1 === null || p2 === null) {
       toast.warn("Preencha ambos os placares antes de enviar.", toastSettings);
@@ -250,10 +249,32 @@ export default function BracketEditorPage() {
 
     const result = await editarPartidas(body, selectedTournament.id, match.id);
     if (result) {
-      if (description) {
-        await adicionarData({ match_attachment: { description: description } }, selectedTournament.id, match.id);
-      }
+      const updatedTournamentsList = await verCampeonatos();
+      setTournaments(updatedTournamentsList);
+      const updatedTournament = updatedTournamentsList.find((t) => t.tournament.id === selectedTournament.id);
 
+      if (updatedTournament) {
+        setSelectedTournament(updatedTournament.tournament);
+      } else {
+        await loadTournamentData(selectedTournament);
+      }
+    }
+  }
+
+  async function updateMatchDate(match) {
+    if (!selectedTournament?.id || !match?.id) return;
+    const inputs = scoreInputs[match.id] || { p1: "", p2: "", winner: "" };
+    const description = inputs.description === "" ? null : inputs.description;
+
+    if (description === null) {
+      toast.warn("Preencha a data da partida antes de enviar.", toastSettings);
+      return;
+    }
+
+    const body = { match_attachment: { description: description } };
+
+    const result = await adicionarData(body, selectedTournament.id, match.id);
+    if (result) {
       const updatedTournamentsList = await verCampeonatos();
       setTournaments(updatedTournamentsList);
       const updatedTournament = updatedTournamentsList.find((t) => t.tournament.id === selectedTournament.id);
@@ -513,7 +534,29 @@ export default function BracketEditorPage() {
                       </div>
 
                       {/* inputs para editar placar + winner */}
-                      <div className="mt-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                      <div className="mt-3 flex flex-col gap-3">
+                        <div className="flex items-center gap-2">
+                          <label className="text-xs">Data do Jogo</label>
+                          <input
+                            className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-50"
+                            value={dataPartida[m.id]}
+                            onChange={(e) => handleMatchScoreChange(m.id, "description", e.target.value)}
+                            type="date"
+                            id="nascimento"
+                            name="data_nascimento"
+                            min={new Date().toISOString().split("T")[0]}
+                            max="2100-01-01"
+                            required
+                          />
+                          <button
+                            onClick={() => updateMatchDate(m)}
+                            className="bg-neutra-preta text-white px-4 py-2 rounded-lg border 
+                          border-neutra-branca cursor-pointer transition-colors duration-300 
+                          hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
+                          >
+                            Atualizar Data
+                          </button>
+                        </div>
                         <div className="flex items-center gap-3">
                           <div className="flex flex-col">
                             <span className="text-xs text-gray-600">
@@ -542,9 +585,6 @@ export default function BracketEditorPage() {
                               className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2 w-24"
                             />
                           </div>
-                        </div>
-
-                        <div className="flex items-center gap-2">
                           <label className="text-xs">ID do ganhador</label>
                           <select
                             value={(scoreInputs[m.id] && scoreInputs[m.id].winner) ?? ""}
@@ -559,18 +599,6 @@ export default function BracketEditorPage() {
                               {m.player2_id} — {participantMap[m.player2_id]?.name || m.player2_name || "—"}
                             </option>
                           </select>
-
-                          <input
-                            className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-full"
-                            value={dataPartida[m.id]}
-                            onChange={(e) => handleMatchScoreChange(m.id, "description", e.target.value)}
-                            type="date"
-                            id="nascimento"
-                            name="data_nascimento"
-                            min={new Date().toISOString().split("T")[0]}
-                            max="2100-01-01"
-                            required
-                          />
                           <button
                             onClick={() => updateMatchScore(m)}
                             className="bg-neutra-preta text-white px-4 py-2 rounded-lg border 
