@@ -75,6 +75,7 @@ export default function LoginPage() {
                 type="password"
                 id="senha"
                 name="senha"
+                autoComplete="current-password"
                 required
               />
             </div>

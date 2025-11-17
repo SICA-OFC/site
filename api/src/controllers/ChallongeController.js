@@ -68,7 +68,29 @@ module.exports = {
   getMatches: async (req, res) => {
     const { tournamentId } = req.params;
     const data = await challongeFetch(`tournaments/${tournamentId}/matches.json`, "GET");
-    res.status(200).json(data);
+
+    const processingPromises = data.map(async (item) => {
+      const match = item.match;
+      const matchId = match.id;
+
+      if (!match.attachment_count || match.attachment_count == 0) return item;
+      const attachmentsArray = await challongeFetch(
+        `tournaments/${tournamentId}/matches/${matchId}/attachments.json`,
+        "GET"
+      );
+
+      if (!attachmentsArray || attachmentsArray.length == 0) return item;
+
+      const firstAttachment = attachmentsArray[0].match_attachment;
+      if (!firstAttachment || !firstAttachment.description) return item;
+      match.date = firstAttachment.description;
+
+      return item;
+    });
+
+    const processedData = await Promise.all(processingPromises);
+
+    res.status(200).json(processedData);
   },
 
   updateMatch: async (req, res) => {
@@ -83,9 +105,9 @@ module.exports = {
     res.status(200).json(data);
   },
 
-  addDate: async (req, res) => {
+  editDate: async (req, res) => {
     const { tournamentId, matchId } = req.params;
-    const data = await challongeFetch(`tournaments/${tournamentId}/matches/${matchId}/attachments.json`, "GET");
+    const data = await challongeFetch(`tournaments/${tournamentId}/matches/${matchId}/attachments.json`, "PUT", req.body);
     res.status(200).json(data);
   },
 };
