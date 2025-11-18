@@ -9,11 +9,7 @@ export default function HomePage() {
     <>
       <Header />
       <div className="flex flex-col justify-center items-center gap-10 mb-10 md:gap-20 md:mb-20">
-        <section className="bg-[url(/src/assets/bannerHome.png)] bg-no-repeat bg-cover h-40 pb-5 md:h-70 md:pb-15 w-full text-center flex justify-center items-end ">
-          <h1 className="text-white text-3xl md:text-6xl font-[Energy]">
-            SICA: O mundo é dos OUSADOS!
-          </h1>
-        </section>
+        <section className="bg-[url(/src/assets/bannerHome.png)] bg-no-repeat bg-center h-50 pb-5 md:h-70 md:pb-15 w-full flex justify-center items-end "></section>
 
         <section className="bg-secundaria text-white flex flex-col md:flex-row justify-center items-center w-[90%] md:w-[80%]">
           <img src={image1} alt="Garota jogando basquete" className="w-full md:w-[70%]" />
