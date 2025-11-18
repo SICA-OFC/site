@@ -78,6 +78,9 @@ const Header = () => {
               <Link to="/" className="hover:border-b-2 hover:border-primaria transition border-b-2 border-transparent">
                 Home
               </Link>
+              <Link to="/equipes" className="hover:border-b-2 border-primaria transition">
+                Times
+              </Link>
               <Link to="/campeonatos" className="hover:border-b-2 border-primaria transition">
                 Campeonatos
               </Link>
@@ -133,9 +136,6 @@ const Header = () => {
           </Link>
           <Link to="/campeonatos" onClick={handleClick}>
             Campeonatos
-          </Link>
-          <Link to="/modalidades" onClick={handleClick}>
-            Modalidades
           </Link>
 
           {isLoggedIn ? (
