@@ -16,8 +16,8 @@ export const Cadastrar = async (data) => {
   } catch (err) {
     toast.error(
       err.response?.data?.erro?.[0]?.msg ||
-        err.response?.data?.erro ||
-        "Algo deu errado ao cadastrar! Tente novamente!",
+      err.response?.data?.erro ||
+      "Algo deu errado ao cadastrar! Tente novamente!",
       toastSettings
     );
 
@@ -388,6 +388,7 @@ export const editarPartidas = async (data, id, matchId) => {
 export const adicionarData = async (data, id, matchId) => {
   try {
     const response = await api.patch(`${BASE_URL}/campeonato/${id}/matches/${matchId}/attachments`, data);
+    toast.success("Data criada com sucesso!", toastSettings);
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);
@@ -395,9 +396,10 @@ export const adicionarData = async (data, id, matchId) => {
   }
 };
 
-export const verDatas = async (id, matchId) => {
+export const editarData = async (data, id, matchId, attachmentId) => {
   try {
-    const response = await api.get(`${BASE_URL}/campeonato/${id}/matches/${matchId}/attachments`);
+    const response = await api.patch(`${BASE_URL}/campeonato/${id}/matches/${matchId}/attachments/${attachmentId}`, data);
+    toast.success("Data editada com sucesso!", toastSettings);
     return response.data;
   } catch (err) {
     toast.error(err.response?.data?.erro || "Algo deu errado! Tente novamente!", toastSettings);

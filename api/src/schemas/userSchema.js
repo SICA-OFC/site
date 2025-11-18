@@ -72,6 +72,17 @@ const userSchema = Joi.object({
     "any.only": "O código fornecido é inválido.",
     "string.base": "O código deve ser válido.",
   }),
+
+  modalidades: Joi.array()
+    .items(Joi.number().integer().positive().messages({
+      "number.base": "O ID da modalidade é inválido",
+    }))
+    .unique()
+    .required()
+    .default([])
+    .messages({
+      "any.required": "Escolha, pelo menos, 1 modalidade de interesse.",
+    }),
 });
 
 const loginSchema = Joi.object({
@@ -146,7 +157,7 @@ const editUserSchema = Joi.object({
 
   modalidades: Joi.array()
     .items(Joi.number().integer().positive().messages({
-    "number.base": "O ID da modalidade é inválido",
+      "number.base": "O ID da modalidade é inválido",
     }))
     .unique()
     .required()

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import { toastSettings } from '../../utils/toastSettings';
 import { HandleIsAdmin } from '../../utils/handleIsAdmin';
-import { adicionarData, comecarCampeonato, editarParticipantes, editarPartidas, finalizarCampeonato, resetarCampeonato, verCampeonatos, verModalidades, verParticipantes, verPartidas } from '../../hooks/api';
+import { adicionarData, comecarCampeonato, editarData, editarParticipantes, editarPartidas, finalizarCampeonato, resetarCampeonato, verCampeonatos, verModalidades, verParticipantes, verPartidas } from '../../hooks/api';
 
 function ClickableUserEntry({ name }) {
   return (
@@ -113,6 +113,8 @@ export default function BracketEditorPage() {
       player2_name,
       scores_csv: m.scores_csv ?? (Array.isArray(m.scores) ? m.scores.join(',') : m.scores ?? ''),
       winner_id: m.winner_id ?? m.winner?.id ?? null,
+      date: m.date ?? null,
+      attachmentId: m.attachmentId ?? null,
       raw: m,
     };
   }
@@ -140,7 +142,7 @@ export default function BracketEditorPage() {
         p1 = a;
         p2 = b;
       }
-      si[mm.id] = { p1: p1 ?? '', p2: p2 ?? '', winner: mm.winner_id ?? '', date: mm.date ?? '' };
+      si[mm.id] = { p1: p1 ?? '', p2: p2 ?? '', winner: mm.winner_id ?? '', date: mm.date ?? '', attachmentId: mm.attachmentId ?? null };
     });
     setScoreInputs(si);
 
@@ -251,17 +253,23 @@ export default function BracketEditorPage() {
 
   async function updateMatchDate(match) {
     if (!selectedTournament?.id || !match?.id) return;
-    const inputs = scoreInputs[match.id] || { p1: '', p2: '', winner: '' };
-    const description = inputs.description === '' ? null : inputs.description;
-
-    if (description === null) {
+    const inputs = scoreInputs[match.id] || { p1: '', p2: '', winner: '', date: '', attachmentId: null };
+    const dateValue = inputs.date === '' ? null : inputs.date;
+    if (dateValue === null) {
       toast.warn('Preencha a data da partida antes de enviar.', toastSettings);
       return;
     }
 
-    const body = { match_attachment: { description: description } };
+    const body = { match_attachment: { description: dateValue } };
+    let result;
+    const attachmentId = inputs.attachmentId;
+    if (attachmentId) {
+      result = await editarData(body, selectedTournament.id, match.id, attachmentId);
+    }
+    if (!attachmentId) {
+      result = await adicionarData(body, selectedTournament.id, match.id);
+    }
 
-    const result = await adicionarData(body, selectedTournament.id, match.id);
     if (result) {
       const updatedTournamentsList = await verCampeonatos();
       setTournaments(updatedTournamentsList);
@@ -359,9 +367,7 @@ export default function BracketEditorPage() {
 
         {tournaments?.length > 0 ? (
           <div className="w-full">
-            <label className="text-sm w-full" htmlFor="nome">
-              Campeonatos
-            </label>
+            <span className="text-sm w-full">Campeonatos</span>
             <div className="w-full overflow-y-scroll max-h-[220px] flex flex-col gap-1 mt-2">
               {tournaments.map((t) => (
                 <div
@@ -384,7 +390,7 @@ export default function BracketEditorPage() {
             <label className="text-sm text-center w-full mt-3" htmlFor="editNome">
               Nome do Campeonato
             </label>
-            <input className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full" value={selectedTournament?.name ?? ''} type="text" id="name" disabled />
+            <input className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full" value={selectedTournament?.name ?? ''} type="text" id="editNome" disabled />
             <label className="text-sm text-center w-full" htmlFor="tipo">
               Modalidade
             </label>
@@ -490,31 +496,31 @@ export default function BracketEditorPage() {
                       {/* inputs para editar placar + winner */}
                       <div className="mt-3 flex flex-col gap-3">
                         <div className="flex items-center gap-2">
-                          <label className="text-xs">Data do Jogo</label>
-                          <input className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-50" value={m.date ? new Date(m.date).toISOString().split('T')[0] : ""} onChange={(e) => handleMatchScoreChange(m.id, 'description', e.target.value)} type="date" id="data_jogo" name="data_jogo" min={new Date().toISOString().split('T')[0]} max="2100-01-01" required />
+                          <span className="text-xs">Data do Jogo</span>
+                          <input className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-3 w-50" value={(scoreInputs[m.id] && scoreInputs[m.id].date) || ''} onChange={(e) => handleMatchScoreChange(m.id, 'date', e.target.value)} type="date" name="data_jogo" min={new Date().toISOString().split('T')[0]} max="2100-01-01" required />
                           <button
                             onClick={() => updateMatchDate(m)}
                             className="bg-neutra-preta text-white px-4 py-2 rounded-lg border 
                           border-neutra-branca cursor-pointer transition-colors duration-300 
                           hover:bg-white hover:text-neutra-preta hover:border-neutra-preta"
                           >
-                            Atualizar Data
+                            {scoreInputs[m.id].attachmentId ? 'Atualizar Data' : 'Criar Data'}
                           </button>
                         </div>
                         <div className="flex items-center gap-3">
                           <div className="flex flex-col">
                             <span className="text-xs text-gray-600">{participantMap[m.player1_id]?.name || m.player1_name || '—'}</span>
-                            <input type="text" inputMode="numeric" value={(scoreInputs[m.id] && scoreInputs[m.id].p1) ?? ''} onChange={(e) => handleMatchScoreChange(m.id, 'p1', e.target.value)} className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2 w-24" />
+                            <input type="text" inputMode="numeric" name="p1" value={(scoreInputs[m.id] && scoreInputs[m.id].p1) ?? ''} onChange={(e) => handleMatchScoreChange(m.id, 'p1', e.target.value)} className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2 w-24" />
                           </div>
 
                           <div className="text-lg font-bold">—</div>
 
                           <div className="flex flex-col">
                             <span className="text-xs text-gray-600">{participantMap[m.player2_id]?.name || m.player2_name || '—'}</span>
-                            <input type="text" inputMode="numeric" value={(scoreInputs[m.id] && scoreInputs[m.id].p2) ?? ''} onChange={(e) => handleMatchScoreChange(m.id, 'p2', e.target.value)} className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2 w-24" />
+                            <input type="text" inputMode="numeric" name="p2" value={(scoreInputs[m.id] && scoreInputs[m.id].p2) ?? ''} onChange={(e) => handleMatchScoreChange(m.id, 'p2', e.target.value)} className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2 w-24" />
                           </div>
-                          <label className="text-xs">ID do ganhador</label>
-                          <select value={(scoreInputs[m.id] && scoreInputs[m.id].winner) ?? ''} onChange={(e) => handleMatchScoreChange(m.id, 'winner', e.target.value)} className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2">
+                          <span className="text-xs">ID do ganhador</span>
+                          <select name="winner" value={(scoreInputs[m.id] && scoreInputs[m.id].winner) ?? ''} onChange={(e) => handleMatchScoreChange(m.id, 'winner', e.target.value)} className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-2">
                             <option value="">—</option>
                             <option value={m.player1_id}>
                               {m.player1_id} — {participantMap[m.player1_id]?.name || m.player1_name || '—'}

@@ -18,6 +18,7 @@ import TeamCreatorPage from "./pages/admPages/TeamPage.jsx";
 import TournamentCreator from "./pages/admPages/TournamentPage.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import TeamsPage from "./pages/TeamsPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/confirmacao",
     element: <EmailConfirmPage />,
+  },
+  {
+    path: "/equipes",
+    element: <TeamsPage />,
   },
   {
     path: "/campeonatos",

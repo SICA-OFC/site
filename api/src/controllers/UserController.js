@@ -21,7 +21,7 @@ module.exports = {
       return res.status(400).json({ erro: error.details[0].message });
     }
 
-    const { rm, nome, curso_id, email, data_nascimento, senha, telefone, codigo } = req.body;
+    const { rm, nome, curso_id, email, data_nascimento, senha, telefone, codigo, modalidades } = req.body;
 
     const salt = await bcrypt.genSalt(12);
     const senhaHash = await bcrypt.hash(senha, salt);
@@ -67,6 +67,22 @@ module.exports = {
         foto_perfil: imageUrl ?? undefined,
       },
     });
+
+    if (modalidades.length > 0) {
+      await prisma.usuario_modalidades.deleteMany({
+        where: { usuario_id: novoUsuario.id },
+      });
+
+      const modalidadesRows = modalidades.map((mId) => ({
+        usuario_id: novoUsuario.id,
+        modalidade_id: parseInt(mId),
+      }));
+
+      await prisma.usuario_modalidades.createMany({
+        data: modalidadesRows,
+        skipDuplicates: true,
+      });
+    }
 
     const titulo = "Confirmar Cadastro";
     const texto = `Seu código de verificação é: ${codigo_verificacao}`;
@@ -555,7 +571,7 @@ module.exports = {
     const timesFormatados = associacoesDeTime.map((assoc) => ({
       id: assoc.time_id,
       nome: assoc.times.nome,
-      funcao: assoc.funcao, 
+      funcao: assoc.funcao,
       modalidade: assoc.times.modalidades ? assoc.times.modalidades.nome : null,
     }));
     console.log(timesFormatados);

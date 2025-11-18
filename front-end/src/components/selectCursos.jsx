@@ -59,7 +59,7 @@ export default function SelectCursos({ periodo, curso, onPeriodoChange, onCursoC
                 checked={periodo === p}
                 onChange={(e) => onPeriodoChange(e.target.value)}
                 required
-                className="appearance-none w-3 h-3 border border-destaque rounded-lg bg-neutra-branca
+                className="appearance-none w-2 h-2 border border-destaque rounded-lg bg-neutra-branca
                 cursor-pointer checked:bg-neutra-preta"
               />
               {labelText}
@@ -69,7 +69,7 @@ export default function SelectCursos({ periodo, curso, onPeriodoChange, onCursoC
       </div>
 
       <select
-        className="bg-neutra-branca border-3 border-[#ddd] rounded-lg p-3 w-full"
+        className="bg-neutra-branca border-2 border-[#ddd] rounded-lg p-2 w-full"
         value={curso}
         id="curso"
         onChange={(e) => onCursoChange(e.target.value)}

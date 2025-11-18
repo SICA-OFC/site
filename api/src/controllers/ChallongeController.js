@@ -83,6 +83,7 @@ module.exports = {
 
       const firstAttachment = attachmentsArray[0].match_attachment;
       if (!firstAttachment || !firstAttachment.description) return item;
+      match.attachmentId = firstAttachment.id;
       match.date = firstAttachment.description;
 
       return item;
@@ -106,8 +107,8 @@ module.exports = {
   },
 
   editDate: async (req, res) => {
-    const { tournamentId, matchId } = req.params;
-    const data = await challongeFetch(`tournaments/${tournamentId}/matches/${matchId}/attachments.json`, "PUT", req.body);
+    const { tournamentId, matchId, attachmentId } = req.params;
+    const data = await challongeFetch(`tournaments/${tournamentId}/matches/${matchId}/attachments/${attachmentId}.json`, "PUT", req.body);
     res.status(200).json(data);
   },
 };

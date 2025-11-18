@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { formatTelefone } from "../../utils/sanitization.js";
-import Logo from "../../assets/logo.png";
-import ProfileUploader from "../../components/ProfileUploader.jsx";
-import SelectCursos from "../../components/selectCursos.jsx";
-import { HandleIsAdmin } from "../../utils/handleIsAdmin.js";
-import { EditarUsuário, verModalidades, verUsuários } from "../../hooks/api.js";
+import { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { formatTelefone } from '../../utils/sanitization.js';
+import Logo from '../../assets/logo.png';
+import ProfileUploader from '../../components/ProfileUploader.jsx';
+import SelectCursos from '../../components/selectCursos.jsx';
+import { HandleIsAdmin } from '../../utils/handleIsAdmin.js';
+import { EditarUsuário, verModalidades, verUsuários } from '../../hooks/api.js';
 
 function ClickableUserEntry({ name, rm, course }) {
   return (
@@ -17,53 +17,100 @@ function ClickableUserEntry({ name, rm, course }) {
   );
 }
 
+function UserEntrySkeleton() {
+  return <div className="p-1 h-6 bg-gray-200 rounded-md animate-pulse w-full"></div>;
+}
+
+// Skeleton para o formulário de edição
+function UserFormSkeleton() {
+  return (
+    <div className="h-full w-full overflow-y-scroll animate-pulse">
+      <div className="flex flex-col justify-around w-full gap-2">
+        {/* Dados Pessoais */}
+        <h4 className="text-neutra-preta font-bold">Dados Pessoais</h4>
+        <div className="h-5 bg-gray-200 rounded w-1/4 mb-1"></div>
+        <div className="h-10 bg-gray-200 rounded w-full mb-2"></div>
+        <div className="h-5 bg-gray-200 rounded w-1/4 mb-1"></div>
+        <div className="h-10 bg-gray-200 rounded w-full mb-2"></div>
+        <div className="h-5 bg-gray-200 rounded w-1/4 mb-1"></div>
+        <div className="h-10 bg-gray-200 rounded w-full mb-2"></div>
+
+        {/* Informações Acadêmicas */}
+        <h4 className="text-neutra-preta font-bold mt-4">Informações Acadêmicas</h4>
+        <div className="h-10 bg-gray-200 rounded w-full mb-2"></div>
+        <div className="h-10 bg-gray-200 rounded w-full mb-2"></div>
+
+        {/* Modalidades */}
+        <h4 className="text-neutra-preta font-bold mt-4">Modalidades</h4>
+        <div className="grid grid-cols-2 gap-2">
+          <div className="h-8 bg-gray-200 rounded w-full"></div>
+          <div className="h-8 bg-gray-200 rounded w-full"></div>
+          <div className="h-8 bg-gray-200 rounded w-full"></div>
+          <div className="h-8 bg-gray-200 rounded w-full"></div>
+        </div>
+
+        {/* Imagem de Perfil */}
+        <h4 className="text-neutra-preta font-bold mt-4">Imagem de Perfil</h4>
+        <div className="h-32 bg-gray-200 rounded w-full"></div>
+      </div>
+    </div>
+  );
+}
+
 export default function ManagementUsersPage() {
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
 
-  const [id, setId] = useState("");
-  const [rm, setRm] = useState("");
-  const [nome, setNome] = useState("");
-  const [nomeExib, setNomeExib] = useState("");
-  const [periodo, setPeriodo] = useState("");
-  const [curso, setCurso] = useState("");
-  const [email, setEmail] = useState("");
-  const [data_nascimento, setDataNascimento] = useState("");
-  const [telefone, setTelefone] = useState("");
+  const [id, setId] = useState('');
+  const [rm, setRm] = useState('');
+  const [nome, setNome] = useState('');
+  const [nomeExib, setNomeExib] = useState('');
+  const [periodo, setPeriodo] = useState('');
+  const [curso, setCurso] = useState('');
+  const [email, setEmail] = useState('');
+  const [data_nascimento, setDataNascimento] = useState('');
+  const [telefone, setTelefone] = useState('');
   const [selectedModalidades, setSelectedModalidades] = useState([]);
   const [file, setFile] = useState(null);
 
-  const [filtro, setFiltro] = useState("");
+  const [filtro, setFiltro] = useState('');
   const [availableModalidades, setAvailableModalidades] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   function ChangeForm(usuario) {
-    setNomeExib(usuario.nome || "");
+    setNomeExib(usuario.nome || '');
     setId(usuario.id);
-    setRm(usuario.rm || "");
-    setNome(usuario.nome || "");
-    setEmail(usuario.email || "");
-    setDataNascimento(usuario.data_nascimento ? new Date(usuario.data_nascimento).toISOString().split("T")[0] : "");
-    setTelefone(usuario.telefone || "");
-    setPeriodo(`${usuario.cursos?.periodo || ""}`);
-    setCurso(usuario.curso_id || "");
+    setRm(usuario.rm || '');
+    setNome(usuario.nome || '');
+    setEmail(usuario.email || '');
+    setDataNascimento(usuario.data_nascimento ? new Date(usuario.data_nascimento).toISOString().split('T')[0] : '');
+    setTelefone(usuario.telefone || '');
+    setPeriodo(`${usuario.cursos?.periodo || ''}`);
+    setCurso(usuario.curso_id || '');
     setFile(usuario.foto_perfil || null);
     const userModalidades = selectedUser.usuario_modalidades?.map((m) => m.modalidade_id) || [];
     setSelectedModalidades(userModalidades);
   }
 
   const HandleLoading = async () => {
+    setIsLoading(true);
     const isAdmin = await HandleIsAdmin(navigate);
     if (!isAdmin) return;
 
-    const { usuarios } = await verUsuários();
-    const { modalidades } = await verModalidades();
-    if (usuarios && usuarios.length > 0 && modalidades) {
-      setUsers(usuarios);
-      setSelectedUser(usuarios[0]);
-      setAvailableModalidades(modalidades);
-    } else {
-      navigate("/");
+    try {
+      const { usuarios } = await verUsuários();
+      const { modalidades } = await verModalidades();
+      if (usuarios && usuarios.length > 0 && modalidades) {
+        setUsers(usuarios);
+        setSelectedUser(usuarios[0]);
+        setAvailableModalidades(modalidades);
+      } else {
+        navigate('/');
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -82,10 +129,8 @@ export default function ManagementUsersPage() {
 
   function handleChange(e) {
     const { name, value, checked } = e.target;
-    if (name === "modalidade") {
-      setSelectedModalidades((prev) =>
-        checked ? [...prev, parseInt(value)] : prev.filter((id) => id !== parseInt(value))
-      );
+    if (name === 'modalidade') {
+      setSelectedModalidades((prev) => (checked ? [...prev, parseInt(value)] : prev.filter((id) => id !== parseInt(value))));
     }
 
     const setters = {
@@ -109,22 +154,20 @@ export default function ManagementUsersPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData();
-    data.append("nome", nome);
-    data.append("email", email);
-    data.append("data_nascimento", data_nascimento);
-    data.append("telefone", telefone);
-    data.append("curso_id", parseInt(curso));
+    data.append('nome', nome);
+    data.append('email', email);
+    data.append('data_nascimento', data_nascimento);
+    data.append('telefone', telefone);
+    data.append('curso_id', parseInt(curso));
 
-    const modalidades = Array.isArray(selectedModalidades)
-      ? selectedModalidades.map((id) => Number(id)).filter((id) => !isNaN(id))
-      : [];
+    const modalidades = Array.isArray(selectedModalidades) ? selectedModalidades.map((id) => Number(id)).filter((id) => !isNaN(id)) : [];
 
     modalidades.forEach((id) => {
-      data.append("modalidades[]", id);
+      data.append('modalidades[]', id);
     });
 
     if (file && file instanceof File) {
-      data.append("photo", file);
+      data.append('photo', file);
     }
 
     const result = await EditarUsuário(data, id);
@@ -151,30 +194,35 @@ export default function ManagementUsersPage() {
           <div className="h-[85%] w-[50%]">
             <h2 className="text-lg font-[energy] border-b-2 border-b-black">VISUALIZAR ALUNOS</h2>
             <div className="flex flex-col h-full justify-between">
-              {!users.length && <p className="text-center">Carregando usuários...</p>}
-              <div className="w-full max-h-[80%] overflow-y-scroll flex flex-col">
-                {users
-                  .filter((u) => {
-                    if (!filtro) return true;
-                    const filtredUsers = u.usuario_modalidades?.some((m) => String(m.modalidade_id) === String(filtro));
-                    return filtredUsers;
-                  })
-                  .map((u) => (
-                    <div key={u.id} onClick={() => setSelectedUser(u)} className="cursor-pointer hover:bg-gray-100 p-1">
-                      <ClickableUserEntry name={u.nome} rm={u.rm} course={u.cursos?.sigla || "—"} />
-                    </div>
-                  ))}
-              </div>
+              {isLoading ? (
+                <>
+                  <UserEntrySkeleton />
+                  <UserEntrySkeleton />
+                  <UserEntrySkeleton />
+                  <UserEntrySkeleton />
+                  <UserEntrySkeleton />
+                  <UserEntrySkeleton />
+                </>
+              ) : (
+                <div className="w-full max-h-[80%] overflow-y-scroll flex flex-col">
+                  {users
+                    .filter((u) => {
+                      if (!filtro) return true;
+                      const filtredUsers = u.usuario_modalidades?.some((m) => String(m.modalidade_id) === String(filtro));
+                      return filtredUsers;
+                    })
+                    .map((u) => (
+                      <div key={u.id} onClick={() => setSelectedUser(u)} className="cursor-pointer hover:bg-gray-100 p-1">
+                        <ClickableUserEntry name={u.nome} rm={u.rm} course={u.cursos?.sigla || '—'} />
+                      </div>
+                    ))}
+                </div>
+              )}
               <div>
                 <label className="text-sm text-center w-full" htmlFor="filtro">
                   Modalidade
                 </label>
-                <select
-                  id="filtro"
-                  value={filtro}
-                  onChange={handleFiltroChange}
-                  className="bg-neutra-branca border rounded-lg p-3 w-full"
-                >
+                <select id="filtro" value={filtro} onChange={handleFiltroChange} className="bg-neutra-branca border rounded-lg p-3 w-full">
                   <option value="">Selecione uma modalidade</option>
                   {availableModalidades.map((mod) => (
                     <option key={mod.id} value={mod.id}>
@@ -188,149 +236,97 @@ export default function ManagementUsersPage() {
 
           {/* Info do aluno selecionado */}
           <div className="h-[85%] w-[50%] flex flex-col">
-            <h2 className="text-xl font-bold  border-b-2 border-b-black font-[Energy]">
-              {selectedUser ? nomeExib : "ALUNO"}
-            </h2>
+            <h2 className="text-xl font-bold  border-b-2 border-b-black font-[Energy]">{selectedUser ? nomeExib : 'ALUNO'}</h2>
             <div className="h-full w-full overflow-y-scroll">
-              <div className="flex flex-col justify-around w-full gap-2">
-                {/* Dados Pessoais */}
-                <h4 className="text-neutra-preta font-bold">Dados Pessoais</h4>
-                <div className="flex flex-col mb-2">
-                  <input type="hidden" name="id" value={id} />
-                  <label htmlFor="rm" className="mb-1 text-neutra-preta">
-                    RM
-                  </label>
-                  <input
-                    type="number"
-                    id="rm"
-                    name="rm"
-                    min="10000"
-                    max="99999"
-                    pattern="\d{5}"
-                    value={rm}
-                    onChange={handleChange}
-                    disabled
-                    className="px-3 py-2 bg-gray-100 border rounded text-[#aaa] text-base w-full"
-                  />
-                </div>
-                <div className="flex flex-col mb-2">
-                  <label htmlFor="nome" className="mb-1 text-neutra-preta">
-                    Nome
-                  </label>
-                  <input
-                    type="text"
-                    id="nome"
-                    name="nome"
-                    value={nome}
-                    onChange={handleChange}
-                    required
-                    autoComplete="name"
-                    pattern="[a-zA-Z\u00C0-\u024F]+( [a-zA-Z\u00C0-\u024F]+)*"
-                    className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full"
-                  />
-                </div>
-                <div className="flex flex-col mb-2">
-                  <label htmlFor="email" className="mb-1 text-neutra-preta">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={email}
-                    onChange={handleChange}
-                    required
-                    autoComplete="email"
-                    className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full"
-                  />
-                </div>
-                <div className="flex flex-col mb-2">
-                  <label htmlFor="telefone" className="mb-1 text-neutra-preta">
-                    Telefone
-                  </label>
-                  <input
-                    type="text"
-                    maxLength="19"
-                    id="telefone"
-                    name="telefone"
-                    value={telefone}
-                    onChange={handleChange}
-                    required
-                    className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full"
-                  />
-                </div>
-                <div className="flex flex-col mb-2">
-                  <label htmlFor="data_nascimento" className="mb-1 text-neutra-preta">
-                    Data de Nascimento
-                  </label>
-                  <input
-                    type="date"
-                    id="data_nascimento"
-                    name="data_nascimento"
-                    value={data_nascimento}
-                    onChange={handleChange}
-                    min="1900-01-01"
-                    max={new Date().toISOString().split("T")[0]}
-                    required
-                    className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full"
-                  />
-                </div>
-
-                {/* Informações Acadêmicas */}
-                <h4 className="text-neutra-preta font-bold">Informações Acadêmicas</h4>
-                <div className="flex flex-col mb-2">
-                  <label htmlFor="curso" className="mb-1 text-neutra-preta">
-                    Curso
-                    <SelectCursos
-                      periodo={periodo}
-                      curso={curso}
-                      onPeriodoChange={setPeriodo}
-                      onCursoChange={setCurso}
-                    />
-                  </label>
-                </div>
-
-                {/* Modalidades: checkboxes baseadas em availableModalidades (ids) */}
-                <h4 className="text-neutra-preta mb-2 font-bold">Modalidades</h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {availableModalidades &&
-                    availableModalidades.map((mod) => (
-                      <label key={mod.id} className="flex items-center gap-2 accent-neutra-preta text-neutra-preta">
-                        <input
-                          type="checkbox"
-                          name="modalidade"
-                          value={mod.id}
-                          checked={selectedModalidades.includes(mod.id)}
-                          onChange={handleChange}
-                          className="w-4 h-4"
-                        />
-                        {mod.nome}
+              {isLoading ? (
+                <UserFormSkeleton />
+              ) : !users.length ? (
+                <></>
+              ) : (
+                <>
+                  <div className="flex flex-col justify-around w-full gap-2">
+                    {/* Dados Pessoais */}
+                    <h4 className="text-neutra-preta font-bold">Dados Pessoais</h4>
+                    <div className="flex flex-col mb-2">
+                      <input type="hidden" name="id" value={id} />
+                      <label htmlFor="rm" className="mb-1 text-neutra-preta">
+                        RM
                       </label>
-                    ))}
-                </div>
-              </div>
+                      <input type="number" id="rm" name="rm" min="10000" max="99999" pattern="\d{5}" value={rm} onChange={handleChange} disabled className="px-3 py-2 bg-gray-100 border rounded text-[#aaa] text-base w-full" />
+                    </div>
+                    <div className="flex flex-col mb-2">
+                      <label htmlFor="nome" className="mb-1 text-neutra-preta">
+                        Nome
+                      </label>
+                      <input type="text" id="nome" name="nome" value={nome} onChange={handleChange} required autoComplete="name" pattern="[a-zA-Z\u00C0-\u024F]+( [a-zA-Z\u00C0-\u024F]+)*" className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full" />
+                    </div>
+                    <div className="flex flex-col mb-2">
+                      <label htmlFor="email" className="mb-1 text-neutra-preta">
+                        Email
+                      </label>
+                      <input type="email" id="email" name="email" value={email} onChange={handleChange} required autoComplete="email" className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full" />
+                    </div>
+                    <div className="flex flex-col mb-2">
+                      <label htmlFor="telefone" className="mb-1 text-neutra-preta">
+                        Telefone
+                      </label>
+                      <input type="text" maxLength="19" id="telefone" name="telefone" value={telefone} onChange={handleChange} required className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full" />
+                    </div>
+                    <div className="flex flex-col mb-2">
+                      <label htmlFor="data_nascimento" className="mb-1 text-neutra-preta">
+                        Data de Nascimento
+                      </label>
+                      <input type="date" id="data_nascimento" name="data_nascimento" value={data_nascimento} onChange={handleChange} min="1900-01-01" max={new Date().toISOString().split('T')[0]} required className="px-3 py-2 bg-gray-100 border rounded text-neutra-preta text-base w-full" />
+                    </div>
 
-              {/* Imagem de Perfil */}
-              <h4 className="text-neutra-preta mb-2">Imagem de Perfil</h4>
-              <div className="flex flex-col mb-2">
-                <ProfileUploader file={file} onFileChange={setFile} />
-              </div>
+                    {/* Informações Acadêmicas */}
+                    <h4 className="text-neutra-preta font-bold">Informações Acadêmicas</h4>
+                    <div className="flex flex-col mb-2">
+                      <label htmlFor="curso" className="mb-1 text-neutra-preta">
+                        Curso
+                        <SelectCursos periodo={periodo} curso={curso} onPeriodoChange={setPeriodo} onCursoChange={setCurso} />
+                      </label>
+                    </div>
+
+                    {/* Modalidades: checkboxes baseadas em availableModalidades (ids) */}
+                    <h4 className="text-neutra-preta mb-2 font-bold">Modalidades</h4>
+                    <div className="grid grid-cols-2 gap-2">
+                      {availableModalidades &&
+                        availableModalidades.map((mod) => (
+                          <label key={mod.id} className="flex items-center gap-2 accent-neutra-preta text-neutra-preta">
+                            <input type="checkbox" name="modalidade" value={mod.id} checked={selectedModalidades.includes(mod.id)} onChange={handleChange} className="w-4 h-4" />
+                            {mod.nome}
+                          </label>
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* Imagem de Perfil */}
+                  <h4 className="text-neutra-preta mb-2">Imagem de Perfil</h4>
+                  <div className="flex flex-col mb-2">
+                    <ProfileUploader file={file} onFileChange={setFile} />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
-
         {/* Botões */}
         <div className="flex justify-evenly px-[20%] mt-8">
           <div className="flex gap-5">
-            {/* Botão Alterar */}
-            <button
-              type="submit"
-              className="bg-secundaria text-neutra-branca px-6 py-2 rounded-md border 
+            {users.length != 0 && (
+              <>
+                {/* Botão Alterar */}
+                <button
+                  type="submit"
+                  className="bg-secundaria text-neutra-branca px-6 py-2 rounded-md border 
               border-neutra-branca cursor-pointer transition-all duration-300 ease-in-out 
               font-semibold hover:bg-neutra-branca hover:text-secundaria hover:border-secundaria"
-            >
-              Alterar
-            </button>
+                >
+                  Alterar
+                </button>
+              </>
+            )}
 
             {/* Botão Voltar */}
             <Link to="/adm">

@@ -145,6 +145,7 @@ module.exports = {
               select: {
                 id: true,
                 nome: true,
+                cursos: true,
               },
             },
           },
