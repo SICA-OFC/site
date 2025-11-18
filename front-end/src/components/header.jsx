@@ -78,14 +78,8 @@ const Header = () => {
               <Link to="/" className="hover:border-b-2 hover:border-primaria transition border-b-2 border-transparent">
                 Home
               </Link>
-              <Link to="/equipes" className="hover:border-b-2 border-primaria transition">
-                Equipes
-              </Link>
               <Link to="/campeonatos" className="hover:border-b-2 border-primaria transition">
                 Campeonatos
-              </Link>
-              <Link to="/modalidades" className="hover:border-b-2 border-primaria transition">
-                Modalidades
               </Link>
             </nav>
           </div>
